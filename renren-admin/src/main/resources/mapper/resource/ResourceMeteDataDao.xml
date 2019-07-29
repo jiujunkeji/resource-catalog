@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.resource.dao.ResourceMeteDataDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.resource.entity.ResourceMeteDataEntity" id="resourceMeteDataMap">
+        <result property="meteId" column="mete_id"/>
+        <result property="meteType" column="mete_type"/>
+        <result property="resourceCategory" column="resource_category"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="catagoryCode" column="catagory_code"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="catalogId" column="catalog_id"/>
+        <result property="resourceTitle" column="resource_title"/>
+        <result property="resourceAbstract" column="resource_abstract"/>
+        <result property="organisationId" column="organisation_id"/>
+        <result property="organisationName" column="organisation_name"/>
+        <result property="organisationAddress" column="organisation_address"/>
+        <result property="keyword" column="keyword"/>
+        <result property="resourceSign" column="resource_sign"/>
+        <result property="metedataIdentifier" column="metedata_identifier"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="reviewState" column="review_state"/>
+        <result property="reviewUserId" column="review_user_id"/>
+        <result property="reviewUserName" column="review_user_name"/>
+        <result property="reviewDeptId" column="review_dept_id"/>
+        <result property="reviewDeptName" column="review_dept_name"/>
+        <result property="reviewTime" column="review_time"/>
+        <result property="pushState" column="push_state"/>
+        <result property="pushUserId" column="push_user_id"/>
+        <result property="pushUserName" column="push_user_name"/>
+        <result property="pushDeptId" column="push_dept_id"/>
+        <result property="pushDeptName" column="push_dept_name"/>
+        <result property="pushTime" column="push_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+
+</mapper>

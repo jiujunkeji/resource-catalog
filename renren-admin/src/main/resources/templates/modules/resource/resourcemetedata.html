@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+			<#if shiro.hasPermission("resource:resourcemetedata:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("resource:resourcemetedata:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("resource:resourcemetedata:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+														                    <div class="form-group">
+                        <div class="col-sm-2 control-label">元数据类型（资源类型、服务类型）</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.meteType" placeholder="元数据类型（资源类型、服务类型）"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">信息资源类型（主题分类）</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源分类id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.categoryId" placeholder="资源分类id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源分类编码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源分类</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">目录id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.catalogId" placeholder="目录id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">信息资源名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">信息资源摘要</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源提供方id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.organisationId" placeholder="资源提供方id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源提供单位</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.organisationName" placeholder="资源提供单位"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">资源提供方地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供方地址"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">关键字</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">信息资源标识</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">元数据标识</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.metedataIdentifier" placeholder="元数据标识"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">更新时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.updateTime" placeholder="更新时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核状态（0：待审核；1：通过；2：未通过）</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewState" placeholder="审核状态（0：待审核；1：通过；2：未通过）"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核人id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewUserId" placeholder="审核人id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewUserName" placeholder="审核人"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核部门id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewDeptId" placeholder="审核部门id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核部门</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewDeptName" placeholder="审核部门"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">审核时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.reviewTime" placeholder="审核时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布状态（0：未发布；1：发布）</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushState" placeholder="发布状态（0：未发布；1：发布）"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布人id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushUserId" placeholder="发布人id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushUserName" placeholder="发布人"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布部门id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushDeptId" placeholder="发布部门id"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布部门</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushDeptName" placeholder="发布部门"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">发布时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.pushTime" placeholder="发布时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">是否删除</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="resourceMeteData.isDeleted" placeholder="是否删除"/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/resource/resourcemetedata.js?_${.now?long}"></script>
+</body>
+</html>

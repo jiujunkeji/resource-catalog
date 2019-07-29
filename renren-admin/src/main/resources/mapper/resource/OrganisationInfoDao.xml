@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.resource.dao.OrganisationInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.resource.entity.OrganisationInfoEntity" id="organisationInfoMap">
+        <result property="organisationId" column="organisation_id"/>
+        <result property="organisationName" column="organisation_name"/>
+        <result property="organisationAddr" column="organisation_addr"/>
+        <result property="linkman" column="linkman"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+
+</mapper>
