@@ -32,7 +32,7 @@ public class MeteCategoryController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("resource:metecategory:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public List<MeteCategoryEntity> list(@RequestParam Map<String, Object> params){
         /*List<MeteCategoryEntity> menuList = meteCategoryService.selectList(null);
         for(MeteCategoryEntity meteCategoryEntity : menuList){
             MeteCategoryEntity parentMenuEntity = meteCategoryService.selectById(meteCategoryEntity.getParentId());
@@ -41,7 +41,7 @@ public class MeteCategoryController {
             }
         }*/
         List<MeteCategoryEntity> list = meteCategoryService.selectList(null);
-        return R.ok().put("list",list);
+        return list;
     }
 
 

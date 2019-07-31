@@ -41,10 +41,10 @@ public class ResourceCatalogController {
      */
     @RequestMapping("/list")
 //    @RequiresPermissions("resource:resourcecatalog:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public List<ResourceCatalogEntity> list(@RequestParam Map<String, Object> params){
 //        PageUtils page = resourceCatalogService.queryPage(params);
         List<ResourceCatalogEntity> list = resourceCatalogService.selectList(null);
-        return R.ok().put("list", list);
+        return list;
     }
 
 
