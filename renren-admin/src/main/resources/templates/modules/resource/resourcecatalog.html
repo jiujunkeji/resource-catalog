@@ -3,22 +3,69 @@
 <head>
     <title></title>
 		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+            <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+            <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+            <style>
+                span.stop{
+                    display: inline-block;
+                    padding: 2px 4px;
+                    border-radius: 2px;
+                    background: #f56c6c;
+                    color: #fff;
+                    font-size: 12px;
+                }
+                span.ok{
+                    display: inline-block;
+                    padding: 2px 4px;
+                    border-radius: 2px;
+                    background: #409eff;
+                    color: #fff;
+                    font-size: 12px;
+                }
+            </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
+
     <div v-show="showList">
+
+
         <div class="grid-btn">
-            <div class="form-group col-sm-2">
-                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="目录名称">
-            </div>
-            <a class="btn btn-default" @click="query">查询</a>
-            <button class="btn btn-primary" @click="downTemplate">下载目录模板</button>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <!--<div class="form-group col-sm-2">-->
+                <!--<el-input-->
+                        <!--placeholder="目录名称"-->
+                        <!--v-model="q.name"-->
+                        <!--clearable-->
+                        <!--@keyup.enter="query">-->
+                <!--</el-input>-->
+                <!--&lt;!&ndash;<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="目录名称">&ndash;&gt;-->
+            <!--</div>-->
+            <!--<el-button size="medium" type="primary" @click="query">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+            <el-button size="medium" type="success" plain icon="el-icon-download" @click="downTemplate">下载目录模板</el-button>&nbsp;&nbsp;
+            <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
+            <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
+            <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
+            <!--<a class="btn btn-default" @click="query">查询</a>-->
+            <!--<button class="btn btn-primary" @click="downTemplate">下载目录模板</button>-->
+            <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+            <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+            <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
         </div>
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
+        <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
+            <thead>
+            <tr>
+                <th data-field="selectItem" data-checkbox="true"></th>
+            </tr>
+            </thead>
+        </table>
+
+
+
     </div>
 
     <div v-show="!showList" class="panel panel-default">
@@ -105,6 +152,7 @@
     </div>
 </div>
 
+<!--<script src="${request.contextPath}/statics/js/modules/sys/menu.js?_${.now?long}"></script>-->
 <script src="${request.contextPath}/statics/js/modules/resource/resourcecatalog.js?_${.now?long}"></script>
 </body>
 </html>

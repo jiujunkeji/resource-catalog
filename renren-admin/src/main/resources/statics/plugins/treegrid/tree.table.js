@@ -40,8 +40,9 @@
                     expandAll: this.expandAll,  //是否全部展开
                     columns: this.columns,		//列数组
                     toolbar: "#" + this.toolbarId,//顶部工具条
-                    height: this.height,
+                    height: 'auto',
                 });
+
             return this;
         },
 

@@ -3,23 +3,57 @@
 <head>
     <title></title>
 		<#include "/header.html">
+            <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+            <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+            <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+            <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+            <style>
+                span.stop{
+                    display: inline-block;
+                    padding: 2px 4px;
+                    border-radius: 2px;
+                    background: #f56c6c;
+                    color: #fff;
+                    font-size: 12px;
+                }
+                span.ok{
+                    display: inline-block;
+                    padding: 2px 4px;
+                    border-radius: 2px;
+                    background: #409eff;
+                    color: #fff;
+                    font-size: 12px;
+                }
+            </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
+
 			<#if shiro.hasPermission("resource:metecategory:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
+            <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
 			</#if>
 			<#if shiro.hasPermission("resource:metecategory:update")>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
+            <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
 			</#if>
 			<#if shiro.hasPermission("resource:metecategory:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
+            <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
 			</#if>
         </div>
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
+        <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
+            <thead>
+            <tr>
+                <th data-field="selectItem" data-checkbox="true"></th>
+            </tr>
+            </thead>
+        </table>
     </div>
 
     <div v-show="!showList" class="panel panel-default">

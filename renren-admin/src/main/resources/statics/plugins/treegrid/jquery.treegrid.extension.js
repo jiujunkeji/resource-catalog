@@ -18,7 +18,7 @@
         _main_div.append(target);
         target.addClass("table table-hover treegrid-table table-bordered");
         if (options.striped) {
-            target.addClass('table-striped');
+            target.addClass('el-table__header el-table');
         }
         // 工具条在外层包装一下div，样式用的bootstrap-table的
         if(options.toolbar){
@@ -247,8 +247,8 @@
         columns : [],
         toolbar: null,//顶部工具条
         height: 0,
-        expanderExpandedClass : 'glyphicon glyphicon-chevron-down',// 展开的按钮的图标
-        expanderCollapsedClass : 'glyphicon glyphicon-chevron-right'// 缩起的按钮的图标
+        expanderExpandedClass : 'el-icon-arrow-down',// 展开的按钮的图标
+        expanderCollapsedClass : 'el-icon-arrow-right'// 缩起的按钮的图标
 
     };
 })(jQuery);

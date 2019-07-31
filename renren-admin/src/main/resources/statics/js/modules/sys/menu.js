@@ -137,7 +137,13 @@ var vm = new Vue({
                 alert("菜单URL不能为空");
                 return true;
             }
-        }
+        },
+    },
+    created:function () {
+        $.get(baseURL + "sys/menu/list", function(r){
+            console.log(r)
+        })
+        // console.log(Menu);
     }
 });
 
@@ -197,6 +203,9 @@ $(function () {
     table.setCodeField("menuId");
     table.setParentCodeField("parentId");
     table.setExpandAll(false);
+    table.setData();
     table.init();
+    console.log(table);
     Menu.table = table;
+    console.log(Menu.table);
 });
