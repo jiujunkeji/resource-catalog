@@ -34,21 +34,45 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
     }
 
     @Override
-    public void insertCatalog(String oneName, String twoName, String threeName, ResourceCatalogEntity catalogEntity) {
+    public void insertCatalog(ResourceCatalogEntity catalogEntity) {
         Long parentId;
-        if(StringUtils.isNotEmpty(threeName)){
-            parentId = this.selectOne(new EntityWrapper<ResourceCatalogEntity>().eq("name",twoName)).getCatalogId();
-            catalogEntity.setName(threeName);
+        if(StringUtils.isNotEmpty(catalogEntity.getThreeName())){
+            parentId = this.selectOne(new EntityWrapper<ResourceCatalogEntity>().eq("name",catalogEntity.getTwoName())).getCatalogId();
+            catalogEntity.setName(catalogEntity.getThreeName());
             catalogEntity.setParentId(parentId);
-        }else if(StringUtils.isNotEmpty(twoName)){
-            parentId = this.selectOne(new EntityWrapper<ResourceCatalogEntity>().eq("name",oneName)).getCatalogId();
-            catalogEntity.setName(twoName);
+        }else if(StringUtils.isNotEmpty(catalogEntity.getTwoName())){
+            parentId = this.selectOne(new EntityWrapper<ResourceCatalogEntity>().eq("name",catalogEntity.getOneName())).getCatalogId();
+            catalogEntity.setName(catalogEntity.getTwoName());
             catalogEntity.setParentId(parentId);
-        }else if(StringUtils.isNotEmpty(oneName)){
-            catalogEntity.setName(oneName);
+        }else if(StringUtils.isNotEmpty(catalogEntity.getOneName())){
+            catalogEntity.setName(catalogEntity.getOneName());
             catalogEntity.setParentId(0L);
         }
         this.insert(catalogEntity);
     }
 
+    @Override
+    public ResourceCatalogEntity selectCatalog(ResourceCatalogEntity catalogEntity){
+        String oneName = null;
+        String twoName = null;
+        String threeName = null;
+        Long a = catalogEntity.getParentId();
+        if(a != 0L){
+            Long b = this.selectById(a).getParentId();
+            if(b != 0L){
+                oneName  = this.selectById(b).getName();
+                twoName  = this.selectById(a).getName();
+                threeName  = catalogEntity.getName();
+            }else{
+                oneName = this.selectById(a).getName();
+                twoName = catalogEntity.getName();
+            }
+        }else{
+            oneName = catalogEntity.getName();
+        }
+        catalogEntity.setOneName(oneName);
+        catalogEntity.setTwoName(twoName);
+        catalogEntity.setThreeName(threeName);
+        return catalogEntity;
+    }
 }

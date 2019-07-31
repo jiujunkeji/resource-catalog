@@ -1,5 +1,6 @@
 package io.renren.modules.resource.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -71,6 +72,12 @@ public class ResourceCatalogEntity implements Serializable {
 	 */
 	private Integer isDeleted;
 
+	@TableField(exist = false)
+	private String oneName;
+	@TableField(exist = false)
+	private String twoName;
+	@TableField(exist = false)
+	private String threeName;
 	/**
 	 * 设置：
 	 */
@@ -226,5 +233,29 @@ public class ResourceCatalogEntity implements Serializable {
 	 */
 	public Integer getIsDeleted() {
 		return isDeleted;
+	}
+
+	public String getOneName() {
+		return oneName;
+	}
+
+	public void setOneName(String oneName) {
+		this.oneName = oneName;
+	}
+
+	public String getTwoName() {
+		return twoName;
+	}
+
+	public void setTwoName(String twoName) {
+		this.twoName = twoName;
+	}
+
+	public String getThreeName() {
+		return threeName;
+	}
+
+	public void setThreeName(String threeName) {
+		this.threeName = threeName;
 	}
 }
