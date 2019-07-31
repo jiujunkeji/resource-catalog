@@ -1,28 +1,26 @@
 package io.renren.modules.resource.controller;
 
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
+import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.ResourceCatalogEntity;
+import io.renren.modules.resource.service.ResourceCatalogService;
+import io.renren.modules.resource.utils.POIUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import io.renren.common.validator.ValidatorUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.renren.modules.resource.entity.ResourceCatalogEntity;
-import io.renren.modules.resource.service.ResourceCatalogService;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
-
-import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 
 /**
@@ -44,9 +42,9 @@ public class ResourceCatalogController {
     @RequestMapping("/list")
 //    @RequiresPermissions("resource:resourcecatalog:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = resourceCatalogService.queryPage(params);
-
-        return R.ok().put("page", page);
+//        PageUtils page = resourceCatalogService.queryPage(params);
+        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(null);
+        return R.ok().put("list", list);
     }
 
 
@@ -125,6 +123,64 @@ public class ResourceCatalogController {
         }catch (Exception ex){
             System.out.println(ex);
         }
+    }
+    /**
+     * 导入目录
+     */
+    @RequestMapping("/importCatalog")
+    public R importCatalog(@RequestParam(value="file",required = false) MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws Exception{
+        // 如果用的是Tomcat服务器，则文件会上传到\\%TOMCAT_HOME%\\webapps\\YourWebProject\\WEB-INF\\upload\\文件夹中
+        String realPath = request.getSession().getServletContext().getRealPath(
+                "/upload/excel");
+        // 这里不必处理IO流关闭的问题，因为FileUtils.copyInputStreamToFile()方法内部会自动把用到的IO流关掉，我是看它的源码才知道的
+        File xlsFile = new File(realPath, file.getOriginalFilename());
+        FileUtils.copyInputStreamToFile(file.getInputStream(), xlsFile);
+        XSSFWorkbook workbook = null;
+        try {
+            workbook = new XSSFWorkbook(new FileInputStream(xlsFile));
+        } catch (Exception ex) {
+            workbook = new XSSFWorkbook(new FileInputStream(xlsFile));
+        }
+        //得到Excel工作表对象
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        if (sheet != null) {
+            //得到Excel工作表的行 数sheet.getLastRowNum()也是得到Excel工作表的行数
+            int rowcount = sheet.getPhysicalNumberOfRows();
+            System.out.println("有数据" + rowcount);
+        } else {
+            System.out.println("没有数据");
+        }
+        XSSFRow row = null;
+        System.out.println(sheet.getLastRowNum());
+        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
+        String oneName;
+        String twoName;
+        String threeName;
+        String type;
+        for (int i = 1; i < sheet.getLastRowNum()+1; i++) {
+            row = sheet.getRow(i);
+            ResourceCatalogEntity catalogEntity = new ResourceCatalogEntity();
+            oneName = POIUtils.getCellValue(row.getCell(0)).replace(" ","");
+            twoName = POIUtils.getCellValue(row.getCell(1)).replace(" ","");
+            threeName = POIUtils.getCellValue(row.getCell(2)).replace(" ","");
+            type = POIUtils.getCellValue(row.getCell(3)).replace(" ","");
+            if("信息资源".equals(type)){
+                catalogEntity.setType(0);
+            }else{
+                catalogEntity.setType(1);
+            }
+            catalogEntity.setRemark(POIUtils.getCellValue(row.getCell(4)).replace(" ",""));
+            catalogEntity.setUpdateTime(new Date());
+            resourceCatalogService.insertCatalog(oneName,twoName,threeName,catalogEntity);
+        }
+        return R.ok();
+    }
+    /**
+     * 导入目录
+     */
+    @RequestMapping("/downCatalog")
+    public R downCatalog(HttpServletResponse response, HttpServletRequest request){
+        return R.ok();
     }
     /**
      * 停用

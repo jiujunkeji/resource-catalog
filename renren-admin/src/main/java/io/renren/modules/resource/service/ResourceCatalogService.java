@@ -7,7 +7,7 @@ import io.renren.modules.resource.entity.ResourceCatalogEntity;
 import java.util.Map;
 
 /**
- * 
+ *
  *
  * @author wangdehai
  * @email 594340717@qq.com
@@ -16,5 +16,7 @@ import java.util.Map;
 public interface ResourceCatalogService extends IService<ResourceCatalogEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void insertCatalog(String oneName, String twoName, String threeName, ResourceCatalogEntity catalogEntity);
 }
 

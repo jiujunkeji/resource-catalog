@@ -1,23 +1,17 @@
 package io.renren.modules.resource.controller;
 
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
+import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.ResourceMeteDataEntity;
+import io.renren.modules.resource.service.ResourceMeteDataService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import io.renren.common.validator.ValidatorUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.renren.modules.resource.entity.ResourceMeteDataEntity;
-import io.renren.modules.resource.service.ResourceMeteDataService;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
-
 
 
 /**
