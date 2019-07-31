@@ -170,16 +170,16 @@ public class ResourceCatalogController {
         for (int i = 1; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
             ResourceCatalogEntity catalogEntity = new ResourceCatalogEntity();
-            catalogEntity.setOneName(POIUtils.getCellValue(row.getCell(0)).replace(" ",""));
-            catalogEntity.setTwoName(POIUtils.getCellValue(row.getCell(1)).replace(" ",""));
-            catalogEntity.setThreeName(POIUtils.getCellValue(row.getCell(2)).replace(" ",""));
-            type = POIUtils.getCellValue(row.getCell(3)).replace(" ","");
+            catalogEntity.setOneName(POIUtils.getCellValue(row.getCell(1)).replace(" ",""));
+            catalogEntity.setTwoName(POIUtils.getCellValue(row.getCell(2)).replace(" ",""));
+            catalogEntity.setThreeName(POIUtils.getCellValue(row.getCell(3)).replace(" ",""));
+            type = POIUtils.getCellValue(row.getCell(4)).replace(" ","");
             if("信息资源".equals(type)){
                 catalogEntity.setType(0);
             }else{
                 catalogEntity.setType(1);
             }
-            catalogEntity.setRemark(POIUtils.getCellValue(row.getCell(4)).replace(" ",""));
+            catalogEntity.setRemark(POIUtils.getCellValue(row.getCell(5)).replace(" ",""));
             catalogEntity.setUpdateTime(new Date());
             resourceCatalogService.insertCatalog(catalogEntity);
         }
