@@ -54,7 +54,8 @@ var vm = new Vue({
         input:'',
 		title: null,
 		resourceCatalog: {},
-        imageUrl:''
+        imageUrl:'',
+        fileData:null
 	},
 	methods: {
 		query: function () {
@@ -150,6 +151,8 @@ var vm = new Vue({
         },
         handleAvatarSuccess:function(res, file) {
             vm.imageUrl = URL.createObjectURL(file.raw);
+            // vm.file = file;
+            // console.log(file);
         },
         beforeAvatarUpload:function(file) {
             var FileExt = file.name.replace(/.+\./, "");
@@ -159,7 +162,12 @@ var vm = new Vue({
                     message: '上传文件只能是excel！'
                 });
                 return false;
-            }
+            }else {
+            	file.type
+            	vm.fileData = file;
+            	console.log(vm.fileData);
+			}
+
 
         }
 	},

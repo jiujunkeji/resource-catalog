@@ -27,9 +27,6 @@
                     color: #fff;
                     font-size: 12px;
                 }
-                .el-upload__input{
-                    opacity: 0;
-                }
             </style>
 </head>
 <body>
@@ -51,22 +48,25 @@
             <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
             <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
             <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
-            <el-button size="medium" type="primary" plain icon="el-icon-bottom-left" @click="daoru">导入</el-button>&nbsp;&nbsp;
-            <button class="el-button el-button--primary el-button--medium is-plain" style="position: relative;">
-                <i class="el-icon-bottom-left"></i> <span>导入</span>
-                <input type="file" style="opacity: 0;position: absolute;top: 0;left: 0;width: 100%;height: 100%;" @change="">
-            </button>
+            <!--<el-button size="medium" type="primary" plain icon="el-icon-bottom-left" @click="daoru">导入</el-button>&nbsp;&nbsp;-->
+            <!--<button class="el-button el-button&#45;&#45;primary el-button&#45;&#45;medium is-plain" style="position: relative;">-->
+                <!--<i class="el-icon-bottom-left"></i> <span>导入</span>-->
+                <!--<input type="file" style="opacity: 0;position: absolute;top: 0;left: 0;width: 100%;height: 100%;" @change="">-->
+            <!--</button>-->
             <el-button size="medium" type="primary" plain icon="el-icon-top-right" @click="downCatalog">导出</el-button>&nbsp;&nbsp;
+            <div style="display: inline-block">
+                <el-upload
+                        class="avatar-uploader"
+                        action='${request.contextPath}/resource/resourcecatalog/importCatalog'
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                    <el-button size="medium" type="primary" plain icon="el-icon-bottom-left">导入</el-button>
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+            </div>
 
-            <el-upload
-                    class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+
 
 
         </div>
