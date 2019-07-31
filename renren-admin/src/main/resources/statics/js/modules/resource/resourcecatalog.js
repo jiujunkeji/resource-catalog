@@ -54,6 +54,7 @@ var vm = new Vue({
         input:'',
 		title: null,
 		resourceCatalog: {},
+        imageUrl:''
 	},
 	methods: {
 		query: function () {
@@ -139,9 +140,33 @@ var vm = new Vue({
 		downTemplate: function () {
 			window.location.href = baseURL + "resource/resourcecatalog/downTemplate"
         },
+		// 导出目录
+        downCatalog: function () {
+            window.location.href = baseURL + "resource/resourcecatalog/downCatalog"
+        },
+		// 导入
+		daoru:function () {
+
+        },
+        handleAvatarSuccess:function(res, file) {
+            vm.imageUrl = URL.createObjectURL(file.raw);
+        },
+        beforeAvatarUpload:function(file) {
+            var FileExt = file.name.replace(/.+\./, "");
+            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
+                this.$message({
+                    type: 'warning',
+                    message: '上传文件只能是excel！'
+                });
+                return false;
+            }
+
+        }
 	},
 	created:function () {
-
+        $.get(baseURL + "resource/resourcecatalog/list", function(r){
+			console.log(r);
+		});
     }
 });
 

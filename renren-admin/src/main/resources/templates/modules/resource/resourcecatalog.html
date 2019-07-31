@@ -27,14 +27,15 @@
                     color: #fff;
                     font-size: 12px;
                 }
+                .el-upload__input{
+                    opacity: 0;
+                }
             </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
 
     <div v-show="showList">
-
-
         <div class="grid-btn">
             <!--<div class="form-group col-sm-2">-->
                 <!--<el-input-->
@@ -50,11 +51,24 @@
             <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
             <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
             <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
-            <!--<a class="btn btn-default" @click="query">查询</a>-->
-            <!--<button class="btn btn-primary" @click="downTemplate">下载目录模板</button>-->
-            <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
-            <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
-            <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+            <el-button size="medium" type="primary" plain icon="el-icon-bottom-left" @click="daoru">导入</el-button>&nbsp;&nbsp;
+            <button class="el-button el-button--primary el-button--medium is-plain" style="position: relative;">
+                <i class="el-icon-bottom-left"></i> <span>导入</span>
+                <input type="file" style="opacity: 0;position: absolute;top: 0;left: 0;width: 100%;height: 100%;" @change="">
+            </button>
+            <el-button size="medium" type="primary" plain icon="el-icon-top-right" @click="downCatalog">导出</el-button>&nbsp;&nbsp;
+
+            <el-upload
+                    class="avatar-uploader"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+
+
         </div>
         <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
             <thead>
