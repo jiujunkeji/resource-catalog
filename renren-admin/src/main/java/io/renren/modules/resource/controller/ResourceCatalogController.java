@@ -11,6 +11,7 @@ import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -54,7 +55,12 @@ public class ResourceCatalogController extends AbstractController{
 //    @RequiresPermissions("resource:resourcecatalog:list")
     public List<ResourceCatalogEntity> list(@RequestParam Map<String, Object> params){
 //        PageUtils page = resourceCatalogService.queryPage(params);
-        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(new EntityWrapper<ResourceCatalogEntity>().eq("is_deleted",0));
+        String name = (String) params.get("name");
+        EntityWrapper<ResourceCatalogEntity> wrapper = new EntityWrapper<ResourceCatalogEntity>();
+        wrapper
+                .like(StringUtils.isNotEmpty(name), "name", name)
+                .eq("is_deleted",0);
+        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(wrapper);
         return list;
     }
 
@@ -186,6 +192,7 @@ public class ResourceCatalogController extends AbstractController{
             catalogEntity.setCreateDeptId(user.getDeptId());
             catalogEntity.setCreateDeptName(deptService.selectById(getDeptId()).getName());
             catalogEntity.setCreateTime(new Date());
+            catalogEntity.setUpdateTime(new Date());
             catalogEntity.setUpdateTime(new Date());
             resourceCatalogService.insertCatalog(catalogEntity);
         }

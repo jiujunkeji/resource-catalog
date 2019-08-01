@@ -66,11 +66,11 @@ public class ResourceCatalogEntity implements Serializable {
 	/**
 	 * 是否使用（0：停用；1：使用）
 	 */
-	private Integer isUsed;
+	private Integer isUsed = 1;
 	/**
 	 * 是否删除（0：未删除；1：已删除）
 	 */
-	private Integer isDeleted;
+	private Integer isDeleted = 0;
 
 	@TableField(exist = false)
 	private String oneName;
