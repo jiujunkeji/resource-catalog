@@ -27,25 +27,37 @@
                     color: #fff;
                     font-size: 12px;
                 }
+                .el-button--primary{
+                    width: 60px;
+                    height: 25px;
+                    padding: 0;
+                }
             </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
+            <span>
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
+            <div class="right">
+                <#if shiro.hasPermission("resource:metecategory:save")>
+                    <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
+                    <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+                </#if>
+                <#if shiro.hasPermission("resource:metecategory:update")>
+                    <el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;
+                    <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+                </#if>
+                <#if shiro.hasPermission("resource:metecategory:delete")>
+                    <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
+                    <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+                </#if>
+            </div>
 
-			<#if shiro.hasPermission("resource:metecategory:save")>
-                <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
-            <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
-			</#if>
-			<#if shiro.hasPermission("resource:metecategory:update")>
-                <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
-            <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
-			</#if>
-			<#if shiro.hasPermission("resource:metecategory:delete")>
-                <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
-            <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
-			</#if>
+
         </div>
         <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
             <thead>

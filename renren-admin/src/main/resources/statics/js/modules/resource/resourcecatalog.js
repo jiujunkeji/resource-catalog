@@ -113,7 +113,7 @@ var vm = new Vue({
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(index){
-								$("#jqGrid").trigger("reloadGrid");
+                                Menu.table.refresh();
 							});
 						}else{
 							alert(r.msg);
@@ -150,9 +150,9 @@ var vm = new Vue({
 
         },
         handleAvatarSuccess:function(res, file) {
-            vm.imageUrl = URL.createObjectURL(file.raw);
+            // vm.imageUrl = URL.createObjectURL(file.raw);
             // vm.file = file;
-            // console.log(file);
+            console.log(file);
         },
         beforeAvatarUpload:function(file) {
             var FileExt = file.name.replace(/.+\./, "");
@@ -163,7 +163,7 @@ var vm = new Vue({
                 });
                 return false;
             }else {
-            	file.type
+            	file.type = 'xls';
             	vm.fileData = file;
             	console.log(vm.fileData);
 			}
@@ -183,6 +183,7 @@ var Menu = {
     table: null,
     layerIndex: -1
 };
+
 /**
  * 初始化表格的列
  */
@@ -190,21 +191,48 @@ Menu.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
         {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
+            if(item.type == 0){
+                return '信息资源';
+            }
+            if(item.isUsed == 1){
+                return '数据资源';
+            }
+        }},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
         {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            if(item.isUsed == 0){
-                return '<span class="stop">停用</span>';
-            }
-            if(item.isUsed == 1){
-                return '<span class="ok">使用</span>';
-            }
+        	if(item.isUsed == 0){
+                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
+			}
+			if(item.isUsed == 1){
+                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
+			}
         }}]
     return columns;
 };
 
+function ss(num,id) {
+	if(num == 0){
+        layer.confirm('确定使用吗？',function (index1) {
+            $.get(baseURL + "resource/resourcecatalog/start?catalogId="+id, function(r){
+                Menu.table.refresh();
+                layer.close(index1)
+            });
+		})
 
+	}else {
+        layer.confirm('确定停用吗？',function (index1) {
+            $.get(baseURL + "resource/resourcecatalog/stop?catalogId="+id, function(r){
+                Menu.table.refresh();
+                layer.close(index1)
+            });
+        })
+        // $.get(baseURL + "resource/resourcecatalog/stop", function(r){
+        //     Menu.table.refresh();
+        // });
+	}
+}
 function getCatalogId () {
     var selected = $('#menuTable').bootstrapTreeTable('getSelections');
     if (selected.length == 0) {

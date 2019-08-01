@@ -27,6 +27,12 @@
                     color: #fff;
                     font-size: 12px;
                 }
+                .el-button--primary{
+                    width: 110px;
+                    height: 25px;
+                    padding: 0;
+                }
+
             </style>
 </head>
 <body>
@@ -34,6 +40,10 @@
 
     <div v-show="showList">
         <div class="grid-btn">
+            <span>
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
             <!--<div class="form-group col-sm-2">-->
                 <!--<el-input-->
                         <!--placeholder="目录名称"-->
@@ -44,27 +54,25 @@
                 <!--&lt;!&ndash;<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="目录名称">&ndash;&gt;-->
             <!--</div>-->
             <!--<el-button size="medium" type="primary" @click="query">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-            <el-button size="medium" type="success" plain icon="el-icon-download" @click="downTemplate">下载目录模板</el-button>&nbsp;&nbsp;
-            <el-button size="medium" type="primary" plain icon="el-icon-plus" @click="add">新增</el-button>&nbsp;&nbsp;
-            <el-button size="medium" type="warning" plain icon="el-icon-edit" @click="update">修改</el-button>&nbsp;&nbsp;
-            <el-button size="medium" type="danger" plain icon="el-icon-delete" @click="del">删除</el-button>&nbsp;&nbsp;
-            <!--<el-button size="medium" type="primary" plain icon="el-icon-bottom-left" @click="daoru">导入</el-button>&nbsp;&nbsp;-->
-            <!--<button class="el-button el-button&#45;&#45;primary el-button&#45;&#45;medium is-plain" style="position: relative;">-->
-                <!--<i class="el-icon-bottom-left"></i> <span>导入</span>-->
-                <!--<input type="file" style="opacity: 0;position: absolute;top: 0;left: 0;width: 100%;height: 100%;" @change="">-->
-            <!--</button>-->
-            <el-button size="medium" type="primary" plain icon="el-icon-top-right" @click="downCatalog">导出</el-button>&nbsp;&nbsp;
-            <div style="display: inline-block">
-                <el-upload
-                        class="avatar-uploader"
-                        action='${request.contextPath}/resource/resourcecatalog/importCatalog'
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                    <el-button size="medium" type="primary" plain icon="el-icon-bottom-left">导入</el-button>
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
+            <div class="right">
+                <el-button size="medium" type="primary" @click="downTemplate">下载目录模板</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="downCatalog">导出</el-button>&nbsp;&nbsp;
+                <div style="display: inline-block">
+                    <el-upload
+                            class="avatar-uploader"
+                            action='${request.contextPath}/resource/resourcecatalog/importCatalog'
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <el-button size="medium" type="primary">导入</el-button>
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
             </div>
+
 
 
 
@@ -167,6 +175,8 @@
 </div>
 
 <!--<script src="${request.contextPath}/statics/js/modules/sys/menu.js?_${.now?long}"></script>-->
+<!--<script src="${request.contextPath}/statics/js/lay/modules/form.js"></script>-->
 <script src="${request.contextPath}/statics/js/modules/resource/resourcecatalog.js?_${.now?long}"></script>
+
 </body>
 </html>

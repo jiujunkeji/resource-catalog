@@ -3,6 +3,10 @@ html { overflow-x:hidden; }
 	position: relative;
 	padding: 0 0 3px 8px
 }
+#rrapp{
+    background:#fff;
+    box-shadow: 0 0 10px #eee
+}
 
 .content-header>.breadcrumb {
     position: relative;
@@ -25,7 +29,24 @@ html { overflow-x:hidden; }
 }
 
 .grid-btn{
-	margin-bottom:12px;
+    overflow: hidden;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 10px;
+}
+.grid-btn>span{
+    color: #2648be;
+    font-size: 18px;
+}
+.grid-btn>span i{
+    font-size: 19px;
+}
+.el-button--primary{
+    background: #2593f3!important;
+    /*font-size: 13px!important;*/
+}
+.grid-btn .right{
+    float: right;
 }
 .grid-btn .btn{
 	margin-right:10px;
