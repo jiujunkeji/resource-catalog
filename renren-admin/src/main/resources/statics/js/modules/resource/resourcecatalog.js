@@ -48,14 +48,16 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q: {
-            name:null
+            name:''
 		},
 		showList: true,
 		title: null,
 		resourceCatalog: {},
         imageUrl:'',
         fileData:null,
-        name:null
+        name:null,
+        open:true,
+        openText:'展开筛选'
 	},
 	methods: {
 		query: function () {
@@ -132,6 +134,7 @@ var vm = new Vue({
 		},
 		reload: function (event) {
 			vm.showList = true;
+            Menu.table.setData(vm.q);
             Menu.table.refresh();
 		},
         validator: function () {
@@ -151,6 +154,7 @@ var vm = new Vue({
 		daoru:function () {
 
         },
+        // 导入完成
         handleAvatarSuccess:function(res, file) {
             // vm.imageUrl = URL.createObjectURL(file.raw);
             // vm.file = file;
@@ -162,6 +166,7 @@ var vm = new Vue({
                 });
             }
         },
+        // 导入前
         beforeAvatarUpload:function(file) {
             var FileExt = file.name.replace(/.+\./, "");
             if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
@@ -177,12 +182,21 @@ var vm = new Vue({
 			}
 
 
+        },
+        // 收缩展开搜索
+        openSwitch:function () {
+            if(vm.open){
+                vm.open = false;
+                vm.openText = '收起筛选'
+
+            }else {
+                vm.open = true;
+                vm.openText = '展开筛选'
+            }
         }
 	},
 	created:function () {
-        $.get(baseURL + "resource/resourcecatalog/list", function(r){
-			console.log(r);
-		});
+        
     }
 });
 
@@ -236,9 +250,6 @@ function ss(num,id) {
                 layer.close(index1)
             });
         })
-        // $.get(baseURL + "resource/resourcecatalog/stop", function(r){
-        //     Menu.table.refresh();
-        // });
 	}
 }
 function getCatalogId () {
@@ -254,12 +265,13 @@ function getCatalogId () {
 
 $(function () {
     var colunms = Menu.initColumn();
-    var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list?name="+vm.q.name, colunms);
+    var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list", colunms);
     table.setExpandColumn(1);
     table.setIdField("catalogId");
     table.setCodeField("catalogId");
     table.setParentCodeField("parentId");
     table.setExpandAll(false);
+    table.setData(vm.q);
     table.init();
     Menu.table = table;
 });

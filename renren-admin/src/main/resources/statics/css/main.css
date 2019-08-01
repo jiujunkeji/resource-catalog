@@ -9,6 +9,13 @@ html { overflow-x:hidden; }
     overflow: hidden;
     margin-bottom: 10px;
     padding-bottom: 10px;
+    height: auto;
+    transition: all 2s;
+}
+.divBox.open{
+    height: 45px;
+    overflow: hidden;
+    transition: all 2s;
 }
 
 .content-header>.breadcrumb {
@@ -37,6 +44,7 @@ html { overflow-x:hidden; }
     line-height: 45px;
     padding: 0 10px;
 }
+
 .grid-btn>span{
     color: #2648be;
     font-size: 18px;
@@ -46,6 +54,7 @@ html { overflow-x:hidden; }
 }
 .el-button--primary{
     background: #2593f3!important;
+    font-weight: 400!important;
     /*font-size: 13px!important;*/
 }
 .grid-btn .right{

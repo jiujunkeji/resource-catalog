@@ -38,12 +38,15 @@
 <body>
 <div id="rrapp" v-cloak>
 
-    <div class="divBox" v-show="showList">
+    <div :class="open ? 'divBox open' : 'divBox'" v-show="showList">
         <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
             <span>
                 <i class="el-icon-s-operation"></i>
-                数据列表
+                筛选查询
             </span>
+            <div class="right">
+                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
+            </div>
 
         </div>
         <div class="switchIn">
