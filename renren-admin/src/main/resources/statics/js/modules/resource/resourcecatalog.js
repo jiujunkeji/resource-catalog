@@ -51,11 +51,11 @@ var vm = new Vue({
             name:null
 		},
 		showList: true,
-        input:'',
 		title: null,
 		resourceCatalog: {},
         imageUrl:'',
-        fileData:null
+        fileData:null,
+        name:null
 	},
 	methods: {
 		query: function () {
@@ -122,7 +122,9 @@ var vm = new Vue({
 				});
 			});
 		},
-
+        clean:function () {
+            vm.q.name = null
+        },
 		getInfo: function(catalogId){
 			$.get(baseURL + "resource/resourcecatalog/info/"+catalogId, function(r){
                 vm.resourceCatalog = r.resourceCatalog;
@@ -152,7 +154,13 @@ var vm = new Vue({
         handleAvatarSuccess:function(res, file) {
             // vm.imageUrl = URL.createObjectURL(file.raw);
             // vm.file = file;
-            console.log(file);
+            console.log(res);
+            if(res.code == 0){
+                this.$message({
+                    type: 'success',
+                    message: '导入成功！'
+                });
+            }
         },
         beforeAvatarUpload:function(file) {
             var FileExt = file.name.replace(/.+\./, "");
@@ -246,7 +254,7 @@ function getCatalogId () {
 
 $(function () {
     var colunms = Menu.initColumn();
-    var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list", colunms);
+    var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list?name="+vm.q.name, colunms);
     table.setExpandColumn(1);
     table.setIdField("catalogId");
     table.setCodeField("catalogId");

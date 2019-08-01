@@ -269,9 +269,11 @@ function _init() {
         var postSetWidth;
         if (window_height >= sidebar_height) {
           $(".content-wrapper, .right-side").css('height', window_height - neg);
+          // $(".content-wrapper, .right-side").css('height', window_height - neg);
           postSetWidth = window_height - neg;
         } else {
-          $(".content-wrapper, .right-side").css('height', sidebar_height);
+          $(".content-wrapper, .right-side").css('height', window_height - neg);
+          // $(".content-wrapper, .right-side").css('height', sidebar_height);
           postSetWidth = sidebar_height;
         }
 

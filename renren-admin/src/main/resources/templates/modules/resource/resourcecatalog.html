@@ -38,7 +38,27 @@
 <body>
 <div id="rrapp" v-cloak>
 
-    <div v-show="showList">
+    <div class="divBox" v-show="showList">
+        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+            <span>
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
+
+        </div>
+        <div class="switchIn">
+            <span>
+                <label>目录名称：</label>
+                <input class="el-input__inner" type="text" placeholder="目录名称" v-model="q.name" >
+            </span>
+        </div>
+        <button class="clean" @click="clean">重置</button>
+        <button class="look" @click="query">查询</button>
+
+
+    </div>
+
+    <div class="divBox" v-show="showList">
         <div class="grid-btn">
             <span>
                 <i class="el-icon-s-operation"></i>
@@ -72,11 +92,6 @@
                     </el-upload>
                 </div>
             </div>
-
-
-
-
-
         </div>
         <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
             <thead>

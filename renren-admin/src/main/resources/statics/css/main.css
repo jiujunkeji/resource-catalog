@@ -3,9 +3,12 @@ html { overflow-x:hidden; }
 	position: relative;
 	padding: 0 0 3px 8px
 }
-#rrapp{
+.divBox{
     background:#fff;
-    box-shadow: 0 0 10px #eee
+    box-shadow: 0 0 10px #eee;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .content-header>.breadcrumb {
@@ -72,4 +75,43 @@ tbody > tr > th {font-weight: normal; }
 .form-horizontal .form-group {margin-left:0px;margin-right:0px;}
 .form-horizontal{
 	width:550px;padding-top:20px;
+}
+.look{
+    float: right;
+    width: 120px;
+    height: 40px;
+    color: #fff;
+    background: #2593f3;
+    border:1px solid #2593f3;
+    font-size: 18px;
+    border-radius: 4px;
+}
+.clean{
+    float: right;
+    width: 120px;
+    height: 40px;
+    color: #2593f3;
+    background: #fff;
+    border:1px solid #2593f3;
+    font-size: 18px;
+    border-radius: 4px;
+    margin: 0 10px;
+}
+div.switchIn{
+    overflow: hidden;
+    padding: 10px;
+
+}
+div.switchIn>span{
+    display: inline-block;
+    line-height: 51px;
+}
+div.switchIn label{
+    font-size: 16px;
+    color: #404040;
+    font-weight: 400;
+}
+div.switchIn .el-input__inner{
+    width: 366px;
+    height: 31px;
 }
