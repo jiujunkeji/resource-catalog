@@ -1,18 +1,19 @@
 package io.renren.modules.resource.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.resource.entity.ResourceCatalogEntity;
 import io.renren.modules.resource.service.ResourceCatalogService;
 import io.renren.modules.resource.utils.POIUtils;
+import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysDeptService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.streaming.SXSSFCell;
-import org.apache.poi.xssf.streaming.SXSSFRow;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -28,7 +29,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -42,10 +42,11 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("resource/resourcecatalog")
-public class ResourceCatalogController {
+public class ResourceCatalogController extends AbstractController{
     @Autowired
     private ResourceCatalogService resourceCatalogService;
-
+    @Autowired
+    private SysDeptService deptService;
     /**
      * 列表
      */
@@ -53,7 +54,7 @@ public class ResourceCatalogController {
 //    @RequiresPermissions("resource:resourcecatalog:list")
     public List<ResourceCatalogEntity> list(@RequestParam Map<String, Object> params){
 //        PageUtils page = resourceCatalogService.queryPage(params);
-        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(null);
+        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(new EntityWrapper<ResourceCatalogEntity>().eq("is_deleted",0));
         return list;
     }
 
@@ -97,16 +98,18 @@ public class ResourceCatalogController {
      */
     @RequestMapping("/delete")
 //    @RequiresPermissions("resource:resourcecatalog:delete")
-    public R delete(@RequestBody Long[] catalogIds){
-//        resourceCatalogService.deleteBatchIds(Arrays.asList(catalogIds));
-        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
+    public R delete(@RequestBody Long catalogId){
+        ResourceCatalogEntity resourceCatalogEntity = resourceCatalogService.selectById(catalogId);
+        resourceCatalogEntity.setIsDeleted(1);
+        resourceCatalogService.updateById(resourceCatalogEntity);
+        /*List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
         list = resourceCatalogService.selectBatchIds(Arrays.asList(catalogIds));
         if(list != null && list.size() > 0){
             for(ResourceCatalogEntity resourceCatalogEntity : list){
                 resourceCatalogEntity.setIsDeleted(1);
             }
             resourceCatalogService.updateBatchById(list);
-        }
+        }*/
         return R.ok();
     }
 
@@ -163,9 +166,6 @@ public class ResourceCatalogController {
         XSSFRow row = null;
         System.out.println(sheet.getLastRowNum());
         List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
-        String oneName;
-        String twoName;
-        String threeName;
         String type;
         for (int i = 1; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
@@ -180,6 +180,12 @@ public class ResourceCatalogController {
                 catalogEntity.setType(1);
             }
             catalogEntity.setRemark(POIUtils.getCellValue(row.getCell(5)).replace(" ",""));
+            SysUserEntity user = getUser();
+            catalogEntity.setCreateUserId(user.getUserId());
+            catalogEntity.setCreateUserName(user.getUsername());
+            catalogEntity.setCreateDeptId(user.getDeptId());
+            catalogEntity.setCreateDeptName(deptService.selectById(getDeptId()).getName());
+            catalogEntity.setCreateTime(new Date());
             catalogEntity.setUpdateTime(new Date());
             resourceCatalogService.insertCatalog(catalogEntity);
         }

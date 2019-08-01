@@ -101,9 +101,8 @@ public class MeteCategoryController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("resource:metecategory:delete")
-    public R delete(@RequestBody Long[] meteCategoryIds){
-        meteCategoryService.deleteBatchIds(Arrays.asList(meteCategoryIds));
-
+    public R delete(@RequestBody Long meteCategoryId){
+        meteCategoryService.deleteById(meteCategoryId);
         return R.ok();
     }
 
