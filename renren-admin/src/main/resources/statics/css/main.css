@@ -1,7 +1,10 @@
 html { overflow-x:hidden; }
 .content-header {
-	position: relative;
-	padding: 0 0 3px 8px
+    position: relative;
+    padding: 0 0 3px 8px
+}
+#rrapp{
+    padding: 40px 15px 15px 50px;
 }
 .divBox{
     background:#fff;
@@ -9,13 +12,13 @@ html { overflow-x:hidden; }
     overflow: hidden;
     margin-bottom: 10px;
     padding-bottom: 10px;
-    height: auto;
-    transition: all 2s;
+    /*height: 171px;*/
+    transition: height 1s;
 }
 .divBox.open{
-    height: 45px;
+    /*height: 45px;*/
     overflow: hidden;
-    transition: all 2s;
+    transition: height 1s;
 }
 
 .content-header>.breadcrumb {
@@ -35,7 +38,7 @@ html { overflow-x:hidden; }
 }
 
 [v-cloak] {
-  display: none;
+    display: none;
 }
 
 .grid-btn{
@@ -45,45 +48,48 @@ html { overflow-x:hidden; }
     padding: 0 10px;
 }
 
-.grid-btn>span{
+span.title{
     color: #2648be;
     font-size: 18px;
 }
-.grid-btn>span i{
+span.title i{
     font-size: 19px;
 }
 .el-button--primary{
+    width: 126px;
+    height: 26px;
+    padding: 0!important;
     background: #2593f3!important;
     font-weight: 400!important;
-    /*font-size: 13px!important;*/
+    font-size: 16px!important;
 }
 .grid-btn .right{
     float: right;
 }
 .grid-btn .btn{
-	margin-right:10px;
+    margin-right:10px;
 }
 .pointer{cursor: pointer;}
 
 .ml-10 { margin-left:0 !important; }
 @media (min-width: 768px) {
-	.ml-10 { margin-left:10px !important; }
-	.col-sm-10 {width: 70%;padding-left: 0px;}
-	.col-sm-2 {width: 24%;}
+    .ml-10 { margin-left:10px !important; }
+    .col-sm-10 {width: 70%;padding-left: 0px;}
+    .col-sm-2 {width: 24%;}
 }
 tbody > tr > th {font-weight: normal; }
 .panel .table { margin:0 0; }
 .panel .pagination { margin:0; }
-.panel-default>.panel-heading {background-color: #f5f5f5;}
+.panel-default>.panel-heading {background-color: #f1f4fb;color: #0f3a6f;font-size: 18px;}
 .row{
-	border-top: 1px solid #ddd;
-	margin:0;
-	padding:20px 2px 0px 2px;
+    border-top: 1px solid #ddd;
+    margin:0;
+    padding:20px 2px 0px 2px;
 }
 .col-xs-6{padding-left: 0px;padding-right: 0px;}
 .form-horizontal .form-group {margin-left:0px;margin-right:0px;}
 .form-horizontal{
-	width:550px;padding-top:20px;
+    width:550px;padding-top:20px;
 }
 .look{
     float: right;
@@ -114,11 +120,13 @@ div.switchIn{
 div.switchIn>span{
     display: inline-block;
     line-height: 51px;
+    padding-right: 20px;
 }
 div.switchIn label{
     font-size: 16px;
     color: #404040;
     font-weight: 400;
+    /*margin-left: ;*/
 }
 div.switchIn .el-input__inner{
     width: 366px;

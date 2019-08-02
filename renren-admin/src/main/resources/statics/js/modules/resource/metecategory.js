@@ -1,67 +1,128 @@
 $(function () {
-    // $("#jqGrid").jqGrid({
-    //     url: baseURL + 'resource/metecategory/list',
-    //     datatype: "json",
-    //     colModel: [
-		// 	{ label: 'meteCategoryId', name: 'meteCategoryId', index: 'mete_category_id', width: 50, key: true },
-		// 	{ label: '分类类型', name: 'categoryType', index: 'category_type', width: 80 },
-		// 	{ label: '分类名称', name: 'name', index: 'name', width: 80 },
-		// 	{ label: '分类代码', name: 'code', index: 'code', width: 80 },
-		// 	{ label: '上级id', name: 'parentId', index: 'parent_id', width: 80 },
-		// 	{ label: '描述', name: 'remark', index: 'remark', width: 80 }
-    //     ],
-		// viewrecords: true,
-    //     height: 385,
-    //     rowNum: 10,
-		// rowList : [10,30,50],
-    //     rownumbers: true,
-    //     rownumWidth: 25,
-    //     autowidth:true,
-    //     multiselect: true,
-    //     pager: "#jqGridPager",
-    //     jsonReader : {
-    //         root: "page.list",
-    //         page: "page.currPage",
-    //         total: "page.totalPage",
-    //         records: "page.totalCount"
-    //     },
-    //     prmNames : {
-    //         page:"page",
-    //         rows:"limit",
-    //         order: "order"
-    //     },
-    //     gridComplete:function(){
-    //     	//隐藏grid底部滚动条
-    //     	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
-    //     }
-    // });
+
 });
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "meteCategoryId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    }
+};
+var ztree;
 
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		showList: true,
 		title: null,
-		meteCategory: {}
+		meteCategory: {
+            parentId:null,
+            parentName:''
+		}
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
+        getMenu: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "resource/metecategory/list", function(r){
+                console.log(r);
+                r.push({
+                    parentId:-1,
+                    meteCategoryId:0,
+                    name:'一级目录'
+                })
+                ztree = $.fn.zTree.init($("#menuTree"), setting, r);
+                var node = ztree.getNodeByParam("meteCategoryId", vm.meteCategory.parentId);
+                ztree.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
+        menuTree: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+                    console.log(node);
+                    //选择上级菜单
+                    vm.meteCategory.parentId = node[0].meteCategoryId;
+                    vm.meteCategory.parentName = node[0].name;
+                    layer.close(index);
+                }
+            });
+        },
 		add: function(){
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '460px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate();
+
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
 			vm.showList = false;
 			vm.title = "新增";
-			vm.meteCategory = {};
+			vm.meteCategory = {
+                parentId:null,
+                parentName:''
+			};
+            vm.getMenu();
 		},
 		update: function (event) {
 			var meteCategoryId = getMeteCategoryId();
 			if(meteCategoryId == null){
 				return ;
 			}
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '460px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['修改','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
 			vm.showList = false;
             vm.title = "修改";
             
-            vm.getInfo(meteCategoryId)
+            vm.getInfo(meteCategoryId);
+            vm.getMenu();
 		},
 		saveOrUpdate: function (event) {
             if(vm.validator()){
@@ -75,9 +136,10 @@ var vm = new Vue({
 			    data: JSON.stringify(vm.meteCategory),
 			    success: function(r){
 			    	if(r.code === 0){
-						alert('操作成功', function(index){
-							vm.reload();
-						});
+                        vm.reload();
+                        // layer.alert('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{title: false,closeBtn:false,time:1000,btn:[]});
+
+                        layer.msg('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{skin:'bg-class'});
 					}else{
 						alert(r.msg);
 					}
@@ -90,8 +152,8 @@ var vm = new Vue({
 			if(meteCategoryIds == null){
 				return ;
 			}
-			
-			confirm('确定要删除选中的记录？', function(){
+
+            layer.confirm('确定要删除选中的记录？', function(index1){
 				$.ajax({
 					type: "POST",
 				    url: baseURL + "resource/metecategory/delete",
@@ -99,9 +161,12 @@ var vm = new Vue({
 				    data: JSON.stringify(meteCategoryIds),
 				    success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								$("#jqGrid").trigger("reloadGrid");
-							});
+                            vm.reload();
+                            layer.close(index1);
+                            // layer.alert('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{title: false,closeBtn:false,time:1000,btn:[]});
+                            layer.msg('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{skin:'bg-class'});
+
+
 						}else{
 							alert(r.msg);
 						}

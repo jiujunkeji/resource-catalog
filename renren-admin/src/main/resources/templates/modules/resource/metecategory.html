@@ -28,17 +28,15 @@
                     font-size: 12px;
                 }
                 .el-button--primary{
-                    width: 60px;
-                    height: 25px;
-                    padding: 0;
+
                 }
             </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="showList" class="divBox">
+    <div class="divBox">
         <div class="grid-btn">
-            <span>
+            <span class="title">
                 <i class="el-icon-s-operation"></i>
                 数据列表
             </span>
@@ -68,8 +66,8 @@
         </table>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
-        <div class="panel-heading">{{title}}</div>
+    <div style="display: none" id="addUp" class="panel panel-default">
+        <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
 														                    <div class="form-group">
                         <div class="col-sm-2 control-label">分类类型</div>
@@ -90,24 +88,30 @@
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">上级id</div>
+                        <div class="col-sm-2 control-label">上&nbsp;&nbsp;级&nbsp;&nbsp;id</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="meteCategory.parentId" placeholder="上级id"/>
+                            <input type="text" class="form-control" style="cursor:pointer;" v-model="meteCategory.parentId" placeholder="上级目录id" @click="menuTree" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">描述</div>
+                        <div class="col-sm-2 control-label">描<span style="color: transparent">类型</span>述</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="meteCategory.remark" placeholder="描述"/>
                         </div>
                     </div>
 							            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>-->
+                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>-->
             </div>
         </form>
     </div>
+
+    <!-- 选择上级菜单 -->
+    <div id="menuLayer" style="display: none;padding:10px;">
+        <ul id="menuTree" class="ztree"></ul>
+    </div>
+
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/resource/metecategory.js?_${.now?long}"></script>

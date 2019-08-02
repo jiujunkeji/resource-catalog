@@ -28,9 +28,7 @@
                     font-size: 12px;
                 }
                 .el-button--primary{
-                    width: 110px;
-                    height: 25px;
-                    padding: 0;
+
                 }
 
             </style>
@@ -38,10 +36,10 @@
 <body>
 <div id="rrapp" v-cloak>
 
-    <div :class="open ? 'divBox open' : 'divBox'" v-show="showList">
+    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
         <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-            <span>
-                <i class="el-icon-s-operation"></i>
+            <span class="title">
+                <i class="el-icon-search"></i>
                 筛选查询
             </span>
             <div class="right">
@@ -61,9 +59,9 @@
 
     </div>
 
-    <div class="divBox" v-show="showList">
+    <div class="divBox">
         <div class="grid-btn">
-            <span>
+            <span class="title">
                 <i class="el-icon-s-operation"></i>
                 数据列表
             </span>
@@ -108,8 +106,11 @@
 
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
-        <div class="panel-heading">{{title}}</div>
+    <div id="addUp" class="panel panel-default" style="display: none">
+        <!--<div class="panel-heading">-->
+
+            <!--{{title}}-->
+        <!--</div>-->
         <form class="form-horizontal">
 														                    <div class="form-group">
                         <div class="col-sm-2 control-label">目录名称</div>
@@ -118,9 +119,9 @@
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">上级id</div>
+                        <div class="col-sm-2 control-label">上&nbsp;&nbsp;级&nbsp;&nbsp;id</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.parentId" placeholder="上级id"/>
+                            <input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentId" @click="menuTree" readonly="readonly" placeholder="上级目录id"/>
                         </div>
                     </div>
 											                    <div class="form-group">
@@ -130,33 +131,9 @@
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">描述</div>
+                        <div class="col-sm-2 control-label">描<span style="color: transparent">类型</span>述</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="resourceCatalog.remark" placeholder="描述"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建人id</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.createUserId" placeholder="创建人id"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建人</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.createUserName" placeholder="创建人"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建部门id</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.createDeptId" placeholder="创建部门id"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">创建部门</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.createDeptName" placeholder="创建部门"/>
                         </div>
                     </div>
 											                    <div class="form-group">
@@ -172,24 +149,30 @@
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">是否使用（0：停用；1：使用）</div>
+                        <div class="col-sm-2 control-label">是否使用</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="resourceCatalog.isUsed" placeholder="是否使用（0：停用；1：使用）"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">是否删除（0：未删除；1：已删除）</div>
+                        <div class="col-sm-2 control-label">是否删除</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="resourceCatalog.isDeleted" placeholder="是否删除（0：未删除；1：已删除）"/>
                         </div>
                     </div>
 							            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>-->
+                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>-->
             </div>
         </form>
     </div>
+
+    <!-- 选择上级菜单 -->
+    <div id="menuLayer" style="display: none;padding:10px;">
+        <ul id="menuTree" class="ztree"></ul>
+    </div>
+
 </div>
 
 <!--<script src="${request.contextPath}/statics/js/modules/sys/menu.js?_${.now?long}"></script>-->

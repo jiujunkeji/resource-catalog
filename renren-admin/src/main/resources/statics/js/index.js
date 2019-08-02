@@ -7,7 +7,7 @@ var menuItem = Vue.extend({
         '	<a v-if="item.type === 0" href="javascript:;">',
         '		<i v-if="item.icon != null" :class="item.icon"></i>',
         '		<span>{{item.name}}</span>',
-        '		<i class="fa fa-angle-left pull-right"></i>',
+        '		<i class="fa fa-angle-right pull-right"></i>',
         '	</a>',
         '	<ul v-if="item.type === 0" class="treeview-menu">',
         '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
@@ -18,15 +18,16 @@ var menuItem = Vue.extend({
         '		<span>{{item.name}}</span>',
         '	</a>',
 
-        '	<a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url"><i v-if="item.icon != null" :class="item.icon"></i><i v-else class="fa fa-circle-o"></i> {{item.name}}</a>',
+        '	<a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url"> {{item.name}}</a>',
         '</li>'
     ].join('')
 });
+// <i v-if="item.icon != null" :class="item.icon"></i><i v-else class="fa fa-circle-o"></i>
 
 //iframe自适应
 $(window).on('resize', function() {
 	var $content = $('.content');
-	$content.height($(this).height() - 140);
+	$content.height($(this).height() - 80);
 	$content.find('iframe').each(function() {
 		$(this).height($content.height());
 	});
@@ -36,7 +37,7 @@ $(window).on('resize', function() {
 Vue.component('menuItem',menuItem);
 
 var vm = new Vue({
-	el:'#rrapp',
+	el:'#homepage',
 	data:{
 		user:{},
 		menuList:{},
