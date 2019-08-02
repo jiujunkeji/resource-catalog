@@ -137,11 +137,9 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
                         vm.reload();
-                        // layer.alert('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{title: false,closeBtn:false,time:1000,btn:[]});
-
-                        layer.msg('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{skin:'bg-class'});
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
 					}else{
-						alert(r.msg);
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}
 				}
 			});
@@ -163,12 +161,11 @@ var vm = new Vue({
 						if(r.code == 0){
                             vm.reload();
                             layer.close(index1);
-                            // layer.alert('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{title: false,closeBtn:false,time:1000,btn:[]});
-                            layer.msg('<img src="'+baseURL+'statics/img/navAction.png"><br>操作成功',{skin:'bg-class'});
+                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
 
 						}else{
-							alert(r.msg);
+                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
 						}
 					}
 				});

@@ -167,6 +167,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     vm.saveOrUpdate();
                     layer.close(index);
+
                 },
                 btn2:function () {
                     vm.reload();
@@ -192,9 +193,9 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
                         vm.reload();
-                        layer.msg('操作成功')
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}else{
-						alert(r.msg);
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}
 				}
 			});
@@ -216,10 +217,10 @@ var vm = new Vue({
 						if(r.code == 0){
                             layer.close(index);
                             vm.reload();
-                            layer.msg('操作成功');
+                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
 						}else{
-							alert(r.msg);
+                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
 						}
 					}
 				});
