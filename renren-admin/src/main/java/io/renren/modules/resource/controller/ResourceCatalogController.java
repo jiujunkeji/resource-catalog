@@ -61,6 +61,12 @@ public class ResourceCatalogController extends AbstractController{
                 .like(StringUtils.isNotEmpty(name), "name", name)
                 .eq("is_deleted",0);
         List<ResourceCatalogEntity> list = resourceCatalogService.selectList(wrapper);
+        for(ResourceCatalogEntity resourceCatalogEntity : list){
+            ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(resourceCatalogEntity.getParentId());
+            if(parentResourceCatalogEntity != null){
+                resourceCatalogEntity.setName(parentResourceCatalogEntity.getName());
+            }
+        }
         return list;
     }
 
@@ -72,7 +78,6 @@ public class ResourceCatalogController extends AbstractController{
 //    @RequiresPermissions("resource:resourcecatalog:info")
     public R info(@PathVariable("catalogId") Long catalogId){
         ResourceCatalogEntity resourceCatalog = resourceCatalogService.selectById(catalogId);
-
         return R.ok().put("resourceCatalog", resourceCatalog);
     }
 

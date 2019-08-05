@@ -73,11 +73,17 @@ public class ResourceCatalogEntity implements Serializable {
 	private Integer isDeleted = 0;
 
 	@TableField(exist = false)
+	private String parentName;
+
+	@TableField(exist = false)
 	private String oneName;
+
 	@TableField(exist = false)
 	private String twoName;
+
 	@TableField(exist = false)
 	private String threeName;
+
 	/**
 	 * 设置：
 	 */
@@ -257,5 +263,13 @@ public class ResourceCatalogEntity implements Serializable {
 
 	public void setThreeName(String threeName) {
 		this.threeName = threeName;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
 	}
 }

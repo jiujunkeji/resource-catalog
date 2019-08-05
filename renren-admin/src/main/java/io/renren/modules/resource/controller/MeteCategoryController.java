@@ -41,6 +41,12 @@ public class MeteCategoryController {
             }
         }*/
         List<MeteCategoryEntity> list = meteCategoryService.selectList(null);
+        for(MeteCategoryEntity meteCategoryEntity : list){
+            MeteCategoryEntity parentEntity = meteCategoryService.selectById(meteCategoryEntity.getParentId());
+            if(parentEntity != null){
+                meteCategoryEntity.setParentName(parentEntity.getName());
+            }
+        }
         return list;
     }
 
