@@ -34,11 +34,11 @@ var vm = new Vue({
             //加载菜单树
             $.get(baseURL + "resource/metecategory/list", function(r){
                 console.log(r);
-                r.push({
-                    parentId:-1,
-                    meteCategoryId:0,
-                    name:'一级目录'
-                })
+                // r.push({
+                //     parentId:-1,
+                //     meteCategoryId:0,
+                //     name:'一级目录'
+                // })
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r);
                 var node = ztree.getNodeByParam("meteCategoryId", vm.meteCategory.parentId);
                 ztree.selectNode(node);

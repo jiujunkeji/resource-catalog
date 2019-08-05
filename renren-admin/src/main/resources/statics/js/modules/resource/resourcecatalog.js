@@ -90,11 +90,11 @@ var vm = new Vue({
             //加载菜单树
             $.get(baseURL + "resource/resourcecatalog/list", function(r){
                 console.log(r);
-                r.push({
-                    parentId:-1,
-                    catalogId:0,
-                    name:'一级目录'
-                })
+                // r.push({
+                //     parentId:-1,
+                //     catalogId:0,
+                //     name:'一级目录'
+                // })
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r);
                 var node = ztree.getNodeByParam("catalogId", vm.resourceCatalog.parentId);
                 ztree.selectNode(node);
@@ -321,14 +321,14 @@ Menu.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
         {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
-            if(item.type == 0){
-                return '信息资源';
-            }
-            if(item.isUsed == 1){
-                return '数据资源';
-            }
-        }},
+        // {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
+        //     if(item.type == 0){
+        //         return '资源';
+        //     }
+        //     if(item.isUsed == 1){
+        //         return '服务';
+        //     }
+        // }},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
         {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){

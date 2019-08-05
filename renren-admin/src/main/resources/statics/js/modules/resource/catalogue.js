@@ -2,12 +2,38 @@ $(function () {
     var _height = $('.divBox').eq(0).find('.switchIn').height();
     var height = _height + 45 + 70;
     vm.h = height;
-    $.getJSON(baseURL+"sys/menu/nav?_"+$.now(), function(r){
-        console.log(r)
-        vm.menuList = r.menuList;
-    });
+
 
 });
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "catalogId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    }
+};
+var ztree;
+
+var setting1 = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "meteCategoryId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    }
+};
+var ztree1;
 
 var vm = new Vue({
     el:'#rrapp',
@@ -17,7 +43,14 @@ var vm = new Vue({
         },
         showList: true,
         title: null,
-        resourceCatalog: {},
+        resourceMeteData: {
+            meteType:null,
+            meteCategoryId:null,
+            meteCategoryName:'',
+            meteCategoryCode:'',
+            catalogId:'',
+            catalogName:''
+        },
         imageUrl:'',
         fileData:null,
         name:null,
@@ -30,8 +63,12 @@ var vm = new Vue({
         },
         count: 1,
         id:0,
-        filterText: '',
-        menuList:{},
+        filterText:'',
+        menuList:[],
+        tableList:[],
+        totalPage:0,
+        page:1,
+        pageSize:10
     },
     watch: {
         filterText:function(val) {
@@ -42,36 +79,156 @@ var vm = new Vue({
         query: function () {
             vm.reload();
         },
+        getMenu: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "resource/resourcecatalog/list", function(r){
+                console.log(r);
+                // r.push({
+                //     parentId:-1,
+                //     catalogId:0,
+                //     name:'一级目录'
+                // })
+                ztree = $.fn.zTree.init($("#menuTree"), setting, r);
+                var node = ztree.getNodeByParam("catalogId", vm.resourceMeteData.catalogId);
+                ztree.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
+        menuTree: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+                    console.log(node);
+                    //选择上级菜单
+                    vm.resourceMeteData.catalogId = node[0].catalogId;
+                    vm.resourceMeteData.catalogName = node[0].name;
+                    // vm.resourceMeteData.catagoryCode = node[0].code;
+                    layer.close(index);
+                }
+            });
+        },
+        getMenu1: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "resource/metecategory/list", function(r){
+                console.log(r);
+                // r.push({
+                //     parentId:-1,
+                //     meteCategoryId:0,
+                //     name:'一级目录'
+                // })
+                ztree1 = $.fn.zTree.init($("#menuTree1"), setting1, r);
+                var node = ztree1.getNodeByParam("meteCategoryId", vm.resourceMeteData.meteCategoryId);
+                ztree1.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
+        menuTree1: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer1"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree1.getSelectedNodes();
+                    console.log(node);
+                    //选择上级菜单
+                    vm.resourceMeteData.meteCategoryId = node[0].meteCategoryId;
+                    vm.resourceMeteData.meteCategoryName = node[0].name;
+                    vm.resourceMeteData.meteCategoryCode = node[0].code;
+                    layer.close(index);
+                }
+            });
+        },
         add: function(){
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
             vm.showList = false;
             vm.title = "新增";
-            vm.resourceCatalog = {};
+            vm.resourceMeteData = {
+                meteType:null,
+                meteCategoryId:null,
+                meteCategoryName:'',
+                meteCategoryCode:'',
+                catalogId:'',
+                catalogName:''
+            };
+            vm.getMenu();
+            vm.getMenu1();
         },
-        update: function (event) {
-            var catalogId = getCatalogId();
-            if(catalogId == null){
+        update: function (id) {
+            var meteId = id;
+            if(meteId == null){
                 return ;
             }
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(catalogId)
+            vm.getInfo(meteId);
+            vm.getMenu();
+            vm.getMenu1();
         },
         saveOrUpdate: function (event) {
-            if(vm.validator()){
-                return ;
-            }
-            var url = vm.resourceCatalog.catalogId == null ? "resource/resourcecatalog/save" : "resource/resourcecatalog/update";
+            var url = vm.resourceMeteData.meteId == null ? "resource/resourcemetedata/save" : "resource/resourcemetedata/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
                 contentType: "application/json",
-                data: JSON.stringify(vm.resourceCatalog),
+                data: JSON.stringify(vm.resourceMeteData),
                 success: function(r){
                     if(r.code === 0){
-                        alert('操作成功', function(index){
-                            vm.reload();
-                        });
+                        vm.page = 1;
+                        vm.reload();
+                        layer.msg('操作成功');
                     }else{
                         alert(r.msg);
                     }
@@ -79,22 +236,21 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var catalogIds = getCatalogId();
-            console.log(catalogIds);
-            if(catalogIds == null){
+            var meteIds = getSelectedRows();
+            if(meteIds == null){
                 return ;
             }
 
             confirm('确定要删除选中的记录？', function(){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "resource/resourcecatalog/delete",
+                    url: baseURL + "resource/resourcemetedata/delete",
                     contentType: "application/json",
-                    data: JSON.stringify(catalogIds),
+                    data: JSON.stringify(meteIds),
                     success: function(r){
                         if(r.code == 0){
                             alert('操作成功', function(index){
-                                Menu.table.refresh();
+                                $("#jqGrid").trigger("reloadGrid");
                             });
                         }else{
                             alert(r.msg);
@@ -103,18 +259,14 @@ var vm = new Vue({
                 });
             });
         },
-        clean:function () {
-            vm.q.name = null
-        },
-        getInfo: function(catalogId){
-            $.get(baseURL + "resource/resourcecatalog/info/"+catalogId, function(r){
-                vm.resourceCatalog = r.resourceCatalog;
+        getInfo: function(meteId){
+            $.get(baseURL + "resource/resourcemetedata/info/"+meteId, function(r){
+                vm.resourceMeteData = r.resourceMeteData;
             });
         },
         reload: function (event) {
             vm.showList = true;
-            Menu.table.setData(vm.q);
-            Menu.table.refresh();
+            vm.getTableList();
         },
         validator: function () {
             if(isBlank(vm.resourceCatalog.name)){
@@ -169,189 +321,87 @@ var vm = new Vue({
                 vm.openText = '展开筛选'
             }
         },
-        handleCheckChange:function(data, checked, indeterminate) {
-            console.log(data, checked, indeterminate);
-        },
-        handleNodeClick:function(data) {
-            console.log(data);
-        },
-        loadNode:function(node, resolve) {
-//						node.icon = 'el-icon-share';
-            console.log(node);
-            console.log(resolve);
-            if(node.level === 0) {
-                return resolve([{
-                    name: 'region1',
-                    id:'id'+this.id++
-                }, {
-                    name: 'region2',
-                    id:'id'+this.id++,
-                    isLeaf:true
-                },{
-                    name: 'region3',
-                    id:'id'+this.id++
-                }, {
-                    name: 'region4',
-                    id:'id'+this.id++,
-                    zones:[]
-                },{
-                    name: 'region5',
-                    id:'id'+this.id++
-                }, {
-                    name: 'region6',
-                    id:'id'+this.id++
-                },{
-                    name: 'region7',
-                    id:'id'+this.id++
-                }, {
-                    name: 'region8',
-                    id:'id'+this.id++
-                },{
-                    name: 'region9',
-                    id:'id'+this.id++
-                }, {
-                    name: 'region10',
-                    id:'id'+this.id++
-                },{
-                    name: 'region11',
-                    id:'id'+this.id++
-                },]);
-            }
-            if(node.level > 3) return resolve([]);
 
-            var hasChild;
-            if(node.data.name === 'region1') {
-                hasChild = true;
-            } else if(node.data.name === 'region2') {
-                hasChild = false;
-            } else if(node.data.name === 'region3') {
-                hasChild = true;
-            } else if(node.data.name === 'region4') {
-                hasChild = false;
-            } else if(node.data.name === 'region5') {
-                hasChild = true;
-            } else if(node.data.name === 'region6') {
-                hasChild = false;
-            } else if(node.data.name === 'region7') {
-                hasChild = true;
-            } else if(node.data.name === 'region8') {
-                hasChild = false;
-            } else if(node.data.name === 'region9') {
-                hasChild = true;
-            } else if(node.data.name === 'region10') {
-                hasChild = false;
-            }else if(node.data.name === 'region11') {
-                hasChild = true;
-            } else{
-                hasChild = Math.random() > 0.5;
-            }
-
-            var data;
-            if(hasChild) {
-                data = [{
-                    name: 'zone' + this.count++,
-                    id:'id'+this.id++
-                }, {
-                    name: 'zone' + this.count++,
-                    id:'id'+this.id++
-                }];
-            } else {
-                data = [];
-            }
-
-            resolve(data);
-//						console.log(resolve);
-        },
         filterNode:function(value, data) {
             if (!value) return true;
             return data.name.indexOf(value) !== -1;
         },
         getMenuList: function (event) {
-            $.getJSON("sys/menu/nav?_"+$.now(), function(r){
-                vm.menuList = r.menuList;
+            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+                var _len=0;
+                for(var i = 1;i<100;i++){
+                    if(i == 1){
+                        r.forEach(function (item) {
+                            if(item.parentId == 0){
+                                vm.menuList.push({
+                                    name:item.name,
+                                    id:item.catalogId,
+                                    list:[]
+                                })
+                                _len++;
+                            }
+                        })
+                    }else if(i == 2){
+                        vm.menuList.forEach(function (item) {
+                            r.forEach(function (n) {
+                                if(n.parentId == item.id){
+                                    item.list.push({
+                                        name:n.name,
+                                        id:n.catalogId,
+                                        list:[]
+                                    })
+                                    _len++;
+                                }
+                            })
+                        })
+                    }else if(i == 3){
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                r.forEach(function (n) {
+                                    if(n.parentId == i.id){
+                                        i.list.push({
+                                            name:n.name,
+                                            id:n.catalogId,
+                                            list:[]
+                                        })
+                                    }
+                                    _len++;
+                                })
+                            })
+
+                        })
+                    }
+
+                }
+
+
+                console.log(vm.menuList);
             });
         },
+        // 获取表格列表
+        getTableList:function () {
+            $.getJSON(baseURL+"resource/resourcemetedata/list?page="+this.page, function(r){
+                console.log(r)
+                this.tableList = r.page.list;
+                this.totalPage = r.page.totalPage;
+                // this.page
+            });
+        },
+        // 分页
+        layerPage:function (currentPage) {
+            console.log(currentPage);
+        },
+        // 树目录点击事件
+        handleNodeClick:function(data) {
+            console.log(data);
+        }
     },
     created:function () {
-        // this.getMenuList();
+        this.getMenuList();
+        this.getTableList();
+
         // this.h = height
     }
 });
 
-var Menu = {
-    id: "menuTable",
-    table: null,
-    layerIndex: -1
-};
 
-/**
- * 初始化表格的列
- */
-Menu.initColumn = function () {
-    var columns = [
-        {field: 'selectItem', radio: true},
-        {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
-            if(item.type == 0){
-                return '信息资源';
-            }
-            if(item.isUsed == 1){
-                return '数据资源';
-            }
-        }},
-        {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
-        {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            if(item.isUsed == 0){
-                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
-            }
-            if(item.isUsed == 1){
-                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
-            }
-        }}]
-    return columns;
-};
-
-function ss(num,id) {
-    if(num == 0){
-        layer.confirm('确定使用吗？',function (index1) {
-            $.get(baseURL + "resource/resourcecatalog/start?catalogId="+id, function(r){
-                Menu.table.refresh();
-                layer.close(index1)
-            });
-        })
-
-    }else {
-        layer.confirm('确定停用吗？',function (index1) {
-            $.get(baseURL + "resource/resourcecatalog/stop?catalogId="+id, function(r){
-                Menu.table.refresh();
-                layer.close(index1)
-            });
-        })
-    }
-}
-function getCatalogId () {
-    var selected = $('#menuTable').bootstrapTreeTable('getSelections');
-    if (selected.length == 0) {
-        alert("请选择一条记录");
-        return null;
-    } else {
-        return selected[0].id;
-    }
-}
-
-
-$(function () {
-    var colunms = Menu.initColumn();
-    var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list", colunms);
-    table.setExpandColumn(1);
-    table.setIdField("catalogId");
-    table.setCodeField("catalogId");
-    table.setParentCodeField("parentId");
-    table.setExpandAll(false);
-    table.setData(vm.q);
-    table.init();
-    Menu.table = table;
-
-
-});

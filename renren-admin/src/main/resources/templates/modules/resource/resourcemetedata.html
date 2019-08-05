@@ -18,7 +18,24 @@
             <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			</#if>
         </div>
-        <table id="jqGrid"></table>
+        <table id="jqGrid" class="el-table__header"></table>
+        <table class="el-table__header">
+            <tr>
+                <th>元数据类型</th>
+                <th>信息资源类型</th>
+                <th>资源分类</th>
+                <th>资源分类编码</th>
+                <th>信息资源名称</th>
+                <th>资源提供单位</th>
+                <th>关键字</th>
+                <th>信息资源标识</th>
+                <th>元数据标识</th>
+                <th>更新时间</th>
+            </tr>
+            <tr>
+                <td>{{}}</td>
+            </tr>
+        </table>
         <div id="jqGridPager"></div>
     </div>
 

@@ -89,8 +89,9 @@ tbody > tr > th {font-weight: normal; }
 .col-xs-6{padding-left: 0px;padding-right: 0px;}
 .form-horizontal .form-group {margin-left:0px;margin-right:0px;}
 .form-horizontal{
-    width:550px;padding-top:20px;
+    width:100%;padding-top:20px;
 }
+
 .look{
     float: right;
     width: 120px;
@@ -131,4 +132,34 @@ div.switchIn label{
 div.switchIn .el-input__inner{
     width: 366px;
     height: 31px;
+}
+.table1{
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #f3f4f8;
+    margin-bottom: 10px;
+    /*border-left: 1px solid #e5e7eb;*/
+}
+.table1 tr{
+    border-bottom: 1px solid #f3f4f8;
+}
+.table1 tr:nth-child(even){
+    background: #f3f4f8;
+}
+.table1 tr th,.table tr td{
+    border-top: 0!important;
+    height: 45px;
+    line-height: 28px!important;
+    font-size: 16px;
+    padding: 0 6px;
+    border-right: 1px solid #e5e7eb;
+}
+.table1 tr th:last-child,.table1 tr td:last-child{
+    border-right: 0;
+}
+.table1 tr th{
+    color: #000;
+}
+.table1 tr td{
+    color: #666;
 }
