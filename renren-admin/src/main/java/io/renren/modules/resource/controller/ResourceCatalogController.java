@@ -64,7 +64,7 @@ public class ResourceCatalogController extends AbstractController{
         for(ResourceCatalogEntity resourceCatalogEntity : list){
             ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(resourceCatalogEntity.getParentId());
             if(parentResourceCatalogEntity != null){
-                resourceCatalogEntity.setName(parentResourceCatalogEntity.getName());
+                resourceCatalogEntity.setParentName(parentResourceCatalogEntity.getName());
             }
         }
         return list;
