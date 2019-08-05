@@ -230,9 +230,10 @@ var vm = new Vue({
             vm.q.name = null
         },
 		getInfo: function(catalogId){
-			$.get(baseURL + "resource/resourcecatalog/info/"+catalogId, function(r){
+            $.get(baseURL + "resource/resourcecatalog/info/"+catalogId, function(r){
                 vm.resourceCatalog = r.resourceCatalog;
-                // if()
+                console.log('修改');
+                console.log(vm.resourceCatalog);
             });
 		},
 		reload: function (event) {
@@ -300,6 +301,10 @@ var vm = new Vue({
 	},
 	created:function () {
         // this.h = height
+        $.get(baseURL + "resource/resourcecatalog/list", function(r){
+
+            console.log(r);
+        });
     }
 });
 

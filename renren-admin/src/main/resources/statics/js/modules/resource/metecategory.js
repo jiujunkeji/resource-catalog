@@ -174,6 +174,8 @@ var vm = new Vue({
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "resource/metecategory/info/"+meteCategoryId, function(r){
                 vm.meteCategory = r.meteCategory;
+                console.log('修改')
+                console.log(vm.meteCategory)
             });
 		},
 		reload: function (event) {
