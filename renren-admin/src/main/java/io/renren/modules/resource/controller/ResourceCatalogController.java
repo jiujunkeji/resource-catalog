@@ -78,6 +78,10 @@ public class ResourceCatalogController extends AbstractController{
 //    @RequiresPermissions("resource:resourcecatalog:info")
     public R info(@PathVariable("catalogId") Long catalogId){
         ResourceCatalogEntity resourceCatalog = resourceCatalogService.selectById(catalogId);
+        ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(resourceCatalog.getParentId());
+        if(parentResourceCatalogEntity != null){
+            resourceCatalog.setParentName(parentResourceCatalogEntity.getName());
+        }
         return R.ok().put("resourceCatalog", resourceCatalog);
     }
 
@@ -270,9 +274,17 @@ public class ResourceCatalogController extends AbstractController{
                 }else if(i == 3){
                     cell.setCellValue(t.getThreeName());
                 }else if(i == 4){
-                    cell.setCellValue(t.getType());
+                    if(t.getType() != null){
+                        if(t.getType() == 0){
+                            cell.setCellValue("信息资源");
+                        }else{
+                            cell.setCellValue("数据资源");
+                        }
+                    }
                 }else if(i == 5){
-                    cell.setCellValue(t.getRemark());
+                    if(t.getRemark() != null){
+                        cell.setCellValue(t.getRemark());
+                    }
                 }
             }
         }

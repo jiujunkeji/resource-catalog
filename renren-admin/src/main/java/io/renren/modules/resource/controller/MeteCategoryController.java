@@ -75,6 +75,10 @@ public class MeteCategoryController {
     @RequiresPermissions("resource:metecategory:info")
     public R info(@PathVariable("meteCategoryId") Long meteCategoryId){
         MeteCategoryEntity meteCategory = meteCategoryService.selectById(meteCategoryId);
+        MeteCategoryEntity parentEntity = meteCategoryService.selectById(meteCategory.getParentId());
+        if(parentEntity != null){
+            meteCategory.setParentName(parentEntity.getName());
+        }
 
         return R.ok().put("meteCategory", meteCategory);
     }
