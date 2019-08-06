@@ -8,10 +8,7 @@ import io.renren.modules.resource.service.ResourceMeteDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -56,8 +53,13 @@ public class ResourceMeteDataController {
     @RequestMapping("/save")
 //    @RequiresPermissions("resource:resourcemetedata:save")
     public R save(@RequestBody ResourceMeteDataEntity resourceMeteData){
+        resourceMeteData.setUpdateTime(new Date());
+        resourceMeteData.setReviewState(0);
         resourceMeteDataService.insert(resourceMeteData);
-
+        //设置元数据标识
+        String metedataIdentifier = "metadata_ " + resourceMeteData.getCategoryId() + "-" + resourceMeteData.getCatalogId() + "-" + resourceMeteData.getMeteId();
+        resourceMeteData.setMetedataIdentifier(metedataIdentifier);
+        resourceMeteDataService.updateById(resourceMeteData);
         return R.ok();
     }
 

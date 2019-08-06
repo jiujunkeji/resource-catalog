@@ -137,7 +137,7 @@ public class ResourceMeteDataEntity implements Serializable {
 	/**
 	 * 是否删除
 	 */
-	private Integer isDeleted;
+	private Integer isDeleted = 0;
 
 	/**
 	 * 设置：id
@@ -487,11 +487,15 @@ public class ResourceMeteDataEntity implements Serializable {
 	public Integer getIsDeleted() {
 		return isDeleted;
 	}
-
+	/**
+	 * 设置：
+	 */
 	public String getCatalogName() {
 		return catalogName;
 	}
-
+	/**
+	 * 获取：是否删除
+	 */
 	public void setCatalogName(String catalogName) {
 		this.catalogName = catalogName;
 	}
