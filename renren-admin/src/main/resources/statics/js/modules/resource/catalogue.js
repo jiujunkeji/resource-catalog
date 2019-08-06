@@ -523,9 +523,14 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            // console.log(data);
-            vm.catalogId = data.id;
-            vm.getTableList();
+            console.log(data);
+
+            if(data.list.length != 0){
+                console.log('进来了')
+                vm.catalogId = data.id;
+                vm.getTableList();
+            }
+
         },
         // 选项卡
         tabClick:function (num) {
@@ -579,7 +584,9 @@ var vm = new Vue({
                 url: baseURL + 'resource/resourcemetedata/revoke',
                 // contentType: "application/json",
                 dataType: 'json',
-                data: id,
+                data: {
+                    meteId:id
+                },
                 success: function(r){
                     if(r.code === 0){
                         layer.msg(r.msg);
