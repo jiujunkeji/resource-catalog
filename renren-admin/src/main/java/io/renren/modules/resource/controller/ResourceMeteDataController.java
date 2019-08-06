@@ -5,6 +5,9 @@ import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.resource.entity.ResourceMeteDataEntity;
 import io.renren.modules.resource.service.ResourceMeteDataService;
+import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.service.SysDeptService;
+import io.renren.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +23,13 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("resource/resourcemetedata")
-public class ResourceMeteDataController {
+public class ResourceMeteDataController extends AbstractController{
     @Autowired
     private ResourceMeteDataService resourceMeteDataService;
+    @Autowired
+    private SysDeptService deptService;
+    @Autowired
+    private SysUserService userService;
 
     /**
      * 列表
@@ -34,7 +41,6 @@ public class ResourceMeteDataController {
 
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息
@@ -94,4 +100,62 @@ public class ResourceMeteDataController {
         return R.ok();
     }
 
+    /**
+     * 审核通过
+     */
+    @RequestMapping("/agree")
+    public R agree(@RequestParam Long meteId){
+        ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
+        mete.setReviewState(1);
+        mete.setReviewDeptId(getDeptId());
+        mete.setReviewDeptName(deptService.selectById(getDeptId()).getName());
+        mete.setReviewTime(new Date());
+        mete.setReviewUserId(getUserId());
+        mete.setReviewUserName(getUser().getUsername());
+        return R.ok();
+    }
+
+    /**
+     * 审核拒绝
+     */
+    @RequestMapping("/refuse")
+    public R refuse(@RequestParam Long meteId){
+        ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
+        mete.setReviewState(2);
+        mete.setReviewDeptId(getDeptId());
+        mete.setReviewDeptName(deptService.selectById(getDeptId()).getName());
+        mete.setReviewTime(new Date());
+        mete.setReviewUserId(getUserId());
+        mete.setReviewUserName(getUser().getUsername());
+        return R.ok();
+    }
+
+    /**
+     * 发布
+     */
+    @RequestMapping("/push")
+    public R push(@RequestParam Long meteId){
+        ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
+        mete.setPushState(1);
+        mete.setPushDeptId(getDeptId());
+        mete.setPushDeptName(deptService.selectById(getDeptId()).getName());
+        mete.setPushTime(new Date());
+        mete.setPushUserId(getUserId());
+        mete.setPushUserName(getUser().getUsername());
+        return R.ok();
+    }
+    /**
+     * 停止发布
+     */
+    @RequestMapping("/stopPush")
+    public R stopPush(@RequestParam Long meteId){
+        ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
+        mete.setPushState(0);
+        mete.setPushDeptId(getDeptId());
+        mete.setPushDeptName(deptService.selectById(getDeptId()).getName());
+        mete.setPushTime(new Date());
+        mete.setPushUserId(getUserId());
+        mete.setPushUserName(getUser().getUsername());
+        return R.ok();
+    }
 }

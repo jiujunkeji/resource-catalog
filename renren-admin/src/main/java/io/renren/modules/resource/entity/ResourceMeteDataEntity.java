@@ -87,7 +87,7 @@ public class ResourceMeteDataEntity implements Serializable {
 	 */
 	private Date updateTime;
 	/**
-	 * 审核状态（0：待审核；1：通过；2：未通过）
+	 * 审核状态（0：待提交；1：待审核；2：通过；3：未通过）
 	 */
 	private Integer reviewState;
 	/**
