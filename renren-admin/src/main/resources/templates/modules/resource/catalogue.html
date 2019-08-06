@@ -12,6 +12,12 @@
         <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
         <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
         <style>
+            html,body{
+                height: 100%;
+            }
+            #rrapp{
+                height: 100%;
+            }
             .el-button--primary{
                 width: 110px;
                 height: 25px;
@@ -19,39 +25,48 @@
             }
             .box{
                 display: flex;
+                height: 100%;
             }
             .objectList{
-                width: 210px;
+                width: 220px;
                 background: #fff;
                 box-shadow: 0 0 10px #eee;
                 margin-right: 10px;
             }
             .listCon{
-                flex: 1;
+                width: calc(100% - 230px);
             }
-            .el-tree .el-tree-node.is-expanded>.el-tree-node__content , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:hover , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:focus{
+            .listCon .divBox{
+                height: 100%;
+            }
+            .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
                 background: #fff;
                 color: #2593f3;
+
             }
-            .el-tree .el-tree-node.is-current>.el-tree-node__content , .el-tree .el-tree-node.is-current>.el-tree-node__content:hover , .el-tree .el-tree-node.is-current>.el-tree-node__content:focus{
-                background: #fff;
-                color: #2593f3;
-            }
-            .el-tree>.el-tree-node.is-expanded>.el-tree-node__content , .el-tree>.el-tree-node.is-expanded>.el-tree-node__content:hover{
+            .el-tree-node.is-expanded.is-current>.el-tree-node__content{
                 background: #2593f3;
                 color: #fff;
             }
-            /*.el-tree-node.is-expanded .el-tree-node:hover , .el-tree-node.is-expanded .el-tree-node:focus , .el-tree-node.is-expanded .is-current{*/
-                /*color: #2593f3!important;*/
-                /*background: #fff!important;*/
+            .el-tree-node.is-current>.el-tree-node__content{
+                background: #2593f3;
+                color: #fff;
+            }
+            /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:hover , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:focus{*/
+                /*background: #fff;*/
+                /*color: #2593f3;*/
             /*}*/
-            /*.el-tree-node.is-expanded>.el-tree-node__content .el-tree-node__content, .el-tree-node>.el-tree-node__content .el-tree-node__content:hover{*/
-                /*color: #2593f3!important;*/
-                /*background: #fff!important;*/
+            /*.el-tree .el-tree-node.is-current>.el-tree-node__content , .el-tree .el-tree-node.is-current>.el-tree-node__content:hover , .el-tree .el-tree-node.is-current>.el-tree-node__content:focus{*/
+                /*background: #fff;*/
+                /*color: #2593f3;*/
+            /*}*/
+            /*.el-tree>.el-tree-node.is-expanded>.el-tree-node__content , .el-tree>.el-tree-node.is-expanded>.el-tree-node__content:hover{*/
+                /*background: #2593f3;*/
+                /*color: #fff;*/
             /*}*/
             .el-input__inner{
                 width: 90%;
-                margin: 0 5%;
+                margin: 0 5% 10px 5%;
             }
             .el-select{
                 width: 100%;
@@ -69,8 +84,6 @@
                 background-image: none;
                 border: 1px solid #f1f4fb;
                 border-radius: 4px;
-                /* -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075); */
-                /* box-shadow: inset 0 1px 1px rgba(0,0,0,.075); */
                 -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
                 -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
                 transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
@@ -113,37 +126,117 @@
                         <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
                     </div>
                 </div>
-                <table class="table1">
-                    <tr>
-                        <th>元数据类型</th>
-                        <th>信息资源类型</th>
-                        <th>资源分类</th>
-                        <th>资源分类编码</th>
-                        <th>信息资源名称</th>
-                        <th>资源提供单位</th>
-                        <th>关键字</th>
-                        <th>信息资源标识</th>
-                        <th>元数据标识</th>
-                        <th>更新时间</th>
-                        <th>操作</th>
-                    </tr>
-                    <tr v-for="item in tableList">
-                        <td>{{item.meteType}}</td>
-                        <td>{{item.resourceCategory}}</td>
-                        <td>{{item.categoryName}}</td>
-                        <td>{{item.catagoryCode}}</td>
-                        <td>{{item.resourceTitle}}</td>
-                        <td>{{item.organisationName}}</td>
-                        <td>{{item.keyword}}</td>
-                        <td>{{item.resourceSign}}</td>
-                        <td>{{item.metedataIdentifier}}</td>
-                        <td>{{item.updateTime}}</td>
-                        <td>
-                            <i class="el-icon-edit" @click="update(item.meteId)"></i> | <i class="el-icon-delete" @click="del(item.meteId)"></i>
+                <el-table
+                        :data="tableList"
+                        border
+                        stripe
+                        style="width: 100%">
+                    <el-table-column
+                            prop="meteType"
+                            label="元数据类型"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="resourceCategory"
+                            label="信息资源类型"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryName"
+                            label="资源分类"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="catagoryCode"
+                            label="资源分类编码"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="resourceTitle"
+                            label="信息资源名称"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="organisationName"
+                            label="资源提供单位"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="keyword"
+                            label="关键字"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="resourceSign"
+                            label="信息资源标识"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="metedataIdentifier"
+                            label="元数据标识"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="updateTime"
+                            label="更新时间"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            label="审核状态"
+                            width="130">
+                        <template slot-scope="scope">
+                            <el-tag
+                                    v-if="scope.row.reviewState == 0"
+                                    size="small"
+                                    type="warning"
+                                    effect="dark">
+                                待审核
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.reviewState == 1"
+                                    size="small"
+                                    type="success"
+                                    effect="dark">
+                                通过
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.reviewState == 2"
+                                    size="small"
+                                    type="danger"
+                                    effect="dark">
+                                未通过
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="发布状态"
+                            width="130">
+                        <template slot-scope="scope">
+                            <el-tag
+                                    v-if="scope.row.pushState == 0"
+                                    size="small"
+                                    type="warning">
+                                未发布
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.pushState == 1"
+                                    size="small"
+                                    type="success">
+                                已发布
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                            width="100">
+                        <template slot-scope="scope">
+                            <i class="el-icon-edit" @click="update(scope.row.meteId)"></i> <span style="color: #ccc">|</span> <i class="el-icon-delete" @click="del(scope.row.meteId)"></i>
 
-                        </td>
-                    </tr>
-                </table>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <br>
                 <el-pagination
                         background
                         pager-count="1"
@@ -191,7 +284,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源分类编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryCode" placeholder="资源分类编码"/>
+                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryCode" placeholder="资源分类编码" readonly="readonly"/>
                 </div>
             </div>
             <div class="form-group">
@@ -242,96 +335,7 @@
                     <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">元数据标识</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.metedataIdentifier" placeholder="元数据标识"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">更新时间</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.updateTime" placeholder="更新时间"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核状态</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewState" placeholder="审核状态（0：待审核；1：通过；2：未通过）"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核人id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewUserId" placeholder="审核人id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核人</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewUserName" placeholder="审核人"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核部门id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewDeptId" placeholder="审核部门id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核部门</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewDeptName" placeholder="审核部门"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">审核时间</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.reviewTime" placeholder="审核时间"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布状态</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushState" placeholder="发布状态（0：未发布；1：发布）"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布人<span style="color: transparent">码</span>id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushUserId" placeholder="发布人id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布人</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushUserName" placeholder="发布人"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布部门id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushDeptId" placeholder="发布部门id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布部门</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushDeptName" placeholder="发布部门"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">发布时间</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.pushTime" placeholder="发布时间"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">是否删除</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.isDeleted" placeholder="是否删除"/>
-                </div>
-            </div>
+
         </form>
     </div>
 
