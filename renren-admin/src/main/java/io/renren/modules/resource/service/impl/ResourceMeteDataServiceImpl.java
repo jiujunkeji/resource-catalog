@@ -25,7 +25,7 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
         EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
         wrapper
                 .eq("is_deleted",0)
-                .eq("catalog_id",catalogId);
+                .eq(StringUtils.isNotEmpty(catalogId),"catalog_id",catalogId);
         if(type != null){
             if("0".equals(type)){
                 wrapper.andNew().eq("review_state","0").or().eq("review_state","3");
