@@ -189,7 +189,7 @@ public class ResourceCatalogController extends AbstractController{
             catalogEntity.setTwoName(POIUtils.getCellValue(row.getCell(2)).replace(" ",""));
             catalogEntity.setThreeName(POIUtils.getCellValue(row.getCell(3)).replace(" ",""));
             type = POIUtils.getCellValue(row.getCell(4)).replace(" ","");
-            if("信息资源".equals(type)){
+            if("资源目录".equals(type)){
                 catalogEntity.setType(0);
             }else{
                 catalogEntity.setType(1);
@@ -217,7 +217,7 @@ public class ResourceCatalogController extends AbstractController{
     @RequestMapping("/downCatalog")
     public void downCatalog(HttpSession session, HttpServletResponse response,
                          HttpServletRequest request) throws Exception{
-        List<ResourceCatalogEntity> catalogList = resourceCatalogService.selectList(null);
+        List<ResourceCatalogEntity> catalogList = resourceCatalogService.selectList(new EntityWrapper<ResourceCatalogEntity>().ne("parent_id","0"));
         if(catalogList != null && catalogList.size() >0){
             String[] headers = {"编号","一级目录名称", "二级目录名称","三级目录名称","目录类型","描述"};
             //表名
@@ -276,9 +276,9 @@ public class ResourceCatalogController extends AbstractController{
                 }else if(i == 4){
                     if(t.getType() != null){
                         if(t.getType() == 0){
-                            cell.setCellValue("信息资源");
+                            cell.setCellValue("资源目录");
                         }else{
-                            cell.setCellValue("数据资源");
+                            cell.setCellValue("服务目录");
                         }
                     }
                 }else if(i == 5){
@@ -339,7 +339,6 @@ public class ResourceCatalogController extends AbstractController{
             return R.error("没有找到目标目录");
         }
     }
-
     /**
      * 启用
      */

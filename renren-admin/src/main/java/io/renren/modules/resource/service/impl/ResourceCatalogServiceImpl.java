@@ -46,7 +46,11 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
             catalogEntity.setParentId(parentId);
         }else if(StringUtils.isNotEmpty(catalogEntity.getOneName())){
             catalogEntity.setName(catalogEntity.getOneName());
-            catalogEntity.setParentId(0L);
+            if(catalogEntity.getType() == 0){
+                catalogEntity.setParentId(1L);
+            }else{
+                catalogEntity.setParentId(2L);
+            }
         }
         this.insert(catalogEntity);
     }
@@ -57,9 +61,9 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         String twoName = null;
         String threeName = null;
         Long a = catalogEntity.getParentId();
-        if(a != 0L){
+        if(a != 1L && a != 2L){
             Long b = this.selectById(a).getParentId();
-            if(b != 0L){
+            if(b != 1L && b != 1L){
                 oneName  = this.selectById(b).getName();
                 twoName  = this.selectById(a).getName();
                 threeName  = catalogEntity.getName();

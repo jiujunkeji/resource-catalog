@@ -47,6 +47,10 @@ public class ResourceMeteDataEntity implements Serializable {
 	 */
 	private Long catalogId;
 	/**
+	 * 目录名称
+	 */
+	private String catalogName;
+	/**
 	 * 信息资源名称
 	 */
 	private String resourceTitle;
@@ -482,5 +486,13 @@ public class ResourceMeteDataEntity implements Serializable {
 	 */
 	public Integer getIsDeleted() {
 		return isDeleted;
+	}
+
+	public String getCatalogName() {
+		return catalogName;
+	}
+
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
 	}
 }
