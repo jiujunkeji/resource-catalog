@@ -19,8 +19,8 @@ $(function () {
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
+        rownumbers: false,
+        rownumWidth: 0,
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -40,6 +40,10 @@ $(function () {
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
         }
     });
+
+    var _height = $('.divBox').eq(0).find('.switchIn').height();
+    var height = _height + 45 + 70;
+    vm.h = height;
 });
 var setting = {
     data: {
@@ -70,7 +74,10 @@ var vm = new Vue({
             deptId:null,
             deptName:null,
             roleIdList:[]
-        }
+        },
+        open:true,
+        openText:'展开筛选',
+        h:0,
     },
     methods: {
         query: function () {
@@ -195,6 +202,20 @@ var vm = new Vue({
                 postData:{'username': vm.q.username},
                 page:page
             }).trigger("reloadGrid");
+        },
+        clean:function () {
+            vm.q.username = null
+        },
+        // 收缩展开搜索
+        openSwitch:function () {
+            if(vm.open){
+                vm.open = false;
+                vm.openText = '收起筛选'
+
+            }else {
+                vm.open = true;
+                vm.openText = '展开筛选'
+            }
         }
     }
 });

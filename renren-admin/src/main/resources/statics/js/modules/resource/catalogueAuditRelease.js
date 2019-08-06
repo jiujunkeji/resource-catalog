@@ -64,46 +64,12 @@ var vm = new Vue({
         count: 1,
         id:0,
         filterText:'',
-        menuList:[
-
-        ],
-        tableList:[
-            // {
-            //     catagoryCode: "CW32",
-            //     catalogId: 9,
-            //     catalogName: "蠕虫病毒",
-            //     categoryId: 17,
-            //     categoryName: "社区",
-            //     isDeleted: 0,
-            //     keyword: "蠕虫、病毒",
-            //     meteId: 1,
-            //     meteType: 0,
-            //     metedataIdentifier: "metedata_ 17-9-1",
-            //     organisationAddress: "北京上地十街",
-            //     organisationId: 1,
-            //     organisationName: "北京九君科技发展有限公司",
-            //     pushDeptId: null,
-            //     pushDeptName: null,
-            //     pushState: 0,
-            //     pushTime: null,
-            //     pushUserId: null,
-            //     pushUserName: null,
-            //     resourceAbstract: "蠕虫病毒是一种常见的计算机病毒。它利用网络进行复制和传播，传染途径是网络和电子邮件。最初的蠕虫病毒定义是因为在DOS环境下，病毒发作时会在屏幕上出现一条类似虫子的东西，胡乱吞吃屏幕上的字母并将其改形。蠕虫病毒是自包含的程序（或是一套程序），它能传播自身功能的拷贝或自身的某些部分到其他的计算机系统中（通常是经过网络连接）。",
-            //     resourceCategory: 0,
-            //     resourceSign: null,
-            //     resourceTitle: "关于蠕虫病毒的数据",
-            //     reviewDeptId: null,
-            //     reviewDeptName: null,
-            //     reviewState: 0,
-            //     reviewTime: null,
-            //     reviewUserId: null,
-            //     reviewUserName: null,
-            //     updateTime: "2019-08-06 10:40:36",
-            // }
-        ],
+        menuList:[],
+        tableList:[],
         totalPage:0,
         page:1,
-        pageSize:10
+        pageSize:10,
+        tab:0
     },
     watch: {
         filterText:function(val) {
@@ -493,13 +459,32 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
-            $.getJSON(baseURL+"resource/resourcemetedata/list?page="+this.page, function(r){
-                console.log(r)
-                vm.tableList = r.page.list;
-                vm.totalPage = r.page.totalPage;
-                console.log(vm.tableList)
-                // this.page
+
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/resourcemetedata/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:this.page,
+
+                },
+                success: function(r){
+                    if(r.code === 0){
+                        vm.tableList = r.page.list;
+                        vm.totalPage = r.page.totalPage;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
             });
+
+            // $.getJSON(baseURL+"resource/resourcemetedata/list?page="+this.page, function(r){
+            //     console.log(r)
+            //     vm.tableList = r.page.list;
+            //     vm.totalPage = r.page.totalPage;
+            //     console.log(vm.tableList)
+            // });
         },
         // 分页
         layerPage:function (currentPage) {
@@ -508,6 +493,11 @@ var vm = new Vue({
         // 树目录点击事件
         handleNodeClick:function(data) {
             console.log(data);
+        },
+        // 选项卡
+        tabClick:function (num) {
+            vm.tab = num;
+            vm.page = 1;
         }
     },
     created:function () {
