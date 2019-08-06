@@ -55,6 +55,7 @@ public class ResourceMeteDataController {
     public R save(@RequestBody ResourceMeteDataEntity resourceMeteData){
         resourceMeteData.setUpdateTime(new Date());
         resourceMeteData.setReviewState(0);
+        resourceMeteData.setPushState(0);
         resourceMeteDataService.insert(resourceMeteData);
         //设置元数据标识
         String metedataIdentifier = "metadata_ " + resourceMeteData.getCategoryId() + "-" + resourceMeteData.getCatalogId() + "-" + resourceMeteData.getMeteId();
