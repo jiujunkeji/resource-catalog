@@ -118,7 +118,7 @@ public class ResourceMeteDataController extends AbstractController{
             }
             resourceMeteDataService.updateBatchById(list);
         }
-        return R.ok();
+        return R.ok("提交成功");
     }
 
     /**
@@ -134,7 +134,8 @@ public class ResourceMeteDataController extends AbstractController{
         } else {
             return R.error("提交时间超过限制，不能撤回");
         }
-        return R.ok();
+        resourceMeteDataService.updateById(mete);
+        return R.ok("操作成功");
     }
 
     /**
