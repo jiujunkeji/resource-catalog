@@ -507,6 +507,7 @@ var vm = new Vue({
                     type:this.tab
                 },
                 success: function(r){
+                    // console.log(r);
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalPage;
@@ -524,11 +525,13 @@ var vm = new Vue({
         handleNodeClick:function(data) {
             // console.log(data);
             vm.catalogId = data.id;
+            vm.getTableList();
         },
         // 选项卡
         tabClick:function (num) {
             vm.tab = num;
             vm.page = 1;
+            vm.getTableList();
         },
         // 表格选中方法
         toggleSelection:function(selection) {
