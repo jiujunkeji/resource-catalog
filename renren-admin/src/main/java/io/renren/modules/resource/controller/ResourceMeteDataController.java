@@ -101,12 +101,49 @@ public class ResourceMeteDataController extends AbstractController{
     }
 
     /**
+     * 提交
+     */
+    @RequestMapping("/submit")
+    public R submit(@RequestBody Long[] meteIds){
+        List<ResourceMeteDataEntity> list = new ArrayList<ResourceMeteDataEntity>();
+        list = resourceMeteDataService.selectBatchIds(Arrays.asList(meteIds));
+        if(list != null && list.size() > 0){
+            for(ResourceMeteDataEntity mete : list){
+                mete.setReviewState(1);
+                mete.setSubmitDeptId(getDeptId());
+                mete.setSubmitDeptName(deptService.selectById(getDeptId()).getName());
+                mete.setSubmitTime(new Date());
+                mete.setSubmitUserId(getUserId());
+                mete.setSubmitUserName(getUser().getUsername());
+            }
+            resourceMeteDataService.updateBatchById(list);
+        }
+        return R.ok();
+    }
+
+    /**
+     * 撤回
+     */
+    @RequestMapping("/revoke")
+    public R revoke(@RequestParam Long meteId){
+        ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
+        Date now = new Date(System.currentTimeMillis() - 600000);
+        Date submitTime = mete.getSubmitTime();
+        if (now.before(submitTime)) {
+            mete.setReviewState(0);
+        } else {
+            return R.error("提交时间超过限制，不能撤回");
+        }
+        return R.ok();
+    }
+
+    /**
      * 审核通过
      */
     @RequestMapping("/agree")
     public R agree(@RequestParam Long meteId){
         ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
-        mete.setReviewState(1);
+        mete.setReviewState(2);
         mete.setReviewDeptId(getDeptId());
         mete.setReviewDeptName(deptService.selectById(getDeptId()).getName());
         mete.setReviewTime(new Date());
@@ -121,7 +158,7 @@ public class ResourceMeteDataController extends AbstractController{
     @RequestMapping("/refuse")
     public R refuse(@RequestParam Long meteId){
         ResourceMeteDataEntity mete = resourceMeteDataService.selectById(meteId);
-        mete.setReviewState(2);
+        mete.setReviewState(3);
         mete.setReviewDeptId(getDeptId());
         mete.setReviewDeptName(deptService.selectById(getDeptId()).getName());
         mete.setReviewTime(new Date());

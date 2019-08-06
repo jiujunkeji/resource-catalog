@@ -93,6 +93,26 @@ public class ResourceMeteDataEntity implements Serializable {
 	/**
 	 * 审核人id
 	 */
+	private Long submitUserId;
+	/**
+	 * 审核人
+	 */
+	private String submitUserName;
+	/**
+	 * 审核部门id
+	 */
+	private Long submitDeptId;
+	/**
+	 * 审核部门
+	 */
+	private String submitDeptName;
+	/**
+	 * 审核时间
+	 */
+	private Date submitTime;
+	/**
+	 * 审核人id
+	 */
 	private Long reviewUserId;
 	/**
 	 * 审核人
@@ -499,4 +519,45 @@ public class ResourceMeteDataEntity implements Serializable {
 	public void setCatalogName(String catalogName) {
 		this.catalogName = catalogName;
 	}
+
+	public Long getSubmitUserId() {
+		return submitUserId;
+	}
+
+	public void setSubmitUserId(Long submitUserId) {
+		this.submitUserId = submitUserId;
+	}
+
+	public String getSubmitUserName() {
+		return submitUserName;
+	}
+
+	public void setSubmitUserName(String submitUserName) {
+		this.submitUserName = submitUserName;
+	}
+
+	public Long getSubmitDeptId() {
+		return submitDeptId;
+	}
+
+	public void setSubmitDeptId(Long submitDeptId) {
+		this.submitDeptId = submitDeptId;
+	}
+
+	public String getSubmitDeptName() {
+		return submitDeptName;
+	}
+
+	public void setSubmitDeptName(String submitDeptName) {
+		this.submitDeptName = submitDeptName;
+	}
+
+	public Date getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(Date submitTime) {
+		this.submitTime = submitTime;
+	}
+
 }
