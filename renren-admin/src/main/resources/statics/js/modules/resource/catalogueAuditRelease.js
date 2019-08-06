@@ -2,8 +2,6 @@ $(function () {
     var _height = $('.divBox').eq(0).find('.switchIn').height();
     var height = _height + 45 + 70;
     vm.h = height;
-
-
 });
 var setting = {
     data: {
@@ -19,7 +17,6 @@ var setting = {
     }
 };
 var ztree;
-
 var setting1 = {
     data: {
         simpleData: {
@@ -229,9 +226,9 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
-                        layer.msg('操作成功');
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
-                        alert(r.msg);
+                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -459,7 +456,6 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
-
             $.ajax({
                 type: "get",
                 url: baseURL + 'resource/resourcemetedata/list',
@@ -478,14 +474,8 @@ var vm = new Vue({
                     }
                 }
             });
-
-            // $.getJSON(baseURL+"resource/resourcemetedata/list?page="+this.page, function(r){
-            //     console.log(r)
-            //     vm.tableList = r.page.list;
-            //     vm.totalPage = r.page.totalPage;
-            //     console.log(vm.tableList)
-            // });
         },
+
         // 分页
         layerPage:function (currentPage) {
             console.log(currentPage);

@@ -37,7 +37,7 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
-                height: 100%;
+                height: calc(100% - 50px);
             }
             .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
                 background: #fff;
@@ -91,6 +91,21 @@
             .el-popper[x-placement^=bottom]{
                 z-index:99999999999!important;
             }
+            .listCon>.el-button{
+                width: 120px;
+                height: 40px;
+                color: #2593f3;
+                margin-bottom: 10px;
+                font-size: 18px;
+                line-height: 40px;
+                padding: 0;
+                font-weight: normal;
+            }
+            .listCon>.el-button.active{
+                background: #2593f3;
+                color: #fff;
+                border-color: #2593f3;
+            }
         </style>
 </head>
 <body>
@@ -113,8 +128,11 @@
             </el-tree>
         </div>
         <div class="listCon">
-
+            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
+            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
+            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
             <div class="divBox" style="margin-bottom: 0;">
+
                 <div class="grid-btn">
                     <span class="title">
                         <i class="el-icon-s-operation"></i>
@@ -122,6 +140,7 @@
                     </span>
                     <div class="right">
                         <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
+                        <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
                         <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
                         <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
                     </div>
@@ -130,11 +149,20 @@
                         :data="tableList"
                         border
                         stripe
+                        @selection-change="toggleSelection"
                         style="width: 100%">
+                    <el-table-column
+                            type="selection"
+                            width="40">
+                    </el-table-column>
                     <el-table-column
                             prop="meteType"
                             label="元数据类型"
                             width="120">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.meteType == 0">资源类型</span>
+                            <span v-if="scope.row.meteType == 1">服务类型</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="resourceCategory"
@@ -190,17 +218,24 @@
                                     size="small"
                                     type="warning"
                                     effect="dark">
-                                待审核
+                                待提交
                             </el-tag>
                             <el-tag
                                     v-if="scope.row.reviewState == 1"
+                                    size="small"
+                                    type="warning"
+                                    effect="dark">
+                                审核中
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.reviewState == 2"
                                     size="small"
                                     type="success"
                                     effect="dark">
                                 通过
                             </el-tag>
                             <el-tag
-                                    v-if="scope.row.reviewState == 2"
+                                    v-if="scope.row.reviewState == 3"
                                     size="small"
                                     type="danger"
                                     effect="dark">
@@ -231,8 +266,8 @@
                             label="操作"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.meteId)"></i> <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" @click="del(scope.row.meteId)"></i>
-
+                            <i class="el-icon-edit" @click="update(scope.row.meteId)" v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3"></i> <span v-if="scope.row.reviewState == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" @click="del(scope.row.meteId)" v-if="scope.row.reviewState == 0"></i>
+                            <el-button v-if="scope.row.reviewState == 1" type="text" @click="revoke(scope.row.meteId)">撤回</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -279,13 +314,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源分类</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
+                    <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源分类编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                    <input type="text" class="form-control" v-model="resourceMeteData.categoryCode" placeholder="资源分类编码" readonly="readonly"/>
                 </div>
             </div>
             <div class="form-group">
