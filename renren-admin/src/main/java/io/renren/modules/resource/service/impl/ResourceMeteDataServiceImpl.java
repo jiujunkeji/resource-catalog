@@ -20,12 +20,22 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        String resourceTitle = (String) params.get("resourceTitle");
+        String catalogId = (String) params.get("catalogId");
+        String type = (String)params.get("type");
+        EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
+        wrapper
+                .eq("is_deleted",0)
+                .eq("catalog_id",catalogId);
+        if(type != null){
+            if("0".equals(type)){
+                wrapper.andNew().eq("review_state","0").or().eq("review_state","3");
+            }else{
+                wrapper.eq("review_state",type);
+            }
+        }
         Page<ResourceMeteDataEntity> page = this.selectPage(
                 new Query<ResourceMeteDataEntity>(params).getPage(),
-                new EntityWrapper<ResourceMeteDataEntity>()
-                        .like(StringUtils.isNotEmpty(resourceTitle),"resource_title",resourceTitle)
-                        .eq("is_deleted",0)
+                wrapper
         );
         return new PageUtils(page);
     }
