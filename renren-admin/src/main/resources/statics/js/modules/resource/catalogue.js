@@ -525,7 +525,7 @@ var vm = new Vue({
         handleNodeClick:function(data) {
             console.log(data);
 
-            if(data.list.length != 0){
+            if(data.list.length == 0){
                 console.log('进来了')
                 vm.catalogId = data.id;
                 vm.getTableList();
@@ -564,7 +564,10 @@ var vm = new Vue({
                     data: JSON.stringify(list),
                     success: function(r){
                         if(r.code === 0){
-                            layer.msg(r.msg);
+                            vm.tab = 1;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
                             alert(r.msg);
                         }
@@ -589,6 +592,9 @@ var vm = new Vue({
                 },
                 success: function(r){
                     if(r.code === 0){
+                        vm.tab = 0;
+                        vm.page = 1;
+                        vm.getTableList();
                         layer.msg(r.msg);
                     }else{
                         alert(r.msg);
