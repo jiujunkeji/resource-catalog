@@ -53,16 +53,16 @@
                 color: #fff;
             }
             /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:hover , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:focus{*/
-                /*background: #fff;*/
-                /*color: #2593f3;*/
+            /*background: #fff;*/
+            /*color: #2593f3;*/
             /*}*/
             /*.el-tree .el-tree-node.is-current>.el-tree-node__content , .el-tree .el-tree-node.is-current>.el-tree-node__content:hover , .el-tree .el-tree-node.is-current>.el-tree-node__content:focus{*/
-                /*background: #fff;*/
-                /*color: #2593f3;*/
+            /*background: #fff;*/
+            /*color: #2593f3;*/
             /*}*/
             /*.el-tree>.el-tree-node.is-expanded>.el-tree-node__content , .el-tree>.el-tree-node.is-expanded>.el-tree-node__content:hover{*/
-                /*background: #2593f3;*/
-                /*color: #fff;*/
+            /*background: #2593f3;*/
+            /*color: #fff;*/
             /*}*/
             .el-input__inner{
                 width: 90%;
@@ -107,7 +107,7 @@
                 border-color: #2593f3;
             }
         </style>
-</head>
+        </head>
 <body>
 <div id="rrapp" v-cloak>
     <div class="box">
@@ -133,6 +133,27 @@
             <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">待发布</button>
             <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">发布</button>
 
+            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                    <span class="title">
+                        <i class="el-icon-search"></i>
+                        筛选查询
+                    </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn">
+                    <span>
+                        <label>目录名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="目录名称" v-model="q.name" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean">重置</button>
+                <button class="look" @click="">查询</button>
+            </div>
+
             <div class="divBox" style="margin-bottom: 0;">
                 <div class="grid-btn">
                     <span class="title">
@@ -153,9 +174,9 @@
                         @selection-change="toggleSelection"
                         style="width: 100%">
                     <!--<el-table-column-->
-                            <!--fixed-->
-                            <!--type="selection"-->
-                            <!--width="40">-->
+                    <!--fixed-->
+                    <!--type="selection"-->
+                    <!--width="40">-->
                     <!--</el-table-column>-->
                     <el-table-column
                             prop="meteType"
@@ -287,6 +308,6 @@
         </div>
     </div>
 </div>
-<script src="${request.contextPath}/statics/js/modules/resource/catalogueAuditRelease.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/catalogueRetrieval.js"></script>
 </body>
 </html>

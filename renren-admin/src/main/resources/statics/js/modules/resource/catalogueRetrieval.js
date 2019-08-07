@@ -3,34 +3,6 @@ $(function () {
     var height = _height + 45 + 70;
     vm.h = height;
 });
-var setting = {
-    data: {
-        simpleData: {
-            enable: true,
-            idKey: "catalogId",
-            pIdKey: "parentId",
-            rootPId: -1
-        },
-        key: {
-            url:"nourl"
-        }
-    }
-};
-var ztree;
-var setting1 = {
-    data: {
-        simpleData: {
-            enable: true,
-            idKey: "meteCategoryId",
-            pIdKey: "parentId",
-            rootPId: -1
-        },
-        key: {
-            url:"nourl"
-        }
-    }
-};
-var ztree1;
 
 var vm = new Vue({
     el:'#rrapp',
@@ -364,7 +336,10 @@ var vm = new Vue({
                     }
                 }
             });
-        }
+        },
+        clean:function () {
+            vm.q.name = null
+        },
     },
     created:function () {
         this.getMenuList();
