@@ -507,7 +507,7 @@ var vm = new Vue({
                     type:this.tab
                 },
                 success: function(r){
-                    // console.log(r);
+                    console.log(r);
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalPage;

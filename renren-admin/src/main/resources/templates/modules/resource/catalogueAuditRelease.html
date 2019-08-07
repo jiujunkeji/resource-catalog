@@ -140,16 +140,23 @@
                         数据列表
                     </span>
                     <div class="right">
-                        <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
-                        <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
-                        <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
+                        <!--<el-button size="medium" type="primary" @click="agree" v-if="tab == 0">通过</el-button>&nbsp;&nbsp;-->
+                        <!--<el-button size="medium" type="primary" @click="add" v-if="tab == 0">退回</el-button>-->
+                        <!--<el-button size="medium" type="primary" @click="add" v-if="tab == 1">发布</el-button>-->
+                        <!--<el-button size="medium" type="primary" @click="add" v-if="tab == 2">停止发布</el-button>&nbsp;&nbsp;-->
                     </div>
                 </div>
                 <el-table
                         :data="tableList"
                         border
                         stripe
+                        @selection-change="toggleSelection"
                         style="width: 100%">
+                    <el-table-column
+                            fixed
+                            type="selection"
+                            width="40">
+                    </el-table-column>
                     <el-table-column
                             prop="meteType"
                             label="元数据类型"
@@ -209,17 +216,24 @@
                                     size="small"
                                     type="warning"
                                     effect="dark">
-                                待审核
+                                待提交
                             </el-tag>
                             <el-tag
                                     v-if="scope.row.reviewState == 1"
+                                    size="small"
+                                    type="warning"
+                                    effect="dark">
+                                审核中
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.reviewState == 2"
                                     size="small"
                                     type="success"
                                     effect="dark">
                                 通过
                             </el-tag>
                             <el-tag
-                                    v-if="scope.row.reviewState == 2"
+                                    v-if="scope.row.reviewState == 3"
                                     size="small"
                                     type="danger"
                                     effect="dark">
@@ -248,10 +262,13 @@
                     <el-table-column
                             fixed="right"
                             label="操作"
-                            width="100">
+                            width="180">
                         <template slot-scope="scope">
-                            <el-button v-if="tab == 0" type="text">通过审核</el-button>
-                            <el-button v-if="tab == 1" type="text">发布</el-button>
+                            <el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">通过审核</el-button>
+                            <span v-if="tab == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <el-button v-if="tab == 0" type="text" @click="refuse(scope.row.meteId)">拒绝审核</el-button>
+                            <el-button v-if="tab == 1" type="text" @click="push(scope.row.meteId)">发布</el-button>
+                            <el-button v-if="tab == 2" type="text" @click="stopPush(scope.row.meteId)">停止发布</el-button>
 
                         </template>
                     </el-table-column>
@@ -268,106 +285,6 @@
 
             </div>
         </div>
-    </div>
-
-    <div id="addUp" class="panel panel-default" style="display: none">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">元数据类型</div>
-                <div class="col-sm-10">
-                    <el-select v-model="resourceMeteData.meteType" placeholder="请选择">
-                        <el-option
-                                key="0"
-                                label="资源类型"
-                                value="0">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="服务类型"
-                                value="1">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源类型</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源分类</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源分类编码</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.meteCategoryCode" placeholder="资源分类编码" readonly="readonly"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">目录名称</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源名称</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源摘要</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供方id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationId" placeholder="资源提供方id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供单位</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationName" placeholder="资源提供单位"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供方地址</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供方地址"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">关键字</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源标识</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
-                </div>
-            </div>
-
-        </form>
-    </div>
-
-
-    <!-- 选择上级菜单 -->
-    <div id="menuLayer" style="display: none;padding:10px;">
-        <ul id="menuTree" class="ztree"></ul>
-    </div>
-    <!-- 选择上级菜单 -->
-    <div id="menuLayer1" style="display: none;padding:10px;">
-        <ul id="menuTree1" class="ztree"></ul>
     </div>
 </div>
 <script src="${request.contextPath}/statics/js/modules/resource/catalogueAuditRelease.js"></script>
