@@ -43,6 +43,17 @@ public class ResourceMeteDataController extends AbstractController{
     }
 
     /**
+     * 列表
+     */
+    @RequestMapping("/list1")
+//    @RequiresPermissions("resource:resourcemetedata:list")
+    public R list1(@RequestParam Map<String, Object> params){
+        PageUtils page = resourceMeteDataService.queryPage1(params);
+
+        return R.ok().put("page", page);
+    }
+
+    /**
      * 信息
      */
     @RequestMapping("/info/{meteId}")
