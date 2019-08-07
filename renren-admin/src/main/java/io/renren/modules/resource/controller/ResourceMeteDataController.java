@@ -150,6 +150,7 @@ public class ResourceMeteDataController extends AbstractController{
         mete.setReviewTime(new Date());
         mete.setReviewUserId(getUserId());
         mete.setReviewUserName(getUser().getUsername());
+        resourceMeteDataService.updateById(mete);
         return R.ok();
     }
 
@@ -165,6 +166,7 @@ public class ResourceMeteDataController extends AbstractController{
         mete.setReviewTime(new Date());
         mete.setReviewUserId(getUserId());
         mete.setReviewUserName(getUser().getUsername());
+        resourceMeteDataService.updateById(mete);
         return R.ok();
     }
 
@@ -180,6 +182,7 @@ public class ResourceMeteDataController extends AbstractController{
         mete.setPushTime(new Date());
         mete.setPushUserId(getUserId());
         mete.setPushUserName(getUser().getUsername());
+        resourceMeteDataService.updateById(mete);
         return R.ok();
     }
     /**
@@ -194,6 +197,7 @@ public class ResourceMeteDataController extends AbstractController{
         mete.setPushTime(new Date());
         mete.setPushUserId(getUserId());
         mete.setPushUserName(getUser().getUsername());
+        resourceMeteDataService.updateById(mete);
         return R.ok();
     }
 }
