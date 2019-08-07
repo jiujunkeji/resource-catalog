@@ -6,17 +6,24 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="showList">
+    <div v-show="showList" class="divBox">
         <div class="grid-btn">
-			<#if shiro.hasPermission("resource:organisationinfo:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("resource:organisationinfo:update")>
-            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("resource:organisationinfo:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
+            <div class="right">
+                <#if shiro.hasPermission("resource:organisationinfo:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                </#if>
+                <#if shiro.hasPermission("resource:organisationinfo:update")>
+                    <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                </#if>
+                <#if shiro.hasPermission("resource:organisationinfo:delete")>
+                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                </#if>
+            </div>
+
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>

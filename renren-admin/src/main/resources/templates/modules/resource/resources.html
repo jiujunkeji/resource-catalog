@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <#include "/header.html">
+        <style>
+            #statistics{
+                display: inline-block;
+                width: 800px;
+                height: 538px;
+            }
+        </style>
+
+</head>
+<body>
+
+<div id="rrapp">
+    <div class="divBox" style="display: inline-block;">
+        <div class="grid-btn" style="border-bottom: 1px solid #eee">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                资源统计
+            </span>
+        </div>
+        <div id="statistics"></div>
+    </div>
+
+</div>
+
+<script src="${request.contextPath}/statics/js/echarts.min.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/chart.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/resources.js"></script>
+</body>
+</html>

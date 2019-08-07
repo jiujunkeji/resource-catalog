@@ -210,7 +210,7 @@ var vm = new Vue({
                 data: {
                     page:this.page,
                     catalogId:this.catalogId,
-                    type:this.tab
+                    type:2
                 },
                 success: function(r){
                     if(r.code === 0){

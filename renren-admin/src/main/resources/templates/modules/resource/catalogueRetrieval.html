@@ -37,34 +37,23 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
-                height: calc(100% - 50px);
+                /*height: calc(100% - 50px);*/
             }
-            .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
-                background: #fff;
-                color: #2593f3;
+            /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content{*/
+                /*background: #fff;*/
+                /*color: #2593f3;*/
 
-            }
-            .el-tree-node.is-expanded.is-current>.el-tree-node__content{
-                background: #2593f3;
-                color: #fff;
-            }
-            .el-tree-node.is-current>.el-tree-node__content{
-                background: #2593f3;
-                color: #fff;
-            }
-            /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:hover , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:focus{*/
-            /*background: #fff;*/
-            /*color: #2593f3;*/
             /*}*/
-            /*.el-tree .el-tree-node.is-current>.el-tree-node__content , .el-tree .el-tree-node.is-current>.el-tree-node__content:hover , .el-tree .el-tree-node.is-current>.el-tree-node__content:focus{*/
-            /*background: #fff;*/
-            /*color: #2593f3;*/
+            /*.el-tree-node.is-expanded.is-current>.el-tree-node__content{*/
+                /*background: #2593f3;*/
+                /*color: #fff;*/
             /*}*/
-            /*.el-tree>.el-tree-node.is-expanded>.el-tree-node__content , .el-tree>.el-tree-node.is-expanded>.el-tree-node__content:hover{*/
-            /*background: #2593f3;*/
-            /*color: #fff;*/
+            /*.el-tree-node.is-current>.el-tree-node__content{*/
+                /*background: #2593f3;*/
+                /*color: #fff;*/
             /*}*/
-            .el-input__inner{
+
+            .objectList .el-input__inner{
                 width: 90%;
                 margin: 0 5% 10px 5%;
             }
@@ -123,15 +112,11 @@
                     placeholder="输入关键字进行过滤"
                     v-model="filterText">
             </el-input>
-            <el-tree class="filter-tree" :data="menuList" :props="props"
+            <el-tree class="filter-tree" :data="menuList" :props="props" highlight-current
                      :filter-node-method="filterNode" ref="tree" accordion @node-click="handleNodeClick">
             </el-tree>
         </div>
         <div class="listCon">
-
-            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待审核</button>
-            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">待发布</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">发布</button>
 
             <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
                 <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
@@ -146,8 +131,16 @@
                 </div>
                 <div class="switchIn">
                     <span>
-                        <label>目录名称：</label>
-                        <input class="el-input__inner" type="text" placeholder="目录名称" v-model="q.name" >
+                        <label>名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="信息资源名称" v-model="q.name" >
+                    </span>
+                    <span>
+                        <label>编码：</label>
+                        <input class="el-input__inner" type="text" placeholder="信息资源编码" v-model="q.name" >
+                    </span>
+                    <span>
+                        <label>状态：</label>
+                        <input class="el-input__inner" type="text" placeholder="信息资源状态" v-model="q.name" >
                     </span>
                 </div>
                 <button class="clean" @click="clean">重置</button>
@@ -280,19 +273,19 @@
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="120">
-                        <template slot-scope="scope">
-                            <el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">通过</el-button>
-                            <span v-if="tab == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                            <el-button v-if="tab == 0" type="text" @click="refuse(scope.row.meteId)">拒绝</el-button>
-                            <el-button v-if="tab == 1" type="text" @click="push(scope.row.meteId)">发布</el-button>
-                            <el-button v-if="tab == 2" type="text" @click="stopPush(scope.row.meteId)">停止发布</el-button>
+                    <!--<el-table-column-->
+                            <!--fixed="right"-->
+                            <!--label="操作"-->
+                            <!--width="120">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">通过</el-button>-->
+                            <!--<span v-if="tab == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>-->
+                            <!--<el-button v-if="tab == 0" type="text" @click="refuse(scope.row.meteId)">拒绝</el-button>-->
+                            <!--<el-button v-if="tab == 1" type="text" @click="push(scope.row.meteId)">发布</el-button>-->
+                            <!--<el-button v-if="tab == 2" type="text" @click="stopPush(scope.row.meteId)">停止发布</el-button>-->
 
-                        </template>
-                    </el-table-column>
+                        <!--</template>-->
+                    <!--</el-table-column>-->
                 </el-table>
                 <br>
                 <el-pagination
