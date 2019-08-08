@@ -1,4 +1,7 @@
 $(function () {
+    var _height = $('.divBox').eq(0).find('.switchIn').height();
+    var height = _height + 45 + 70;
+    vm.h = height;
     $("#jqGrid").jqGrid({
         url: baseURL + 'sys/log/list',
         datatype: "json",
@@ -45,11 +48,30 @@ var vm = new Vue({
 		q:{
 			key: null
 		},
+        open:true,
+        openText:'展开筛选',
+        h:0,
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
+        clean:function () {
+            vm.q = {
+                key: null
+            };
+        },
+        // 收缩展开搜索
+        openSwitch:function () {
+            if(vm.open){
+                vm.open = false;
+                vm.openText = '收起筛选'
+
+            }else {
+                vm.open = true;
+                vm.openText = '展开筛选'
+            }
+        },
 		reload: function (event) {
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 

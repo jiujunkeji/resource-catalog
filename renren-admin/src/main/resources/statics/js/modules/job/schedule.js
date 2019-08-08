@@ -1,4 +1,7 @@
 $(function () {
+    var _height = $('.divBox').eq(0).find('.switchIn').height();
+    var height = _height + 45 + 70;
+    vm.h = height;
     $("#jqGrid").jqGrid({
         url: baseURL + 'sys/schedule/list',
         datatype: "json",
@@ -19,7 +22,7 @@ $(function () {
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
+        rownumbers: false,
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
@@ -50,12 +53,31 @@ var vm = new Vue({
 		},
 		showList: true,
 		title: null,
-		schedule: {}
+		schedule: {},
+        open:true,
+        openText:'展开筛选',
+        h:0,
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
+        clean:function () {
+            vm.q = {
+                beanName: null
+            };
+        },
+        // 收缩展开搜索
+        openSwitch:function () {
+            if(vm.open){
+                vm.open = false;
+                vm.openText = '收起筛选'
+
+            }else {
+                vm.open = true;
+                vm.openText = '展开筛选'
+            }
+        },
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";

@@ -266,9 +266,9 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
-                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
-                        layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -279,7 +279,7 @@ var vm = new Vue({
                 return ;
             }
 
-            confirm('确定要删除选中的记录？', function(){
+            layer.confirm('确定要删除选中的记录？', function(){
                 $.ajax({
                     type: "POST",
                     url: baseURL + "resource/resourcemetedata/delete",
@@ -287,11 +287,11 @@ var vm = new Vue({
                     data: JSON.stringify(meteIds),
                     success: function(r){
                         if(r.code == 0){
-                            alert('操作成功', function(index){
-                                $("#jqGrid").trigger("reloadGrid");
-                            });
+                            layer.close(index);
+                            vm.reload();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
-                            alert(r.msg);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
                 });
@@ -311,42 +311,6 @@ var vm = new Vue({
                 alert("目录名称不能为空");
                 return true;
             }
-        },
-        downTemplate: function () {
-            window.location.href = baseURL + "resource/resourcecatalog/downTemplate"
-        },
-        // 导出目录
-        downCatalog: function () {
-            window.location.href = baseURL + "resource/resourcecatalog/downCatalog"
-        },
-        // 导入完成
-        handleAvatarSuccess:function(res, file) {
-            // vm.imageUrl = URL.createObjectURL(file.raw);
-            // vm.file = file;
-            console.log(res);
-            if(res.code == 0){
-                this.$message({
-                    type: 'success',
-                    message: '导入成功！'
-                });
-            }
-        },
-        // 导入前
-        beforeAvatarUpload:function(file) {
-            var FileExt = file.name.replace(/.+\./, "");
-            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
-                this.$message({
-                    type: 'warning',
-                    message: '上传文件只能是excel！'
-                });
-                return false;
-            }else {
-                file.type = 'xls';
-                vm.fileData = file;
-                console.log(vm.fileData);
-            }
-
-
         },
         // 收缩展开搜索
         openSwitch:function () {
@@ -567,9 +531,9 @@ var vm = new Vue({
                             vm.tab = 1;
                             vm.page = 1;
                             vm.getTableList();
-                            layer.msg('<div style="color: #3b3b3b;font-size: 18px;text-align: center;padding-top: 50px;line-height: 40px;"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
-                            alert(r.msg);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
                 });
@@ -595,9 +559,9 @@ var vm = new Vue({
                         vm.tab = 0;
                         vm.page = 1;
                         vm.getTableList();
-                        layer.msg(r.msg);
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
-                        alert(r.msg);
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });

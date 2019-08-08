@@ -14,9 +14,10 @@ function ziyuan() {
         },
         legend: {
             orient: 'horizontal',
-            top:'10',
+            top:'20',
             itemWidth:30,
-            itemHeight:14,
+            itemHeight:12,
+            itemGap:16,
             data: ['整车工程中心','人力资源部','用户体验及功能开发中心	','路特斯工程（中国）','吉利品牌研究院NL项目组']
         },
         series : [
@@ -24,7 +25,7 @@ function ziyuan() {
                 name: '部门使用情况',
                 type: 'pie',
                 radius : '55%',
-                center: ['50%', '60%'],
+                center: ['50%', '55%'],
                 label:{
                     show:true,
                     formatter:'{b}: {d}%'

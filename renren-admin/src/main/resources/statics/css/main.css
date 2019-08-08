@@ -163,3 +163,27 @@ div.switchIn .el-input__inner{
 .table1 tr td{
     color: #666;
 }
+.okDiv{
+    padding-top: 30px;
+    color: #3b3b3b;
+    font-size: 18px;
+    text-align: center;
+    line-height: 40px;
+
+}
+*::-webkit-scrollbar {
+    width: 0px;
+    height:6px;
+}
+*::-webkit-scrollbar-thumb {
+
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #2648be;
+}
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(208,210,219,0.8);
+}
+
