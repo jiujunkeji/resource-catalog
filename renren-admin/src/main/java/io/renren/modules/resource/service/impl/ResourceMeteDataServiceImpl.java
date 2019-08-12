@@ -50,7 +50,7 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
                 .eq(StringUtils.isNotEmpty(catalogId),"catalog_id",catalogId);
         if(type != null){
             if("0".equals(type)){
-                wrapper.andNew().eq("review_state","1");
+                wrapper.eq("review_state","1");
             }else if("1".equals(type)){
                 wrapper.eq("review_state","2").eq("push_state","0");
             }else if("2".equals(type)){
