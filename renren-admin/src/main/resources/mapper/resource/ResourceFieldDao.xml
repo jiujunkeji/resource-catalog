@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.resource.dao.ResourceFieldDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.resource.entity.ResourceFieldEntity" id="resourceFieldMap">
+        <result property="fieldId" column="field_id"/>
+        <result property="meteId" column="mete_id"/>
+        <result property="cnName" column="CN_name"/>
+        <result property="euName" column="EU_name"/>
+        <result property="datType" column="dat_type"/>
+        <result property="dataLength" column="data_length"/>
+        <result property="judgeMandatory" column="judge_mandatory"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+</mapper>
