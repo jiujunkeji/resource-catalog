@@ -1,10 +1,12 @@
 package io.renren.modules.resource.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -158,6 +160,9 @@ public class ResourceMeteDataEntity implements Serializable {
 	 * 是否删除
 	 */
 	private Integer isDeleted = 0;
+
+	@TableField(exist = false)
+	private List<ResourceFieldEntity> fieldList;
 
 	/**
 	 * 设置：id
@@ -560,4 +565,11 @@ public class ResourceMeteDataEntity implements Serializable {
 		this.submitTime = submitTime;
 	}
 
+	public List<ResourceFieldEntity> getFieldList() {
+		return fieldList;
+	}
+
+	public void setFieldList(List<ResourceFieldEntity> fieldList) {
+		this.fieldList = fieldList;
+	}
 }

@@ -1,9 +1,12 @@
 package io.renren.modules.resource.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.ResourceFieldEntity;
 import io.renren.modules.resource.entity.ResourceMeteDataEntity;
+import io.renren.modules.resource.service.ResourceFieldService;
 import io.renren.modules.resource.service.ResourceMeteDataService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.service.SysDeptService;
@@ -30,6 +33,8 @@ public class ResourceMeteDataController extends AbstractController{
     private SysDeptService deptService;
     @Autowired
     private SysUserService userService;
+    @Autowired
+    private ResourceFieldService resourceFieldService;
 
     /**
      * 列表
@@ -60,7 +65,8 @@ public class ResourceMeteDataController extends AbstractController{
 //    @RequiresPermissions("resource:resourcemetedata:info")
     public R info(@PathVariable("meteId") Long meteId){
         ResourceMeteDataEntity resourceMeteData = resourceMeteDataService.selectById(meteId);
-
+        List<ResourceFieldEntity> fieldEntityList = resourceFieldService.selectList(new EntityWrapper<ResourceFieldEntity>().eq("mete_id",meteId));
+        resourceMeteData.setFieldList(fieldEntityList);
         return R.ok().put("resourceMeteData", resourceMeteData);
     }
 
