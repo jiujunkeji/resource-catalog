@@ -108,10 +108,10 @@ public class ResourceFieldController {
         return R.ok();
     }
 
-    /*
+    /**
      *导入
      */
-    @RequestMapping("importField")
+    @RequestMapping("/importField")
     public R importField(@RequestParam(value="file",required=false)MultipartFile file , HttpServletResponse response, HttpServletRequest request) throws Exception {
         String realPath = request.getSession().getServletContext().getRealPath("/upload/excel");
         File xlsFile = new File(realPath, file.getOriginalFilename());
@@ -159,7 +159,7 @@ public class ResourceFieldController {
     }
 
 
-    /*
+    /**
     导出
      */
     @RequestMapping("/downField")
