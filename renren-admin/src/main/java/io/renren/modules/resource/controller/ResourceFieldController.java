@@ -79,7 +79,10 @@ public class ResourceFieldController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("resource:resourcefield:save")
-    public R save(@RequestBody ResourceFieldEntity resourceField){
+    public R save(@RequestBody ResourceFieldEntity resourceField , Long meteId){
+        resourceField.setMeteId(meteId);
+        resourceField.setCreateDate(new Date());
+        resourceField.setUpdateTime(new Date());
         resourceFieldService.insert(resourceField);
 
         return R.ok();
@@ -91,6 +94,7 @@ public class ResourceFieldController {
     @RequestMapping("/update")
     //@RequiresPermissions("resource:resourcefield:update")
     public R update(@RequestBody ResourceFieldEntity resourceField){
+        resourceField.setUpdateTime(new Date());
         ValidatorUtils.validateEntity(resourceField);
         resourceFieldService.updateAllColumnById(resourceField);//全部更新
         
