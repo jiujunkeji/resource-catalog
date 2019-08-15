@@ -49,7 +49,8 @@ var vm = new Vue({
             categoryName:'',
             categoryCode:'',
             catalogId:'',
-            catalogName:''
+            catalogName:'',
+            fieldList:[]
         },
         imageUrl:'',
         fileData:null,
@@ -64,49 +65,19 @@ var vm = new Vue({
         count: 1,
         id:0,
         filterText:'',
-        menuList:[
-
-        ],
-        tableList:[
-            // {
-            //     catagoryCode: "CW32",
-            //     catalogId: 9,
-            //     catalogName: "蠕虫病毒",
-            //     categoryId: 17,
-            //     categoryName: "社区",
-            //     isDeleted: 0,
-            //     keyword: "蠕虫、病毒",
-            //     meteId: 1,
-            //     meteType: 0,
-            //     metedataIdentifier: "metedata_ 17-9-1",
-            //     organisationAddress: "北京上地十街",
-            //     organisationId: 1,
-            //     organisationName: "北京九君科技发展有限公司",
-            //     pushDeptId: null,
-            //     pushDeptName: null,
-            //     pushState: 0,
-            //     pushTime: null,
-            //     pushUserId: null,
-            //     pushUserName: null,
-            //     resourceAbstract: "蠕虫病毒是一种常见的计算机病毒。它利用网络进行复制和传播，传染途径是网络和电子邮件。最初的蠕虫病毒定义是因为在DOS环境下，病毒发作时会在屏幕上出现一条类似虫子的东西，胡乱吞吃屏幕上的字母并将其改形。蠕虫病毒是自包含的程序（或是一套程序），它能传播自身功能的拷贝或自身的某些部分到其他的计算机系统中（通常是经过网络连接）。",
-            //     resourceCategory: 0,
-            //     resourceSign: null,
-            //     resourceTitle: "关于蠕虫病毒的数据",
-            //     reviewDeptId: null,
-            //     reviewDeptName: null,
-            //     reviewState: 0,
-            //     reviewTime: null,
-            //     reviewUserId: null,
-            //     reviewUserName: null,
-            //     updateTime: "2019-08-06 10:40:36",
-            // }
-        ],
+        menuList:[],
+        tableList:[],
+        tableListUp:[],
         totalPage:0,
+        totalPage1:0,
         page:1,
+        page1:1,
         pageSize:10,
         tab:0,
         checkIdList:[],
-        catalogId:null
+        checkIdList1:[],
+        catalogId:null,
+        fileData:{}
     },
     watch: {
         filterText:function(val) {
@@ -194,24 +165,7 @@ var vm = new Vue({
             });
         },
         add: function(){
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#addUp'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['600px', '520px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.reload();
-                }
 
-            })
             vm.showList = false;
             vm.title = "新增";
             vm.resourceMeteData = {
@@ -220,7 +174,8 @@ var vm = new Vue({
                 categoryName:'',
                 categoryCode:'',
                 catalogId:'',
-                catalogName:''
+                catalogName:'',
+                fieldList:[]
             };
             vm.getMenu();
             vm.getMenu1();
@@ -230,24 +185,7 @@ var vm = new Vue({
             if(meteId == null){
                 return ;
             }
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#addUp'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['600px', '520px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.reload();
-                }
-
-            })
+            //
             vm.showList = false;
             vm.title = "修改";
 
@@ -299,7 +237,9 @@ var vm = new Vue({
         },
         getInfo: function(meteId){
             $.get(baseURL + "resource/resourcemetedata/info/"+meteId, function(r){
+                console.log(r);
                 vm.resourceMeteData = r.resourceMeteData;
+                // vm.tableListUp = r.resourceMeteData.list;
             });
         },
         reload: function (event) {
@@ -485,6 +425,10 @@ var vm = new Vue({
         layerPage:function (currentPage) {
             console.log(currentPage);
         },
+        // 编辑分页
+        layerPage1:function (currentPage) {
+            console.log(currentPage);
+        },
         // 树目录点击事件
         handleNodeClick:function(data) {
             console.log(data);
@@ -566,6 +510,173 @@ var vm = new Vue({
                 }
             });
         },
+
+        // 编辑方法
+        // 新增
+        addUp:function () {
+            vm.fileData = {};
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate1();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.getFileTableList();
+                }
+
+            })
+        },
+        // 删除
+        delUp:function () {
+            var list = []
+            vm.checkIdList1.forEach(function (item) {
+                list.push(item.meteId)
+            })
+            console.log(list);
+            if(list.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                layer.confirm('确定要删除选中的记录？', function(){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "resource/resourcefield/delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        success: function(r){
+                            if(r.code == 0){
+                                layer.close(index);
+                                vm.getFileTableList();
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+                });
+            }
+
+
+        },
+        // 保存方法
+        saveOrUpdate1: function (event) {
+            var url = vm.fileData.fieldId == null ? "resource/resourcefield/save" : "resource/resourcefield/update";
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.fileData),
+                success: function(r){
+                    if(r.code === 0){
+                        vm.page1 = 1;
+                        vm.getFileTableList();
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+        },
+        // 获取信息方法
+        getFileInfo:function (fileId) {
+            $.get(baseURL + "resource/resourcefield/info/"+fileId, function(r){
+                console.log(r);
+                // vm.fileData = r.resourceMeteData;
+            });
+        },
+        // 批量设置
+        setUp:function () {
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate1();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
+        },
+        // 修改
+        editUp:function (id) {
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.saveOrUpdate1();
+                    layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
+            vm.getFileInfo(id);
+        },
+        // 获取文件列表
+        getFileTableList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/resourcefield/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:vm.page1,
+                    id:vm.resourceMeteData.meteId
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.resourceMeteData.fieldList = r.page.list;
+                        vm.totalPage1 = r.page.totalPage;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 导入
+        inUp:function () {
+            
+        },
+        // 导出
+        outUp:function () {
+            
+        },
+        // 下载模版
+        downUp:function () {
+            
+        },
+        // 表格选中方法
+        toggleSelection1:function(selection) {
+            console.log(selection);
+            vm.checkIdList1 = selection;
+        },
+
     },
     created:function () {
         this.getMenuList();

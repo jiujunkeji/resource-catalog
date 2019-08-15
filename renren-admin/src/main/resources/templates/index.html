@@ -7,12 +7,14 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/statics/css/element.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
+  <link rel="stylesheet" href="${request.contextPath}/statics/css/index.css">
+  <!--<link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">-->
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -72,10 +74,20 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <ol class="breadcrumb" id="nav_title" style="position:static;float:none;">
-        <li class="active"><i class="fa fa-home" style="font-size:20px;position:relative;top:2px;left:-3px;"></i> &nbsp; 首页</li>
-        <li class="active">{{navTitle}}</li>
-      </ol>
+        <ul class="topMenulist">
+            <li :class="tab == 0 ? 'active' : ''" style="text-align: center" @click="openHome">
+                <span>首页</span>
+            </li>
+            <li v-for="(item,index) in topMenuList" :key="index"  :class="tab == index+1 ? 'active' : ''">
+                <span @click="topMenuListClick(item)">{{item.name}}</span>
+                <i class="el-icon-close" @click="delTopMenu(index)"></i>
+            </li>
+        </ul>
+
+      <!--<ol class="breadcrumb" id="nav_title" style="position:static;float:none;">-->
+        <!--<li class="active"><i class="fa fa-home" style="font-size:20px;position:relative;top:2px;left:-3px;"></i> &nbsp; 首页</li>-->
+        <!--<li class="active">{{navTitle}}</li>-->
+      <!--</ol>-->
     </section>
 
     <!-- Main content -->

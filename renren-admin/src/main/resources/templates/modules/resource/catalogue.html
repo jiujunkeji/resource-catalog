@@ -52,18 +52,6 @@
                 background: #2593f3;
                 color: #fff;
             }
-            /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:hover , .el-tree .el-tree-node.is-expanded>.el-tree-node__content:focus{*/
-                /*background: #fff;*/
-                /*color: #2593f3;*/
-            /*}*/
-            /*.el-tree .el-tree-node.is-current>.el-tree-node__content , .el-tree .el-tree-node.is-current>.el-tree-node__content:hover , .el-tree .el-tree-node.is-current>.el-tree-node__content:focus{*/
-                /*background: #fff;*/
-                /*color: #2593f3;*/
-            /*}*/
-            /*.el-tree>.el-tree-node.is-expanded>.el-tree-node__content , .el-tree>.el-tree-node.is-expanded>.el-tree-node__content:hover{*/
-                /*background: #2593f3;*/
-                /*color: #fff;*/
-            /*}*/
             .el-input__inner{
                 width: 90%;
                 margin: 0 5% 10px 5%;
@@ -80,9 +68,9 @@
                 font-size: 14px;
                 line-height: 1.42857143;
                 color: #555;
-                background-color: #f1f4fb;
+                background-color: none;
                 background-image: none;
-                border: 1px solid #f1f4fb;
+                border: 1px solid #d2d2d2;
                 border-radius: 4px;
                 -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
                 -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
@@ -106,11 +94,12 @@
                 color: #fff;
                 border-color: #2593f3;
             }
+
         </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div class="box">
+    <div class="box" v-show="showList">
         <div class="objectList">
             <div class="grid-btn">
                 <span class="title">
@@ -286,92 +275,249 @@
         </div>
     </div>
 
+    <div v-show="!showList" class="">
+        <div style="margin-bottom: 20px;overflow: hidden">
+            <button class="look" @click="saveOrUpdate">提交</button>
+            <button class="clean" @click="reload">取消</button>
+
+        </div>
+        <div class="divBox">
+            <div class="grid-btn" style="border-bottom: 1px solid #eee;margin-bottom: 20px">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    新增目录
+                </span>
+
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>元数据类型</label>
+                    <div class="inp">
+                        <el-select v-model="resourceMeteData.meteType" placeholder="请选择">
+                            <el-option
+                                    key="0"
+                                    label="资源类型"
+                                    value="0">
+                            </el-option>
+                            <el-option
+                                    key="1"
+                                    label="服务类型"
+                                    value="1">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>信息资源类型</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>资源分类</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>资源分类编码</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.categoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>目录名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>信息资源名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>信息资源摘要</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>资源提供方id</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.organisationId" placeholder="资源提供方id"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>资源提供单位</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.organisationName" placeholder="资源提供单位"/>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>资源提供方地址</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供方地址"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>关键字</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>信息资源标识</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divBox">
+            <div class="grid-btn" style="border-bottom: 1px solid #eee;margin-bottom: 20px">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    数据列表
+                </span>
+                <div class="right">
+                    <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="setUp">批量设置</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="inUp">导入</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="downUp">下载模版</el-button>&nbsp;&nbsp;
+
+                </div>
+            </div>
+            <el-table
+                    :data="resourceMeteData.fieldList"
+                    border
+                    stripe
+                    @selection-change="toggleSelection1"
+                    style="width: 100%">
+                <el-table-column
+                        type="selection"
+                        width="40">
+                </el-table-column>
+                <el-table-column
+                        prop="cnName"
+                        label="中文名称"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="euName"
+                        label="英文名称"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="dataType"
+                        label="数据类型"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="dataLength"
+                        label="数据长度"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="judgeMandatory"
+                        label="判断必选"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="keyword"
+                        label="关键字"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="createDate"
+                        label="创建时间"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="updateTime"
+                        label="更新时间"
+                        width="">
+                </el-table-column>
+
+                <el-table-column
+                        label="操作"
+                        width="80">
+                    <template slot-scope="scope">
+                        <i class="el-icon-edit" @click="editUp(scope.row.fieldId)"></i>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <br>
+            <el-pagination
+                    background
+                    pager-count="1"
+                    :current-page="page1"
+                    layout="prev, pager, next, jumper"
+                    @current-change="layerPage1"
+                    :total="totalPage1">
+            </el-pagination>
+        </div>
+
+
+
+
+
+    </div>
+
     <div id="addUp" class="panel panel-default" style="display: none">
         <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">元数据类型</div>
-                <div class="col-sm-10">
-                    <el-select v-model="resourceMeteData.meteType" placeholder="请选择">
-                        <el-option
-                                key="0"
-                                label="资源类型"
-                                value="0">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="服务类型"
-                                value="1">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源类型</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>
-                </div>
-            </div>
 
             <div class="form-group">
-                <div class="col-sm-2 control-label">资源分类</div>
+                <div class="col-sm-2 control-label">中文名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
+                    <input type="text" class="form-control" v-model="fileData.cnName" placeholder="中文名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">资源分类编码</div>
+                <div class="col-sm-2 control-label">英文名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.categoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                    <input type="text" class="form-control" v-model="fileData.euName" placeholder="英文名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">目录名称</div>
+                <div class="col-sm-2 control-label">数据类型</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
+                    <input type="text" class="form-control" v-model="fileData.dataType" placeholder="数据类型"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源名称</div>
+                <div class="col-sm-2 control-label">数据长度</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                    <input type="text" class="form-control" v-model="fileData.dataLength" placeholder="数据长度"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源摘要</div>
+                <div class="col-sm-2 control-label">判断必选</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>
+                    <input type="text" class="form-control" v-model="fileData.judgeMandatory" placeholder="判断必选"/>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供方id</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationId" placeholder="资源提供方id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供单位</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationName" placeholder="资源提供单位"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">资源提供方地址</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供方地址"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">关键字</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">信息资源标识</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label">创建时间</div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="fileData.createDate" placeholder="创建时间"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label">更新时间</div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="fileData.updateTime" placeholder="更新时间"/>-->
+                <!--</div>-->
+            <!--</div>-->
 
         </form>
     </div>
