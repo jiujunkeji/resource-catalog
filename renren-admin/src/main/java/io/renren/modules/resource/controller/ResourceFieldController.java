@@ -55,7 +55,7 @@ public class ResourceFieldController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:resourcefield:list")
+    //@RequiresPermissions("resource:resourcefield:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = resourceFieldService.queryPage(params);
 
@@ -67,7 +67,7 @@ public class ResourceFieldController {
      * 信息
      */
     @RequestMapping("/info/{fieldId}")
-    @RequiresPermissions("resource:resourcefield:info")
+    //@RequiresPermissions("resource:resourcefield:info")
     public R info(@PathVariable("fieldId") Long fieldId){
         ResourceFieldEntity resourceField = resourceFieldService.selectById(fieldId);
 
@@ -78,8 +78,11 @@ public class ResourceFieldController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:resourcefield:save")
-    public R save(@RequestBody ResourceFieldEntity resourceField){
+    //@RequiresPermissions("resource:resourcefield:save")
+    public R save(@RequestBody ResourceFieldEntity resourceField , Long meteId){
+        resourceField.setMeteId(meteId);
+        resourceField.setCreateDate(new Date());
+        resourceField.setUpdateTime(new Date());
         resourceFieldService.insert(resourceField);
 
         return R.ok();
@@ -89,8 +92,9 @@ public class ResourceFieldController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:resourcefield:update")
+    //@RequiresPermissions("resource:resourcefield:update")
     public R update(@RequestBody ResourceFieldEntity resourceField){
+        resourceField.setUpdateTime(new Date());
         ValidatorUtils.validateEntity(resourceField);
         resourceFieldService.updateAllColumnById(resourceField);//全部更新
         
@@ -101,7 +105,7 @@ public class ResourceFieldController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:resourcefield:delete")
+    //@RequiresPermissions("resource:resourcefield:delete")
     public R delete(@RequestBody Long[] fieldIds){
         resourceFieldService.deleteBatchIds(Arrays.asList(fieldIds));
 
