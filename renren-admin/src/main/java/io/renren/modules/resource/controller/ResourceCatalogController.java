@@ -140,6 +140,7 @@ public class ResourceCatalogController extends AbstractController{
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
             String filePath = getClass().getClassLoader().getResource("TAB1/" + pathName).getPath();
+            System.out.println(filePath);
             FileInputStream input = new FileInputStream(filePath);
             OutputStream out = response.getOutputStream();
             byte[] b = new byte[2048];
@@ -158,8 +159,9 @@ public class ResourceCatalogController extends AbstractController{
     @RequestMapping("/importCatalog")
     public R importCatalog(@RequestParam(value="file",required = false) MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws Exception{
         // 如果用的是Tomcat服务器，则文件会上传到\\%TOMCAT_HOME%\\webapps\\YourWebProject\\WEB-INF\\upload\\文件夹中
-        String realPath = request.getSession().getServletContext().getRealPath(
-                "/upload/excel");
+        /*String realPath = request.getSession().getServletContext().getRealPath(
+                "/upload/excel");*/
+        String realPath = getClass().getClassLoader().getResource("upload").getPath();
         // 这里不必处理IO流关闭的问题，因为FileUtils.copyInputStreamToFile()方法内部会自动把用到的IO流关掉，我是看它的源码才知道的
         File xlsFile = new File(realPath, file.getOriginalFilename());
         FileUtils.copyInputStreamToFile(file.getInputStream(), xlsFile);
@@ -205,6 +207,7 @@ public class ResourceCatalogController extends AbstractController{
             catalogEntity.setUpdateTime(new Date());
             resourceCatalogService.insertCatalog(catalogEntity);
         }
+        xlsFile.delete();
         return R.ok();
     }
 
