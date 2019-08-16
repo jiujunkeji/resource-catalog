@@ -3,6 +3,8 @@ package io.renren.modules.resource.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -109,6 +111,31 @@ public class ResourceFieldController {
         resourceFieldService.deleteBatchIds(Arrays.asList(fieldIds));
 
         return R.ok();
+    }
+
+    /**
+     * 下载目录模板
+     */
+    @RequestMapping("/downTemplate")
+    public void downTemplate(HttpServletResponse response, HttpServletRequest request){
+        try{
+            String pathName = "fieldTemplate.xlsx";
+            String fileName = "元数据字段导入模板.xlsx";
+            String fn = URLEncoder.encode(fileName,"UTF-8");
+            response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            String filePath = getClass().getClassLoader().getResource("TAB1/" + pathName).getPath();
+            FileInputStream input = new FileInputStream(filePath);
+            OutputStream out = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int len;
+            while((len = input.read(b)) != -1){
+                out.write(b,0,len);
+            }
+            response.setHeader("Conten-Length",String.valueOf(input.getChannel().size()));
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
     }
 
     /**
