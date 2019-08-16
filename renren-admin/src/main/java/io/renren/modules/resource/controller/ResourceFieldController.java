@@ -143,7 +143,8 @@ public class ResourceFieldController {
      */
     @RequestMapping("/importField")
     public R importField(@RequestParam(value="file",required=false)MultipartFile file , HttpServletResponse response, HttpServletRequest request) throws Exception {
-        String realPath = request.getSession().getServletContext().getRealPath("/upload/excel");
+        //String realPath = request.getSession().getServletContext().getRealPath("/upload/excel");
+        String realPath = getClass().getClassLoader().getResource("upload").getPath();
         File xlsFile = new File(realPath, file.getOriginalFilename());
         FileUtils.copyInputStreamToFile(file.getInputStream(), xlsFile);
         XSSFWorkbook workbook = null;
@@ -186,7 +187,7 @@ public class ResourceFieldController {
             }
             if (POIUtils.getCellValue(row.getCell(4)) != null) {
                 dl = Integer.valueOf(POIUtils.getCellValue(row.getCell(4)).replace(".0",""));
-                fieldEntity.setDataType(dl);
+                fieldEntity.setDataLength(dl);
             }
             if (POIUtils.getCellValue(row.getCell(5)) != null) {
                 String jmf =(POIUtils.getCellValue(row.getCell(5)));
@@ -200,6 +201,7 @@ public class ResourceFieldController {
             fieldEntity.setUpdateTime(new Date());
             resourceFieldService.insert(fieldEntity);
         }
+        xlsFile.delete();
         return R.ok();
     }
 
