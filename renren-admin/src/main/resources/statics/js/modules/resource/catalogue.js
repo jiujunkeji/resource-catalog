@@ -77,7 +77,8 @@ var vm = new Vue({
         checkIdList:[],
         checkIdList1:[],
         catalogId:null,
-        fileData:{}
+        fileData:{},
+        comList:[],
     },
     watch: {
         filterText:function(val) {
@@ -160,6 +161,7 @@ var vm = new Vue({
                     vm.resourceMeteData.categoryId = node[0].meteCategoryId;
                     vm.resourceMeteData.categoryName = node[0].name;
                     vm.resourceMeteData.categoryCode = node[0].code;
+                    console.log(vm.resourceMeteData.categoryCode);
                     layer.close(index);
                 }
             });
@@ -167,7 +169,7 @@ var vm = new Vue({
         add: function(){
 
             vm.showList = false;
-            vm.title = "新增";
+            vm.title = "新增目录";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -179,6 +181,7 @@ var vm = new Vue({
             };
             vm.getMenu();
             vm.getMenu1();
+            vm.getComList();
         },
         update: function (id) {
             var meteId = id;
@@ -187,11 +190,12 @@ var vm = new Vue({
             }
             //
             vm.showList = false;
-            vm.title = "修改";
+            vm.title = "修改目录";
 
             vm.getInfo(meteId);
             vm.getMenu();
             vm.getMenu1();
+            vm.getComList();
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteId == null ? "resource/resourcemetedata/save" : "resource/resourcemetedata/update";
@@ -212,17 +216,15 @@ var vm = new Vue({
             });
         },
         del: function (id) {
-            var meteIds = id;
-            if(meteIds == null){
-                return ;
-            }
+            var list = [];
+            list.push(id)
 
-            layer.confirm('确定要删除选中的记录？', function(){
+            layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
                     url: baseURL + "resource/resourcemetedata/delete",
                     contentType: "application/json",
-                    data: JSON.stringify(meteIds),
+                    data: JSON.stringify(list),
                     success: function(r){
                         if(r.code == 0){
                             layer.close(index);
@@ -251,6 +253,33 @@ var vm = new Vue({
                 alert("目录名称不能为空");
                 return true;
             }
+        },
+        // 获取资源提供方单位
+        getComList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/organisationinfo/select',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:1,
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.comList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 设置资源提供方信息
+        setCom:function (obj) {
+            console.log(obj);
+            vm.resourceMeteData.organisationName = obj.organisationName;
+            vm.resourceMeteData.organisationId = obj.organisationId;
+            vm.resourceMeteData.organisationAddress = obj.organisationAddr;
         },
         // 收缩展开搜索
         openSwitch:function () {
@@ -538,7 +567,7 @@ var vm = new Vue({
         delUp:function () {
             var list = []
             vm.checkIdList1.forEach(function (item) {
-                list.push(item.meteId)
+                list.push(item.fieldId)
             })
             console.log(list);
             if(list.length == 0){
@@ -547,7 +576,7 @@ var vm = new Vue({
                     type: 'warning'
                 });
             }else {
-                layer.confirm('确定要删除选中的记录？', function(){
+                layer.confirm('确定要删除选中的记录？', function(index){
                     $.ajax({
                         type: "POST",
                         url: baseURL + "resource/resourcefield/delete",
@@ -591,7 +620,7 @@ var vm = new Vue({
         getFileInfo:function (fileId) {
             $.get(baseURL + "resource/resourcefield/info/"+fileId, function(r){
                 console.log(r);
-                // vm.fileData = r.resourceMeteData;
+                vm.fileData = r.resourceField;
             });
         },
         // 批量设置
@@ -617,6 +646,7 @@ var vm = new Vue({
         },
         // 修改
         editUp:function (id) {
+            vm.getFileInfo(id);
             layer.open({
                 type: 1,
                 title: '新增',
@@ -631,11 +661,11 @@ var vm = new Vue({
                     layer.close(index);
                 },
                 btn2:function () {
-                    vm.reload();
+                    vm.getFileTableList();
                 }
 
             })
-            vm.getFileInfo(id);
+
         },
         // 获取文件列表
         getFileTableList:function () {
@@ -659,17 +689,42 @@ var vm = new Vue({
                 }
             });
         },
-        // 导入
-        inUp:function () {
-            
+        // 导入完成
+        handleAvatarSuccess:function(res, file) {
+            // vm.imageUrl = URL.createObjectURL(file.raw);
+            // vm.file = file;
+            console.log(res);
+            if(res.code == 0){
+                this.$message({
+                    type: 'success',
+                    message: '导入成功！'
+                });
+            }
+        },
+        // 导入前
+        beforeAvatarUpload:function(file) {
+            var FileExt = file.name.replace(/.+\./, "");
+            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
+                this.$message({
+                    type: 'warning',
+                    message: '上传文件只能是excel！'
+                });
+                return false;
+            }else {
+                file.type = 'xls';
+                vm.fileData = file;
+                console.log(vm.fileData);
+            }
+
+
         },
         // 导出
         outUp:function () {
-            
+            window.location.href = baseURL + "resource/resourcefield/downField"
         },
         // 下载模版
         downUp:function () {
-            
+            window.location.href = baseURL + "resource/resourcefield/downTemplate"
         },
         // 表格选中方法
         toggleSelection1:function(selection) {
