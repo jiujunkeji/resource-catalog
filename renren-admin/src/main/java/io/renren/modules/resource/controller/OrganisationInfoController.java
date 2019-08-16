@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,6 +38,15 @@ public class OrganisationInfoController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * select列表
+     */
+    @RequestMapping("/select")
+    public R select(@RequestParam Map<String, Object> params){
+        List<OrganisationInfoEntity> list = organisationInfoService.selectList(null);
+
+        return R.ok().put("list", list);
+    }
 
     /**
      * 信息
