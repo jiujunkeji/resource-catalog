@@ -3,6 +3,8 @@ package io.renren.modules.resource.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -112,6 +114,31 @@ public class ResourceFieldController {
     }
 
     /**
+     * 下载目录模板
+     */
+    @RequestMapping("/downTemplate")
+    public void downTemplate(HttpServletResponse response, HttpServletRequest request){
+        try{
+            String pathName = "fieldTemplate.xlsx";
+            String fileName = "元数据字段导入模板.xlsx";
+            String fn = URLEncoder.encode(fileName,"UTF-8");
+            response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            String filePath = getClass().getClassLoader().getResource("TAB1/" + pathName).getPath();
+            FileInputStream input = new FileInputStream(filePath);
+            OutputStream out = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int len;
+            while((len = input.read(b)) != -1){
+                out.write(b,0,len);
+            }
+            response.setHeader("Conten-Length",String.valueOf(input.getChannel().size()));
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
+    }
+
+    /**
      *导入
      */
     @RequestMapping("/importField")
@@ -144,19 +171,34 @@ public class ResourceFieldController {
             fieldEntity.setCnName(POIUtils.getCellValue(row.getCell(1)).replace(" ", ""));
             fieldEntity.setEuName(POIUtils.getCellValue(row.getCell(2)).replace(" ", ""));
             if (POIUtils.getCellValue(row.getCell(3)) != null) {
-                dt = Integer.valueOf(POIUtils.getCellValue(row.getCell(3)));
-                fieldEntity.setDataType(dt);
+                String dtf = (POIUtils.getCellValue(row.getCell(3)));
+                if (dtf.equals("整型")){
+                    fieldEntity.setDataType(0);
+                }else if (dtf.equals("实型")){
+                    fieldEntity.setDataType(1);
+                }else if (dtf.equals("布尔型")){
+                    fieldEntity.setDataType(2);
+                }else if (dtf.equals("字符串")){
+                    fieldEntity.setDataType(3);
+                }else if (dtf.equals("日期")){
+                    fieldEntity.setDataType(4);
+                }
             }
             if (POIUtils.getCellValue(row.getCell(4)) != null) {
-                dl = Integer.valueOf(POIUtils.getCellValue(row.getCell(4)));
+                dl = Integer.valueOf(POIUtils.getCellValue(row.getCell(4)).replace(".0",""));
                 fieldEntity.setDataType(dl);
             }
-            if (POIUtils.getCellValue(row.getCell(3)) != null) {
-                jm = Integer.valueOf(POIUtils.getCellValue(row.getCell(3)));
-                fieldEntity.setDataType(jm);
+            if (POIUtils.getCellValue(row.getCell(5)) != null) {
+                String jmf =(POIUtils.getCellValue(row.getCell(5)));
+                if (jmf.equals("必选")){
+                    fieldEntity.setJudgeMandatory(0);
+                }else if (jmf.equals("非必选")){
+                    fieldEntity.setJudgeMandatory(1);
+                }
             }
             fieldEntity.setCreateDate(new Date());
             fieldEntity.setUpdateTime(new Date());
+            resourceFieldService.insert(fieldEntity);
         }
         return R.ok();
     }
@@ -165,8 +207,8 @@ public class ResourceFieldController {
     /**
     导出
      */
-    @RequestMapping("/downField")
-    public void downField(HttpSession session, HttpServletResponse response, HttpServletRequest request)throws Exception{
+    @RequestMapping("/downField/{meteId}")
+    public void downField(@PathVariable("meteId") Long meteId, HttpSession session, HttpServletResponse response, HttpServletRequest request)throws Exception{
 
         List<ResourceFieldEntity> fieldList =resourceFieldService.selectList(new EntityWrapper<ResourceFieldEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
@@ -234,7 +276,11 @@ public class ResourceFieldController {
                 }else if (i == 4){
                     cell.setCellValue(t.getDataLength());
                 }else if(i == 5){
-                    cell.setCellValue(t.getJudgeMandatory());
+                    if (t.getJudgeMandatory() == 0){
+                        cell.setCellValue("必选");
+                    }else if (t.getJudgeMandatory() == 1){
+                        cell.setCellValue("非必选");
+                    }
                 }
             }
         }
