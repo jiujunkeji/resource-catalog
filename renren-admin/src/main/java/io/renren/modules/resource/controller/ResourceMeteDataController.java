@@ -80,6 +80,12 @@ public class ResourceMeteDataController extends AbstractController{
         resourceMeteData.setReviewState(0);
         resourceMeteData.setPushState(0);
         resourceMeteDataService.insert(resourceMeteData);
+        Long meteId = resourceMeteData.getMeteId();
+        List<ResourceFieldEntity> resourceFieldEntityList = resourceMeteData.getFieldList();
+        for (ResourceFieldEntity resourceFieldEntity : resourceFieldEntityList){
+            resourceFieldEntity.setMeteId(meteId);
+            resourceFieldService.updateById(resourceFieldEntity);
+        }
         //设置元数据标识
         String metedataIdentifier = "metadata_ " + resourceMeteData.getCategoryId() + "-" + resourceMeteData.getCatalogId() + "-" + resourceMeteData.getMeteId();
         resourceMeteData.setMetedataIdentifier(metedataIdentifier);
@@ -93,6 +99,12 @@ public class ResourceMeteDataController extends AbstractController{
     @RequestMapping("/update")
 //    @RequiresPermissions("resource:resourcemetedata:update")
     public R update(@RequestBody ResourceMeteDataEntity resourceMeteData){
+        Long meteId = resourceMeteData.getMeteId();
+        List<ResourceFieldEntity> resourceFieldEntityList = resourceMeteData.getFieldList();
+        for (ResourceFieldEntity resourceFieldEntity : resourceFieldEntityList){
+            resourceFieldEntity.setMeteId(meteId);
+            resourceFieldService.updateById(resourceFieldEntity);
+        }
         ValidatorUtils.validateEntity(resourceMeteData);
         resourceMeteDataService.updateAllColumnById(resourceMeteData);//全部更新
         

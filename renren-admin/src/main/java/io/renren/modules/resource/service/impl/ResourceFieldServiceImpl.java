@@ -18,9 +18,11 @@ public class ResourceFieldServiceImpl extends ServiceImpl<ResourceFieldDao, Reso
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String meteId = (String) params.get("id");
         Page<ResourceFieldEntity> page = this.selectPage(
                 new Query<ResourceFieldEntity>(params).getPage(),
                 new EntityWrapper<ResourceFieldEntity>()
+                       .eq("mete_id",meteId).or().isNull("mete_id")
         );
 
         return new PageUtils(page);

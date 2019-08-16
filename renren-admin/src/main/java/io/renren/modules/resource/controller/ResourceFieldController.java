@@ -79,8 +79,7 @@ public class ResourceFieldController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("resource:resourcefield:save")
-    public R save(@RequestBody ResourceFieldEntity resourceField , Long meteId){
-        resourceField.setMeteId(meteId);
+    public R save(@RequestBody ResourceFieldEntity resourceField){
         resourceField.setCreateDate(new Date());
         resourceField.setUpdateTime(new Date());
         resourceFieldService.insert(resourceField);
