@@ -196,6 +196,7 @@ var vm = new Vue({
         // 分页
         layerPage:function (currentPage) {
             console.log(currentPage);
+            vm.page = currentPage;
             vm.getTableList();
         },
 	},

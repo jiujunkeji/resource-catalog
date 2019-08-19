@@ -443,7 +443,7 @@ var vm = new Vue({
                     console.log(r);
                     if(r.code === 0){
                         vm.tableList = r.page.list;
-                        vm.totalPage = r.page.totalPage;
+                        vm.totalPage = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }
@@ -453,10 +453,14 @@ var vm = new Vue({
         // 分页
         layerPage:function (currentPage) {
             console.log(currentPage);
+            vm.page = currentPage;
+            vm.getTableList();
         },
         // 编辑分页
         layerPage1:function (currentPage) {
             console.log(currentPage);
+            vm.page1 = currentPage;
+            vm.getFileTableList();
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
@@ -682,7 +686,7 @@ var vm = new Vue({
                     console.log(r);
                     if(r.code === 0){
                         vm.resourceMeteData.fieldList = r.page.list;
-                        vm.totalPage1 = r.page.totalPage;
+                        vm.totalPage1 = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }
@@ -699,6 +703,7 @@ var vm = new Vue({
                     type: 'success',
                     message: '导入成功！'
                 });
+                vm.getFileTableList();
             }
         },
         // 导入前
@@ -715,12 +720,45 @@ var vm = new Vue({
                 vm.fileData = file;
                 console.log(vm.fileData);
             }
-
-
+        },
+        handlePreview:function(file) {
+            var FileExt = file.name.replace(/.+\./, "");
+            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
+                this.$message({
+                    type: 'warning',
+                    message: '上传文件只能是excel！'
+                });
+                return false;
+            }else {
+                file.type = 'xls';
+                vm.fileData = file;
+                console.log(vm.fileData);
+                vm.inUp();
+            }
+        },
+        inUp:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/resourcefield/importField',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    file:vm.fileData,
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        // vm.resourceMeteData.fieldList = r.page.list;
+                        // vm.totalPage1 = r.page.totalPage;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
         },
         // 导出
         outUp:function () {
-            window.location.href = baseURL + "resource/resourcefield/downField"
+            window.location.href = baseURL + "resource/resourcefield/downField/"+vm.resourceMeteData.meteId
         },
         // 下载模版
         downUp:function () {

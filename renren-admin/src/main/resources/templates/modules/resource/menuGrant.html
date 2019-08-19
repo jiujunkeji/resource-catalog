@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <#include "/header.html">
+        <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+        <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+        <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+        <style>
+            span.stop{
+                display: inline-block;
+                padding: 2px 4px;
+                border-radius: 2px;
+                background: #f56c6c;
+                color: #fff;
+                font-size: 12px;
+            }
+            span.ok{
+                display: inline-block;
+                padding: 2px 4px;
+                border-radius: 2px;
+                background: #409eff;
+                color: #fff;
+                font-size: 12px;
+            }
+            .el-button--primary{
+
+            }
+            .col-sm-2.control-label{
+                width: 100px;
+            }
+            .col-sm-10 .el-select{
+                width: 100%;
+            }
+            .col-sm-10 .el-select .el-input__inner{
+                display: block;
+                width: 100%;
+                height: 34px;
+                padding: 6px 12px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #555;
+                background-color: #f1f4fb;
+                background-image: none;
+                border: 1px solid #f1f4fb;
+                border-radius: 4px;
+                -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+                -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            }
+            .el-select-dropdown{
+                z-index:9999999999!important;
+            }
+            .el-message{
+                z-index:9999999999!important;
+            }
+
+        </style>
+        </head>
+<body>
+<div id="rrapp" v-cloak>
+
+    <div class="divBox">
+        <div class="grid-btn">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
+            <div class="right">
+                <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
+            </div>
+        </div>
+        <el-table
+                :data="tableList"
+                border
+                stripe
+                @selection-change="toggleSelection"
+                style="width: 100%">
+            <!--<el-table-column-->
+            <!--fixed-->
+            <!--type="selection"-->
+            <!--width="40">-->
+            <!--</el-table-column>-->
+            <el-table-column
+                    prop="deptName"
+                    label="部门名称"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="用户"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="roleName"
+                    label="角色"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="catalogName"
+                    label="目录"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="120">
+                <template slot-scope="scope">
+                    <el-switch
+                            v-model="scope.row.grantId"
+                            active-value="1"
+                            @change="changeIs(scope.row.grantId,scope.row.isUsed)"
+                            inactive-value="2">
+                    </el-switch>
+                </template>
+            </el-table-column>
+        </el-table>
+        <br>
+        <el-pagination
+                background
+                pager-count="1"
+                :current-page="page"
+                layout="prev, pager, next, jumper"
+                @current-change="layerPage"
+                :total="totalPage">
+        </el-pagination>
+
+
+
+    </div>
+
+    <div id="addUp" class="panel panel-default" style="display: none">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">部门名称</div>
+                <div class="col-sm-10">
+                    <el-select v-model="resourceCatalog.deptName" placeholder="请选择" @change="deptChange">
+                        <el-option
+                                v-for="item in dept"
+                                :key="item.organisationId"
+                                :label="item.organisationName"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" @click="menuTree" readonly="readonly" placeholder="部门名称"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">用户名称</div>
+                <div class="col-sm-10">
+                    <el-select v-model="resourceCatalog.userName" placeholder="请选择" @focus="getUser" @change="userChange">
+                        <el-option
+                                v-for="item in user"
+                                :key="item.userId"
+                                :label="item.username"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="用户"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">目录名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="resourceCatalog.catalogName" placeholder="目录" @click="menuTree" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否使用</div>
+                <div class="col-sm-10">
+                    <el-select v-model="resourceCatalog.isUsed" placeholder="请选择">
+                        <el-option
+                                key="0"
+                                label="停用"
+                                value="0">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="使用"
+                                value="1">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="用户"/>-->
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+
+    <!-- 选择上级菜单 -->
+    <div id="menuLayer" style="display: none;padding:10px;">
+        <ul id="menuTree" class="ztree"></ul>
+    </div>
+
+</div>
+
+<!--<script src="${request.contextPath}/statics/js/modules/sys/menu.js?_${.now?long}"></script>-->
+<!--<script src="${request.contextPath}/statics/js/lay/modules/form.js"></script>-->
+<script src="${request.contextPath}/statics/js/modules/resource/menuGrant.js?_${.now?long}"></script>
+
+</body>
+</html>

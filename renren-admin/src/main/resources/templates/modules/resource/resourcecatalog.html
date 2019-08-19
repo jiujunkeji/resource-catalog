@@ -30,6 +30,34 @@
                 .el-button--primary{
 
                 }
+                .col-sm-2.control-label{
+                    width: 100px;
+                }
+                .col-sm-10 .el-select{
+                    width: 100%;
+                }
+                .col-sm-10 .el-select .el-input__inner{
+                    display: block;
+                    width: 100%;
+                    height: 34px;
+                    padding: 6px 12px;
+                    font-size: 14px;
+                    line-height: 1.42857143;
+                    color: #555;
+                    background-color: #f1f4fb;
+                    background-image: none;
+                    border: 1px solid #f1f4fb;
+                    border-radius: 4px;
+                    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+                    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+                    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+                }
+                .el-select-dropdown{
+                    z-index:9999999999!important;
+                }
+                .el-message{
+                    z-index:9999999999!important;
+                }
 
             </style>
 </head>
@@ -163,6 +191,41 @@
                 <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>-->
                 <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>-->
             </div>
+        </form>
+    </div>
+
+    <div id="grant" class="panel panel-default" style="display: none">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">部门名称</div>
+                <div class="col-sm-10">
+                    <el-select v-model="gatntObj.deptName" multiple placeholder="请选择" @change="deptChange">
+                        <el-option
+                                v-for="item in dept"
+                                :key="item.organisationId"
+                                :label="item.organisationName"
+                                :value="item.organisationId">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" @click="menuTree" readonly="readonly" placeholder="部门名称"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">用户名称</div>
+                <div class="col-sm-10">
+                    <el-select v-model="gatntObj.userName" placeholder="请选择" @focus="getUser" @change="userChange">
+                        <el-option
+                                v-for="item in user"
+                                :key="item.userId"
+                                :label="item.username"
+                                :value="item.userId">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="用户"/>-->
+                </div>
+            </div>
+
+
         </form>
     </div>
 

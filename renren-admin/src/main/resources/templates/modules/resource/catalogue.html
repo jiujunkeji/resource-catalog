@@ -65,7 +65,7 @@
                 margin: 0;
                 height: 34px;
                 padding: 6px 12px;
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 1.42857143;
                 color: #555;
                 background-color: none;
@@ -410,9 +410,12 @@
                     <div style="display: inline-block">
                         <el-upload
                                 class="avatar-uploader"
+                                ref="upload"
                                 action='${request.contextPath}/resource/resourcefield/importField'
                                 :show-file-list="false"
+                                :on-change="handlePreview"
                                 :on-success="handleAvatarSuccess"
+                                :auto-upload="false"
                                 :before-upload="beforeAvatarUpload">
                             <el-button size="medium" type="primary">导入</el-button>
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -502,11 +505,6 @@
                     :total="totalPage1">
             </el-pagination>
         </div>
-
-
-
-
-
     </div>
 
     <div id="addUp" class="panel panel-default" style="display: none">
