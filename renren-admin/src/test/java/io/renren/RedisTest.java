@@ -1,6 +1,8 @@
 package io.renren;
 
 import io.renren.common.utils.RedisUtils;
+import io.renren.modules.resource.service.CatalogGrantService;
+import io.renren.modules.resource.service.ResourceCatalogService;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Test;
@@ -14,14 +16,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RedisTest {
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private ResourceCatalogService resourceCatalogService;
 
     @Test
     public void contextLoads() {
-        SysUserEntity user = new SysUserEntity();
-        user.setEmail("123456@qq.com");
-        redisUtils.set("user", user);
+//        SysUserEntity user = new SysUserEntity();
+//        user.setEmail("123456@qq.com");
+//        redisUtils.set("user", user);
+//
+//        System.out.println(ToStringBuilder.reflectionToString(redisUtils.get("user", SysUserEntity.class)));
 
-        System.out.println(ToStringBuilder.reflectionToString(redisUtils.get("user", SysUserEntity.class)));
+        System.out.println(resourceCatalogService.selectAllCatalogName(7L));
     }
 
 }

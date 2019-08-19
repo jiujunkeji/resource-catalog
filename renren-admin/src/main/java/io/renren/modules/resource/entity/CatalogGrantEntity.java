@@ -65,7 +65,7 @@ public class CatalogGrantEntity implements Serializable {
 	/**
 	 * 是否使用（0：停用；1：使用）
 	 */
-	private Integer isUsed;
+	private Integer isUsed = 1;
 
 	/**
 	 * 设置：

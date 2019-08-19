@@ -1,9 +1,17 @@
 package io.renren.modules.resource.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.ResourceCatalogEntity;
+import io.renren.modules.resource.service.ResourceCatalogService;
+import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.controller.SysRoleController;
+import io.renren.modules.sys.entity.SysRoleEntity;
+import io.renren.modules.sys.service.SysRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +36,13 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("resource/cataloggrant")
-public class CatalogGrantController {
+public class CatalogGrantController extends AbstractController{
     @Autowired
     private CatalogGrantService catalogGrantService;
+    @Autowired
+    private SysRoleService roleService;
+    @Autowired
+    private ResourceCatalogService resourceCatalogService;
 
     /**
      * 列表
@@ -58,8 +70,13 @@ public class CatalogGrantController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody CatalogGrantEntity catalogGrant){
+        SysRoleEntity sysRoleEntity = roleService.selectOne(new EntityWrapper<SysRoleEntity>().eq("user_id",catalogGrant.getUserId()));
+        catalogGrant.setRoleId(sysRoleEntity.getRoleId());
+        catalogGrant.setRoleName(sysRoleEntity.getRoleName());
+        catalogGrant.setCreateUserId(getUserId());
+        catalogGrant.setCreateTime(new Date());
+        catalogGrant.setCatalogName(resourceCatalogService.selectAllCatalogName(catalogGrant.getCatalogId()));
         catalogGrantService.insert(catalogGrant);
-
         return R.ok();
     }
 
@@ -84,4 +101,32 @@ public class CatalogGrantController {
         return R.ok();
     }
 
+    /**
+     * 停用
+     */
+    @RequestMapping("/stop")
+    public R stop(@RequestParam Long grantId){
+        CatalogGrantEntity catalogGrant = catalogGrantService.selectById(grantId);
+        if(catalogGrant != null){
+            catalogGrant.setIsUsed(0);
+            catalogGrantService.updateById(catalogGrant);
+            return R.ok();
+        }else{
+            return R.error("没有找到目标授权");
+        }
+    }
+    /**
+     * 启用
+     */
+    @RequestMapping("/start")
+    public R start(@RequestParam Long grantId){
+        CatalogGrantEntity catalogGrant = catalogGrantService.selectById(grantId);
+        if(catalogGrant != null){
+            catalogGrant.setIsUsed(1);
+            catalogGrantService.updateById(catalogGrant);
+            return R.ok();
+        }else{
+            return R.error("没有找到目标授权");
+        }
+    }
 }

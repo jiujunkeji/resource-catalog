@@ -85,19 +85,33 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
 
     @Override
     public String selectAllCatalogName(Long catalogId) {
-        List<ResourceCatalogEntity> parentList = new ArrayList<ResourceCatalogEntity>();
+        StringBuffer stf = new StringBuffer("");
+        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
         ResourceCatalogEntity currentCatalog = this.selectById(catalogId);
         if(currentCatalog != null){
-            parentList.add(currentCatalog);
-            return selectParentCatalogList(parentList,currentCatalog);
-        }else{
-            return "";
+            list.add(currentCatalog);
+            list = selectParentCatalogList(list,currentCatalog);
+            for(int i = list.size()-1; i > -1; i--){
+                stf.append(list.get(i).getName());
+                stf.append("/");
+            }
         }
-
+        String result = stf.toString();
+        if(result.length() > 0){
+            result = result.substring(0,result.length()-1);
+        }
+        return result;
     }
 
-    public String selectParentCatalogList(List<ResourceCatalogEntity> parentList, ResourceCatalogEntity currentCatalog) {
-
-        return null;
+    public List<ResourceCatalogEntity> selectParentCatalogList(List<ResourceCatalogEntity> list, ResourceCatalogEntity currentCatalog) {
+        if(currentCatalog == null){
+            return list;
+        }
+        ResourceCatalogEntity parentCatalog = this.selectById(currentCatalog.getParentId());
+        if(parentCatalog != null){
+            list.add(parentCatalog);
+            selectParentCatalogList(list,parentCatalog);
+        }
+        return list;
     }
 }
