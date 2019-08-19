@@ -20,5 +20,8 @@ public interface ResourceCatalogService extends IService<ResourceCatalogEntity> 
     void insertCatalog(ResourceCatalogEntity catalogEntity);
 
     ResourceCatalogEntity selectCatalog(ResourceCatalogEntity catalogEntity);
+
+
+    String selectAllCatalogName(Long catalogId);
 }
 

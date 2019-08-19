@@ -36,7 +36,6 @@ public class CatalogGrantController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:cataloggrant:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = catalogGrantService.queryPage(params);
 
@@ -48,7 +47,6 @@ public class CatalogGrantController {
      * 信息
      */
     @RequestMapping("/info/{grantId}")
-    @RequiresPermissions("resource:cataloggrant:info")
     public R info(@PathVariable("grantId") Long grantId){
         CatalogGrantEntity catalogGrant = catalogGrantService.selectById(grantId);
 
@@ -59,7 +57,6 @@ public class CatalogGrantController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:cataloggrant:save")
     public R save(@RequestBody CatalogGrantEntity catalogGrant){
         catalogGrantService.insert(catalogGrant);
 
@@ -70,7 +67,6 @@ public class CatalogGrantController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:cataloggrant:update")
     public R update(@RequestBody CatalogGrantEntity catalogGrant){
         ValidatorUtils.validateEntity(catalogGrant);
         catalogGrantService.updateAllColumnById(catalogGrant);//全部更新
@@ -82,7 +78,6 @@ public class CatalogGrantController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:cataloggrant:delete")
     public R delete(@RequestBody Long[] grantIds){
         catalogGrantService.deleteBatchIds(Arrays.asList(grantIds));
 

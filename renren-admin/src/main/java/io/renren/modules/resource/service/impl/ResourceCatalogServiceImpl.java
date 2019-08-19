@@ -1,9 +1,12 @@
 package io.renren.modules.resource.service.impl;
 
+import io.renren.modules.resource.entity.CatalogGrantEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -78,5 +81,23 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         catalogEntity.setTwoName(twoName);
         catalogEntity.setThreeName(threeName);
         return catalogEntity;
+    }
+
+    @Override
+    public String selectAllCatalogName(Long catalogId) {
+        List<ResourceCatalogEntity> parentList = new ArrayList<ResourceCatalogEntity>();
+        ResourceCatalogEntity currentCatalog = this.selectById(catalogId);
+        if(currentCatalog != null){
+            parentList.add(currentCatalog);
+            return selectParentCatalogList(parentList,currentCatalog);
+        }else{
+            return "";
+        }
+
+    }
+
+    public String selectParentCatalogList(List<ResourceCatalogEntity> parentList, ResourceCatalogEntity currentCatalog) {
+
+        return null;
     }
 }
