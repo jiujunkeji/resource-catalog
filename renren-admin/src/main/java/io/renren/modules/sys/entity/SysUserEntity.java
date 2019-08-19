@@ -55,6 +55,12 @@ public class SysUserEntity implements Serializable {
 	private String username;
 
 	/**
+	 * 用户名
+	 */
+	@NotBlank(message="昵称不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	private String name;
+
+	/**
 	 * 密码
 	 */
 	@NotBlank(message="密码不能为空", groups = AddGroup.class)
@@ -248,5 +254,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

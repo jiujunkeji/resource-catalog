@@ -17,6 +17,7 @@
 package io.renren.modules.sys.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -62,7 +63,17 @@ public class SysUserController extends AbstractController {
 
 		return R.ok().put("page", page);
 	}
-	
+
+	/**
+	 * 所有用户列表
+	 */
+	@RequestMapping("/select")
+	public R select(@RequestParam Long deptId){
+		List<SysUserEntity> list = sysUserService.selectList(new EntityWrapper<SysUserEntity>().eq("dept_id",deptId));
+
+		return R.ok().put("list", list);
+	}
+
 	/**
 	 * 获取登录的用户信息
 	 */
