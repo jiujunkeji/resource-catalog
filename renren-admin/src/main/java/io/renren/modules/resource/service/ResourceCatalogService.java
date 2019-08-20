@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.resource.entity.ResourceCatalogEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +22,10 @@ public interface ResourceCatalogService extends IService<ResourceCatalogEntity> 
 
     ResourceCatalogEntity selectCatalog(ResourceCatalogEntity catalogEntity);
 
-
     String selectAllCatalogName(Long catalogId);
+
+    List<ResourceCatalogEntity> selectParentCatalogList(List<ResourceCatalogEntity> list, ResourceCatalogEntity currentCatalog);
+
+    List<ResourceCatalogEntity> selectChildCatalogList(List<ResourceCatalogEntity> list, ResourceCatalogEntity currentCatalog);
 }
 

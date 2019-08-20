@@ -1,7 +1,11 @@
 package io.renren.modules.resource.service.impl;
 
-import io.renren.modules.resource.entity.CatalogGrantEntity;
+import io.renren.modules.resource.entity.CatalogDeptEntity;
+import io.renren.modules.resource.entity.CatalogUserEntity;
+import io.renren.modules.resource.service.CatalogDeptService;
+import io.renren.modules.resource.service.CatalogUserService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +25,11 @@ import io.renren.modules.resource.service.ResourceCatalogService;
 
 @Service("resourceCatalogService")
 public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, ResourceCatalogEntity> implements ResourceCatalogService {
+
+    @Autowired
+    private CatalogUserService catalogUserService;
+    @Autowired
+    private CatalogDeptService catalogDeptService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -103,6 +112,7 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         return result;
     }
 
+    @Override
     public List<ResourceCatalogEntity> selectParentCatalogList(List<ResourceCatalogEntity> list, ResourceCatalogEntity currentCatalog) {
         if(currentCatalog == null){
             return list;
@@ -111,6 +121,21 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         if(parentCatalog != null){
             list.add(parentCatalog);
             selectParentCatalogList(list,parentCatalog);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ResourceCatalogEntity> selectChildCatalogList(List<ResourceCatalogEntity> list, ResourceCatalogEntity currentCatalog) {
+        if(currentCatalog == null){
+            return list;
+        }
+        List<ResourceCatalogEntity> childCatalogList = this.selectList(new EntityWrapper<ResourceCatalogEntity>().eq("parent_id",currentCatalog.getCatalogId()));
+        if(childCatalogList != null && childCatalogList.size() > 0){
+            list.addAll(childCatalogList);
+            for(ResourceCatalogEntity child : childCatalogList){
+                selectChildCatalogList(list,child);
+            }
         }
         return list;
     }

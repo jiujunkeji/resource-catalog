@@ -3,12 +3,19 @@ package io.renren.modules.resource.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.CatalogDeptEntity;
+import io.renren.modules.resource.entity.CatalogUserEntity;
 import io.renren.modules.resource.entity.ResourceCatalogEntity;
+import io.renren.modules.resource.service.CatalogDeptService;
+import io.renren.modules.resource.service.CatalogUserService;
 import io.renren.modules.resource.service.ResourceCatalogService;
 import io.renren.modules.resource.utils.POIUtils;
+import io.renren.modules.resource.vm.GrantVM;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
+import io.renren.modules.sys.service.SysUserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +37,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -47,7 +55,13 @@ public class ResourceCatalogController extends AbstractController{
     @Autowired
     private ResourceCatalogService resourceCatalogService;
     @Autowired
+    private SysUserService userService;
+    @Autowired
     private SysDeptService deptService;
+    @Autowired
+    private CatalogUserService catalogUserService;
+    @Autowired
+    private CatalogDeptService catalogDeptService;
     /**
      * 列表
      */
@@ -355,5 +369,136 @@ public class ResourceCatalogController extends AbstractController{
         }else{
             return R.error("没有找到目标目录");
         }
+    }
+
+    /**
+     * 获取授权信息
+     */
+    @RequestMapping("/selectGrant")
+    public R grant(@RequestParam Long catalogId){
+        //获取之前授权的用户列表
+        List<CatalogUserEntity> cataLogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("catalog_id",catalogId));
+        //之前授权的用户id列表
+        List<Long> userIdList = new ArrayList<Long>();
+        for(CatalogUserEntity catalogUserEntity : cataLogUserList){
+            userIdList.add(catalogUserEntity.getUserId());
+        }
+        List<SysUserEntity> userList = new ArrayList<SysUserEntity>();
+        userList = userService.selectBatchIds(userIdList);
+        //获取之前授权的部门列表
+        List<CatalogDeptEntity> cataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",catalogId));
+        //之前授权的部门id列表
+        List<Long> deptIdList = new ArrayList<Long>();
+        for(CatalogDeptEntity catalogDeptEntity : cataLogDeptList){
+            deptIdList.add(catalogDeptEntity.getDeptId());
+        }
+        List<SysDeptEntity> deptList = new ArrayList<SysDeptEntity>();
+        deptList = deptService.selectBatchIds(deptIdList);
+        return R.ok().put("userList",userList).put("deptList",deptList);
+    }
+
+    /**
+     * 授权
+     */
+    @RequestMapping("/grant")
+    public R grant(@RequestBody GrantVM grantVM){
+        System.out.println(grantVM.getCatalogId());
+
+        List<SysUserEntity> userList = grantVM.getUserList();
+        List<SysDeptEntity> deptList = grantVM.getDeptList();
+
+        //获取之前授权的用户列表
+        List<CatalogUserEntity> oldCataLogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("catalog_id",grantVM.getCatalogId()));
+        //之前授权的用户id列表
+        List<Long> oldUserIdList = new ArrayList<Long>();
+        for(CatalogUserEntity catalogUserEntity : oldCataLogUserList){
+            oldUserIdList.add(catalogUserEntity.getUserId());
+        }
+        //现在授权的用户id列表
+        List<Long> newUserIdList = new ArrayList<Long>();
+        for(SysUserEntity userEntity : userList){
+            newUserIdList.add(userEntity.getUserId());
+        }
+        //需要添加授权的用户id列表
+        List<Long> addUserIdList = new ArrayList<Long>();
+        addUserIdList = newUserIdList;
+        addUserIdList.removeAll(oldUserIdList);
+        //需要删除授权的用户id列表
+        List<Long> deleteUserIdList = new ArrayList<Long>();
+        deleteUserIdList = oldUserIdList;
+        deleteUserIdList.removeAll(newUserIdList);
+        //获取之前授权的部门列表
+        List<CatalogDeptEntity> oldCataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",grantVM.getCatalogId()));
+        //之前授权的部门id列表
+        List<Long> oldDeptIdList = new ArrayList<Long>();
+        for(CatalogDeptEntity catalogDeptEntity : oldCataLogDeptList){
+            oldDeptIdList.add(catalogDeptEntity.getDeptId());
+        }
+        //现在授权的部门id列表
+        List<Long> newDeptIdList = new ArrayList<Long>();
+        for(SysDeptEntity deptEntity : deptList){
+            newDeptIdList.add(deptEntity.getDeptId());
+        }
+        //需要添加授权的部门id列表
+        List<Long> addDeptIdList = new ArrayList<Long>();
+        addDeptIdList = newDeptIdList;
+        addDeptIdList.removeAll(oldDeptIdList);
+        //需要删除授权的部门id列表
+        List<Long> deleteDeptIdList = new ArrayList<Long>();
+        deleteDeptIdList = oldDeptIdList;
+        deleteDeptIdList.removeAll(newDeptIdList);
+        //list:所有授权目录子级（包括本身）的实体
+        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
+        //idList:所有授权目录子级（包括本身）的catalogId列表
+        List<Long> idList = new ArrayList<Long>();
+        ResourceCatalogEntity currentCatalog = resourceCatalogService.selectById(grantVM.getCatalogId());
+        List<ResourceCatalogEntity> a = new ArrayList<ResourceCatalogEntity>();
+        //先将本体授权目录set进集合，再递归获取子级
+        a.add(currentCatalog);
+        //递归获取到所有授权目录子级（包括本身）的实体
+        list = resourceCatalogService.selectChildCatalogList(a,currentCatalog);
+        //循环获取授权目录id列表
+        for(ResourceCatalogEntity l : list){
+            idList.add(l.getCatalogId());
+        }
+        //获取上级id
+        Long parentCatalogId = currentCatalog.getParentId();
+
+        //循环需要添加授权的用户列表
+        if(addUserIdList.size() > 0){
+            for(Long userId : addUserIdList){
+                if(catalogUserService.selectUserIsNull(userId,parentCatalogId)){
+                    //若没有授权，则授权所有子级
+                    catalogUserService.addBatch(idList,userId);
+                }else{
+                    //如果上级id有授权，则只增加当前授权id
+                    catalogUserService.insert(new CatalogUserEntity(grantVM.getCatalogId(),userId));
+                }
+            }
+        }
+        if(deleteDeptIdList.size() > 0){
+            for(Long deptId : deleteDeptIdList){
+                if(catalogDeptService.selectDeptIsNull(deptId,parentCatalogId)){
+                    //若没有授权，则授权所有子级
+                    catalogDeptService.addBatch(idList,deptId);
+                }else{
+                    //如果上级id有授权，则只增加当前授权id
+                    catalogDeptService.insert(new CatalogDeptEntity(grantVM.getCatalogId(),deptId));
+                }
+            }
+        }
+        //循环需要删除授权的用户列表
+        if(deleteUserIdList.size() > 0) {
+            for (Long userId : deleteUserIdList) {
+                catalogUserService.deleteBatch(idList,userId);
+            }
+        }
+        //循环需要删除授权的用户列表
+        if(deleteDeptIdList.size() > 0) {
+            for (Long deptId : deleteDeptIdList) {
+                catalogDeptService.deleteBatch(idList,deptId);
+            }
+        }
+        return R.ok();
     }
 }
