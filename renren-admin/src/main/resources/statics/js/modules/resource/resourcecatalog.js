@@ -74,12 +74,20 @@ var vm = new Vue({
             parentId:null,
             parentName:''
         },
+        gatntObj: {
+            deptId:null,
+            deptName:[],
+            userId:null,
+            userName:[]
+        },
         imageUrl:'',
         fileData:null,
         name:null,
         open:true,
         openText:'展开筛选',
         h:0,
+        dept:[],
+        user:[],
         // catalogList:
 	},
 	methods: {
@@ -268,6 +276,7 @@ var vm = new Vue({
                     type: 'success',
                     message: '导入成功！'
                 });
+                vm.reload();
             }
         },
         // 导入前
@@ -297,14 +306,47 @@ var vm = new Vue({
                 vm.open = true;
                 vm.openText = '展开筛选'
             }
-        }
+        },
+        // 部门
+        getDept:function () {
+            $.get(baseURL + "resource/organisationinfo/select", function(r){
+                console.log(r);
+                vm.dept = r.list;
+                // vm.menu.parentName = node.name;
+            })
+        },
+        deptChange:function (obj) {
+            console.log(obj);
+            // vm.gatntObj.deptId = obj.organisationId;
+            // vm.gatntObj.deptName = obj.organisationName;
+            // vm.getUser();
+        },
+        // 用户
+        getUser:function () {
+            if(vm.gatntObj.deptId){
+                $.get(baseURL + "sys/user/select?deptId="+vm.resourceCatalog.deptId, function(r){
+                    console.log(r);
+                    vm.user = r.list;
+
+                })
+            }else {
+                this.$message({
+                    message: '请先选择部门',
+                    type: 'warning'
+                });
+            }
+
+        },
+        userChange:function (obj) {
+            console.log(obj);
+            vm.resourceCatalog.userId = obj.userId;
+            vm.resourceCatalog.userName = obj.username;
+        },
 	},
 	created:function () {
         // this.h = height
-        $.get(baseURL + "resource/resourcecatalog/list", function(r){
-
-            console.log(r);
-        });
+        this.getDept();
+        // this.getUser();
     }
 });
 
@@ -331,13 +373,16 @@ Menu.initColumn = function () {
         // }},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
-        {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+        {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
         	if(item.isUsed == 0){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
 			}
 			if(item.isUsed == 1){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
 			}
+        }},
+        {title: '操作', field: '', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+            return '<button class="textB" onClick="grant('+item.catalogId+')">授权</button>';
         }}]
     return columns;
 };
@@ -368,6 +413,28 @@ function getCatalogId () {
     } else {
         return selected[0].id;
     }
+}
+
+function grant() {
+
+    layer.open({
+        type: 1,
+        title: '授权',
+        content: $('#grant'), //这里content是一个普通的String
+        skin: 'openClass',
+        area: ['562px', '520px'],
+        shadeClose: true,
+        closeBtn:0,
+        btn: ['确定','取消'],
+        btn1:function (index) {
+            // vm.saveOrUpdate();
+            layer.close(index);
+        },
+        btn2:function () {
+            vm.reload();
+        }
+
+    })
 }
 
 

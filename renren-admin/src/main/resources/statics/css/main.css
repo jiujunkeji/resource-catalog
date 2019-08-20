@@ -210,6 +210,14 @@ div.line .item>div.inp{
     cursor: pointer;
 }
 
+.textB{
+    background: none;
+    border:none;
+    color: #2593f3;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
 
 *::-webkit-scrollbar {
     width: 0px;
