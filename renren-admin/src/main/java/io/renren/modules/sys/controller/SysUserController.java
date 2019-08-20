@@ -34,6 +34,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,13 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/select")
 	public R select(@RequestParam Long deptId){
-		List<SysUserEntity> list = sysUserService.selectList(new EntityWrapper<SysUserEntity>().eq("dept_id",deptId));
+		List<SysUserEntity> list = new ArrayList<SysUserEntity>();
+		if(deptId != null){
+			list = sysUserService.selectList(new EntityWrapper<SysUserEntity>().eq("dept_id",deptId));
+		}else{
+			list = sysUserService.selectList(null);
+		}
+
 
 		return R.ok().put("list", list);
 	}
