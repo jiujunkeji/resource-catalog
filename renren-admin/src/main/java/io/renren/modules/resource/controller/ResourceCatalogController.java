@@ -385,7 +385,9 @@ public class ResourceCatalogController extends AbstractController{
             userIdList.add(catalogUserEntity.getUserId());
         }
         List<SysUserEntity> userList = new ArrayList<SysUserEntity>();
-        userList = userService.selectBatchIds(userIdList);
+        if(userIdList != null && userIdList.size() > 0){
+            userList = userService.selectBatchIds(userIdList);
+        }
         //获取之前授权的部门列表
         List<CatalogDeptEntity> cataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",catalogId));
         //之前授权的部门id列表
@@ -394,7 +396,9 @@ public class ResourceCatalogController extends AbstractController{
             deptIdList.add(catalogDeptEntity.getDeptId());
         }
         List<SysDeptEntity> deptList = new ArrayList<SysDeptEntity>();
-        deptList = deptService.selectBatchIds(deptIdList);
+        if(deptIdList != null && deptIdList.size() > 0){
+            deptList = deptService.selectBatchIds(deptIdList);
+        }
         return R.ok().put("userList",userList).put("deptList",deptList);
     }
 
