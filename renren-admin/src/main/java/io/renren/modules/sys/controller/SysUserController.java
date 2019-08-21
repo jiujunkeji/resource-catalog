@@ -25,7 +25,10 @@ import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.dto.SysUserDto;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysDeptService;
 import io.renren.modules.sys.service.SysUserRoleService;
 import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.shiro.ShiroUtils;
@@ -53,6 +56,8 @@ public class SysUserController extends AbstractController {
 	private SysUserService sysUserService;
 	@Autowired
 	private SysUserRoleService sysUserRoleService;
+	@Autowired
+	private SysDeptService sysDeptService;
 	
 	/**
 	 * 所有用户列表
@@ -79,6 +84,25 @@ public class SysUserController extends AbstractController {
 
 
 		return R.ok().put("list", list);
+	}
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/selectList")
+	public List<SysUserDto> selectList(){
+		List<SysUserDto> list = new ArrayList<SysUserDto>();
+		List<SysDeptEntity> oneList = sysDeptService.selectList(new EntityWrapper<SysDeptEntity>().eq("del_flag",0));
+		for(SysDeptEntity dept : oneList){
+			if(sysUserService.selectCount(new EntityWrapper<SysUserEntity>().eq("dept_id",dept.getDeptId())) != 0){
+				SysUserDto dto = new SysUserDto();
+				dto.setDeptName(dept.getName());
+				List<SysUserEntity> userList = sysUserService.selectList(new EntityWrapper<SysUserEntity>().eq("dept_id",dept.getDeptId()));
+				dto.setUserList(userList);
+				list.add(dto);
+			}
+		}
+		return list;
 	}
 
 	/**

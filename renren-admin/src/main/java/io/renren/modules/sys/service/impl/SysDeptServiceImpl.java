@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import io.renren.common.annotation.DataFilter;
 import io.renren.common.utils.Constant;
 import io.renren.modules.sys.dao.SysDeptDao;
+import io.renren.modules.sys.dto.SysDeptDto;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,27 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDeptEntity> i
 		getDeptTreeList(subIdList, deptIdList);
 
 		return deptIdList;
+	}
+
+	@Override
+	public SysDeptDto init(SysDeptEntity dept) {
+		SysDeptDto dto = new SysDeptDto();
+		dto.setDeptId(dept.getDeptId());
+		dto.setDeptName(dept.getName());
+		dto.setChildrenList(selectChild(dept.getDeptId()));
+		return dto;
+	}
+
+	public List<SysDeptDto> selectChild(Long parentId){
+		List<SysDeptDto> list = new ArrayList<>();
+		List<SysDeptEntity> deptList = this.selectList(new EntityWrapper<SysDeptEntity>().eq("parent_id",parentId).eq("del_flag",0));
+		if(deptList != null && deptList.size() > 0){
+			for(SysDeptEntity dept : deptList){
+				SysDeptDto dto = init(dept);
+				list.add(dto);
+			}
+		}
+		return list;
 	}
 
 	/**

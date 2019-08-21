@@ -16,8 +16,10 @@
 
 package io.renren.modules.sys.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.dto.SysDeptDto;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,6 +80,20 @@ public class SysDeptController extends AbstractController {
 	}
 
 	/**
+	 * 列表
+	 */
+	@RequestMapping("/selectList")
+	public List<SysDeptDto> selectList(){
+		List<SysDeptDto> deptDtoList = new ArrayList<SysDeptDto>();
+		List<SysDeptEntity> oneList = sysDeptService.selectList(new EntityWrapper<SysDeptEntity>().eq("parent_id",0).eq("del_flag",0));
+		for(SysDeptEntity deptEntity : oneList){
+			SysDeptDto dept = sysDeptService.init(deptEntity);
+			deptDtoList.add(dept);
+		}
+		return deptDtoList;
+	}
+
+	/**
 	 * 上级部门Id(管理员则为0)
 	 */
 	@RequestMapping("/info")
@@ -91,7 +108,6 @@ public class SysDeptController extends AbstractController {
 					parentId = sysDeptEntity.getParentId();
 					continue;
 				}
-
 				if(parentId > sysDeptEntity.getParentId().longValue()){
 					parentId = sysDeptEntity.getParentId();
 				}

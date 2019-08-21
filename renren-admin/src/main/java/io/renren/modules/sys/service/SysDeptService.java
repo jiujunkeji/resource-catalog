@@ -18,6 +18,7 @@ package io.renren.modules.sys.service;
 
 
 import com.baomidou.mybatisplus.service.IService;
+import io.renren.modules.sys.dto.SysDeptDto;
 import io.renren.modules.sys.entity.SysDeptEntity;
 
 import java.util.List;
@@ -44,5 +45,7 @@ public interface SysDeptService extends IService<SysDeptEntity> {
 	 * 获取子部门ID，用于数据过滤
 	 */
 	List<Long> getSubDeptIdList(Long deptId);
+
+	SysDeptDto init(SysDeptEntity dept);
 
 }
