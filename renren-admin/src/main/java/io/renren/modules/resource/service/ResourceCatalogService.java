@@ -1,5 +1,6 @@
 package io.renren.modules.resource.service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.resource.entity.ResourceCatalogEntity;
@@ -17,6 +18,8 @@ import java.util.Map;
 public interface ResourceCatalogService extends IService<ResourceCatalogEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<ResourceCatalogEntity> selectUserList(EntityWrapper<ResourceCatalogEntity> wrapper, Long userId, Long deptId);
 
     void insertCatalog(ResourceCatalogEntity catalogEntity);
 

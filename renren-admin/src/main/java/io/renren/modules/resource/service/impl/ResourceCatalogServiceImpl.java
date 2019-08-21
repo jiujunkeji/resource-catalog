@@ -1,5 +1,6 @@
 package io.renren.modules.resource.service.impl;
 
+import io.renren.common.utils.Constant;
 import io.renren.modules.resource.entity.CatalogDeptEntity;
 import io.renren.modules.resource.entity.CatalogUserEntity;
 import io.renren.modules.resource.service.CatalogDeptService;
@@ -8,10 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -43,6 +42,37 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<ResourceCatalogEntity> selectUserList(EntityWrapper<ResourceCatalogEntity> wrapper, Long userId, Long deptId) {
+        List<ResourceCatalogEntity> allList = new ArrayList<ResourceCatalogEntity>();
+        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
+        allList = this.selectList(wrapper);
+        //系统管理员，拥有最高权限
+        if(userId == Constant.SUPER_ADMIN){
+            return allList;
+        }
+        Set<Long> idSet = new HashSet<Long>();
+        //普通权限，先查询他的部门权限和用户权限，将所有的catalogId添加到Set
+        List<CatalogDeptEntity> catalogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("dept_id",deptId));
+        List<CatalogUserEntity> catalogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("user_id",userId));
+        if(catalogDeptList != null && catalogDeptList.size() > 0){
+            for(CatalogDeptEntity catalogDeptEntity : catalogDeptList){
+                idSet.add(catalogDeptEntity.getCatalogId());
+            }
+        }
+        if(catalogUserList != null && catalogUserList.size() > 0){
+            for(CatalogUserEntity catalogUserEntity : catalogUserList){
+                idSet.add(catalogUserEntity.getCatalogId());
+            }
+        }
+        for(ResourceCatalogEntity catalog : allList){
+            if(idSet.contains(catalog.getCatalogId())){
+                list.add(catalog);
+            }
+        }
+        return list;
     }
 
     @Override

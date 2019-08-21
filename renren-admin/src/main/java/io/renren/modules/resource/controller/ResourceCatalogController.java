@@ -74,7 +74,8 @@ public class ResourceCatalogController extends AbstractController{
         wrapper
                 .like(StringUtils.isNotEmpty(name), "name", name)
                 .eq("is_deleted",0);
-        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(wrapper);
+//        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(wrapper);
+        List<ResourceCatalogEntity> list = resourceCatalogService.selectUserList(wrapper,getUserId(),getDeptId());
         for(ResourceCatalogEntity resourceCatalogEntity : list){
             ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(resourceCatalogEntity.getParentId());
             if(parentResourceCatalogEntity != null){
@@ -447,16 +448,18 @@ public class ResourceCatalogController extends AbstractController{
         List<Long> deleteDeptIdList = new ArrayList<Long>();
         deleteDeptIdList = oldDeptIdList;
         deleteDeptIdList.removeAll(newDeptIdList);
-        //list:所有授权目录子级（包括本身）的实体
+        //list:所有授权目录子级和父级（包括本身）的实体
         List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
-        //idList:所有授权目录子级（包括本身）的catalogId列表
+        //idList:所有授权目录子级和父级（包括本身）的catalogId列表
         List<Long> idList = new ArrayList<Long>();
         ResourceCatalogEntity currentCatalog = resourceCatalogService.selectById(grantVM.getCatalogId());
         List<ResourceCatalogEntity> a = new ArrayList<ResourceCatalogEntity>();
-        //先将本体授权目录set进集合，再递归获取子级
+        //先将本体授权目录set进集合，再递归获取子级和父级
         a.add(currentCatalog);
-        //递归获取到所有授权目录子级（包括本身）的实体
+        //递归获取到所有授权目录子级的实体
         list = resourceCatalogService.selectChildCatalogList(a,currentCatalog);
+        //递归获取到所有授权目录父级的实体
+        list = resourceCatalogService.selectParentCatalogList(list,currentCatalog);
         //循环获取授权目录id列表
         for(ResourceCatalogEntity l : list){
             idList.add(l.getCatalogId());
@@ -501,4 +504,5 @@ public class ResourceCatalogController extends AbstractController{
         }
         return R.ok();
     }
+
 }

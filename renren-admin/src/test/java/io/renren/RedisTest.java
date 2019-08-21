@@ -1,7 +1,6 @@
 package io.renren;
 
 import io.renren.common.utils.RedisUtils;
-import io.renren.modules.resource.service.CatalogGrantService;
 import io.renren.modules.resource.service.ResourceCatalogService;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.builder.ToStringBuilder;
