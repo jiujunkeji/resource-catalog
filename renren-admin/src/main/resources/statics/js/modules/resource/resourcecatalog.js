@@ -75,10 +75,8 @@ var vm = new Vue({
             parentName:''
         },
         gatntObj: {
-            deptId:null,
-            deptName:[],
-            userId:null,
-            userName:[]
+            deptId:[],
+            userId:[],
         },
         imageUrl:'',
         fileData:null,
@@ -317,31 +315,73 @@ var vm = new Vue({
         },
         deptChange:function (obj) {
             console.log(obj);
-            // vm.gatntObj.deptId = obj.organisationId;
-            // vm.gatntObj.deptName = obj.organisationName;
+            vm.gatntObj.deptId = obj;
             // vm.getUser();
         },
         // 用户
         getUser:function () {
-            if(vm.gatntObj.deptId){
-                $.get(baseURL + "sys/user/select?deptId="+vm.resourceCatalog.deptId, function(r){
-                    console.log(r);
-                    vm.user = r.list;
-
-                })
-            }else {
-                this.$message({
-                    message: '请先选择部门',
-                    type: 'warning'
-                });
-            }
-
+            $.get(baseURL + "sys/user/select?deptId=null", function(r){
+                console.log(r);
+                vm.user = r.list;
+            })
         },
         userChange:function (obj) {
             console.log(obj);
-            vm.resourceCatalog.userId = obj.userId;
-            vm.resourceCatalog.userName = obj.username;
+            vm.gatntObj.userId = obj;
         },
+        // 授权
+        setGrant:function (id) {
+            $.ajax({
+                type: "POST",
+                url: baseURL + "resource/resourcecatalog/grant",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    userList:vm.gatntObj.deptId,
+                    deptList:vm.gatntObj.userId,
+                    catalogId:id
+                }),
+                success: function(r){
+                    if(r.code == 0){
+                        vm.reload();
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+        },
+        getGrant:function (id) {
+            $.ajax({
+                type: "GET",
+                url: baseURL + "resource/resourcecatalog/selectGrant",
+                data: {
+                    catalogId:id
+                },
+                success: function(r){
+                    if(r.code == 0){
+                        layer.open({
+                            type: 1,
+                            title: '授权',
+                            content: $('#grant'), //这里content是一个普通的String
+                            skin: 'openClass',
+                            area: ['562px', '520px'],
+                            shadeClose: true,
+                            closeBtn:0,
+                            btn: ['确定','取消'],
+                            btn1:function (index) {
+                                vm.setGrant(id);
+                                layer.close(index);
+                            },
+                            btn2:function () {
+                                vm.reload();
+                            }
+                        })
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+        }
 	},
 	created:function () {
         // this.h = height
@@ -415,26 +455,8 @@ function getCatalogId () {
     }
 }
 
-function grant() {
-
-    layer.open({
-        type: 1,
-        title: '授权',
-        content: $('#grant'), //这里content是一个普通的String
-        skin: 'openClass',
-        area: ['562px', '520px'],
-        shadeClose: true,
-        closeBtn:0,
-        btn: ['确定','取消'],
-        btn1:function (index) {
-            // vm.saveOrUpdate();
-            layer.close(index);
-        },
-        btn2:function () {
-            vm.reload();
-        }
-
-    })
+function grant(id) {
+    vm.getGrant(id);
 }
 
 

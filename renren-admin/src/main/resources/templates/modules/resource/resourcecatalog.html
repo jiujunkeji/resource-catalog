@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>资源目录</title>
 		<#include "/header.html">
             <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
             <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -199,7 +199,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">部门名称</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.deptName" multiple placeholder="请选择" @change="deptChange">
+                    <el-select v-model="gatntObj.deptId" multiple placeholder="请选择" @change="deptChange">
                         <el-option
                                 v-for="item in dept"
                                 :key="item.organisationId"
@@ -213,7 +213,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">用户名称</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.userName" placeholder="请选择" @focus="getUser" @change="userChange">
+                    <el-select v-model="gatntObj.userId" placeholder="请选择" @focus="getUser" @change="userChange">
                         <el-option
                                 v-for="item in user"
                                 :key="item.userId"
