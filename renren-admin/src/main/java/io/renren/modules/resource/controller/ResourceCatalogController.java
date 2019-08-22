@@ -409,9 +409,6 @@ public class ResourceCatalogController extends AbstractController{
     public R grant(@RequestBody GrantVM grantVM){
         System.out.println(grantVM.getCatalogId());
 
-        List<SysUserEntity> userList = grantVM.getUserList();
-        List<SysDeptEntity> deptList = grantVM.getDeptList();
-
         //获取之前授权的用户列表
         List<CatalogUserEntity> oldCataLogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("catalog_id",grantVM.getCatalogId()));
         //之前授权的用户id列表
@@ -420,10 +417,8 @@ public class ResourceCatalogController extends AbstractController{
             oldUserIdList.add(catalogUserEntity.getUserId());
         }
         //现在授权的用户id列表
-        List<Long> newUserIdList = new ArrayList<Long>();
-        for(SysUserEntity userEntity : userList){
-            newUserIdList.add(userEntity.getUserId());
-        }
+        List<Long> newUserIdList = grantVM.getUserList();
+
         //需要添加授权的用户id列表
         List<Long> addUserIdList = new ArrayList<Long>();
         addUserIdList = newUserIdList;
@@ -440,10 +435,7 @@ public class ResourceCatalogController extends AbstractController{
             oldDeptIdList.add(catalogDeptEntity.getDeptId());
         }
         //现在授权的部门id列表
-        List<Long> newDeptIdList = new ArrayList<Long>();
-        for(SysDeptEntity deptEntity : deptList){
-            newDeptIdList.add(deptEntity.getDeptId());
-        }
+        List<Long> newDeptIdList = grantVM.getDeptList();
         //需要添加授权的部门id列表
         List<Long> addDeptIdList = new ArrayList<Long>();
         addDeptIdList = newDeptIdList;

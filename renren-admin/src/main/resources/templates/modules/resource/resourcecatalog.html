@@ -36,10 +36,10 @@
                 .col-sm-10 .el-select{
                     width: 100%;
                 }
-                .col-sm-10 .el-select .el-input__inner{
+                .col-sm-10 .el-input__inner{
                     display: block;
                     width: 100%;
-                    height: 34px;
+                    height: 34px!important;
                     padding: 6px 12px;
                     font-size: 14px;
                     line-height: 1.42857143;
@@ -57,6 +57,12 @@
                 }
                 .el-message{
                     z-index:9999999999!important;
+                }
+                .el-popper[x-placement^=bottom]{
+                    z-index:999999999!important;
+                }
+                .el-cascader{
+                    width: 100%;
                 }
 
             </style>
@@ -199,28 +205,49 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">部门名称</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.deptId" multiple placeholder="请选择" @change="deptChange">
-                        <el-option
-                                v-for="item in dept"
-                                :key="item.organisationId"
-                                :label="item.organisationName"
-                                :value="item.organisationId">
-                        </el-option>
-                    </el-select>
+                    <!--<el-select v-model="gatntObj.deptId" multiple placeholder="请选择" @change="deptChange">-->
+                        <!--<el-option-->
+                                <!--v-for="item in dept"-->
+                                <!--:key="item.organisationId"-->
+                                <!--:label="item.organisationName"-->
+                                <!--:value="item.organisationId">-->
+                        <!--</el-option>-->
+                    <!--</el-select>-->
+                    <el-cascader
+                            v-model="gatntObj.deptId"
+                            :options="dept"
+                            :props="props"
+                            :show-all-levels="false"
+                            @change="deptChange"
+                            clearable></el-cascader>
                     <!--<input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" @click="menuTree" readonly="readonly" placeholder="部门名称"/>-->
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">用户名称</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.userId" placeholder="请选择" @focus="getUser" @change="userChange">
-                        <el-option
-                                v-for="item in user"
-                                :key="item.userId"
-                                :label="item.username"
-                                :value="item.userId">
-                        </el-option>
+                    <el-select v-model="gatntObj.userId" multiple placeholder="请选择" @change="userChange">
+                        <el-option-group
+                                v-for="group in user"
+                                :key="group.deptName"
+                                :label="group.deptName">
+                            <el-option
+                                    v-for="item in group.userList"
+                                    :key="item.userId"
+                                    :label="item.username"
+                                    :value="item.userId">
+                            </el-option>
+                        </el-option-group>
                     </el-select>
+
+                    <!--<el-select v-model="gatntObj.userId" placeholder="请选择" @focus="getUser" @change="userChange">-->
+                        <!--<el-option-->
+                                <!--v-for="item in user"-->
+                                <!--:key="item.userId"-->
+                                <!--:label="item.username"-->
+                                <!--:value="item.userId">-->
+                        <!--</el-option>-->
+                    <!--</el-select>-->
                     <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="用户"/>-->
                 </div>
             </div>

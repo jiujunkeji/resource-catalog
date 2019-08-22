@@ -84,8 +84,20 @@ var vm = new Vue({
         open:true,
         openText:'展开筛选',
         h:0,
-        dept:[],
+        dept:[
+            {
+                deptId:1,
+                deptName:'11',
+                childrenList1:null
+            }
+        ],
         user:[],
+        props: {
+		    multiple: true,
+            value:'deptId',
+            label:'deptName',
+            children:'childrenList'
+        },
         // catalogList:
 	},
 	methods: {
@@ -307,22 +319,24 @@ var vm = new Vue({
         },
         // 部门
         getDept:function () {
-            $.get(baseURL + "resource/organisationinfo/select", function(r){
+            $.get(baseURL + "sys/dept/selectList", function(r){
+            // $.get(baseURL + "sys/dept/list", function(r){
                 console.log(r);
-                vm.dept = r.list;
+                vm.dept = r;
                 // vm.menu.parentName = node.name;
             })
         },
         deptChange:function (obj) {
             console.log(obj);
-            vm.gatntObj.deptId = obj;
+
+            // vm.gatntObj.deptId = obj;
             // vm.getUser();
         },
         // 用户
         getUser:function () {
-            $.get(baseURL + "sys/user/select?deptId=null", function(r){
+            $.get(baseURL + "sys/user/selectList", function(r){
                 console.log(r);
-                vm.user = r.list;
+                vm.user = r;
             })
         },
         userChange:function (obj) {
@@ -331,13 +345,18 @@ var vm = new Vue({
         },
         // 授权
         setGrant:function (id) {
+		    var deptList = [];
+            vm.gatntObj.deptId.forEach(function (item) {
+                console.log(item)
+                deptList.push(item[item.length-1]);
+            })
             $.ajax({
                 type: "POST",
                 url: baseURL + "resource/resourcecatalog/grant",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    userList:vm.gatntObj.deptId,
-                    deptList:vm.gatntObj.userId,
+                    userList:vm.gatntObj.userId,
+                    deptList:deptList,
                     catalogId:id
                 }),
                 success: function(r){
@@ -359,6 +378,8 @@ var vm = new Vue({
                 },
                 success: function(r){
                     if(r.code == 0){
+                        vm.gatntObj.deptId = r.deptList;
+                        vm.gatntObj.userId = r.userList;
                         layer.open({
                             type: 1,
                             title: '授权',
@@ -386,6 +407,7 @@ var vm = new Vue({
 	created:function () {
         // this.h = height
         this.getDept();
+        this.getUser();
         // this.getUser();
     }
 });

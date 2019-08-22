@@ -353,11 +353,11 @@ div.line .item>div.inp{
 }
 
 body {
-    animation: fadein 1s linear 1;
-    -webkit-animation: fadein 1s linear 1;
-    -moz-animation: fadein 1s linear 1;
-    -o-animation: fadein 1s linear 1;
-    -ms-animation: fadein 1s linear 1;
+    animation: fadein 0.5s linear 1;
+    -webkit-animation: fadein 0.5s linear 1;
+    -moz-animation: fadein 0.5s linear 1;
+    -o-animation: fadein 0.5s linear 1;
+    -ms-animation: fadein 0.5s linear 1;
     /*animation: fadein1 1s linear 1;*/
 }
 

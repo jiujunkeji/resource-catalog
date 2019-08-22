@@ -84,6 +84,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDeptEntity> i
 				SysDeptDto dto = init(dept);
 				list.add(dto);
 			}
+		}else{
+			return null;
 		}
 		return list;
 	}
