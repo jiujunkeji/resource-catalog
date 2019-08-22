@@ -18,5 +18,7 @@ public interface ResourceMeteDataService extends IService<ResourceMeteDataEntity
     PageUtils queryPage(Map<String, Object> params);
 
     PageUtils queryPage1(Map<String, Object> params);
+
+    PageUtils queryPage2(Map<String, Object> params);
 }
 

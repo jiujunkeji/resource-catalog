@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.CatalogSearchEntity;
 import io.renren.modules.resource.entity.ResourceFieldEntity;
 import io.renren.modules.resource.entity.ResourceMeteDataEntity;
+import io.renren.modules.resource.service.CatalogSearchService;
 import io.renren.modules.resource.service.ResourceFieldService;
 import io.renren.modules.resource.service.ResourceMeteDataService;
 import io.renren.modules.sys.controller.AbstractController;
@@ -35,6 +37,8 @@ public class ResourceMeteDataController extends AbstractController{
     private SysUserService userService;
     @Autowired
     private ResourceFieldService resourceFieldService;
+    @Autowired
+    private CatalogSearchService catalogSearchService;
 
     /**
      * 列表
@@ -56,6 +60,18 @@ public class ResourceMeteDataController extends AbstractController{
         PageUtils page = resourceMeteDataService.queryPage1(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     *检索列表
+     */
+    @RequestMapping("/list2")
+    public R list2(@RequestParam Map<String,Object> params){
+        PageUtils page = resourceMeteDataService.queryPage2(params);
+        CatalogSearchEntity catalogSearchEntity = null;
+        catalogSearchEntity.setSearchDate(new Date());
+        catalogSearchService.insert(catalogSearchEntity);
+        return R.ok().put("page",page);
     }
 
     /**
@@ -110,6 +126,18 @@ public class ResourceMeteDataController extends AbstractController{
         
         return R.ok();
     }
+
+    /**
+     * 统计
+     */
+    @RequestMapping("/stat")
+    public R stat(){
+        int meteAll = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>());
+        int meteShare = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().eq("push_state",1));
+
+        return R.ok().put("meteAll",meteAll).put("meteShare",meteShare);
+    }
+
 
     /**
      * 删除
