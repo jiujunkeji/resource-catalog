@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>目录检索</title>
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -132,15 +132,45 @@
                 <div class="switchIn">
                     <span>
                         <label>名称：</label>
-                        <input class="el-input__inner" type="text" placeholder="信息资源名称" v-model="q.name" >
+                        <input class="el-input__inner" type="text" placeholder="信息资源名称" v-model="q.resourceTitle" >
                     </span>
                     <span>
-                        <label>编码：</label>
-                        <input class="el-input__inner" type="text" placeholder="信息资源编码" v-model="q.name" >
+                        <label>标识：</label>
+                        <input class="el-input__inner" type="text" placeholder="信息资源标识" v-model="q.resourceSign" >
                     </span>
                     <span>
-                        <label>状态：</label>
-                        <input class="el-input__inner" type="text" placeholder="信息资源状态" v-model="q.name" >
+                        <label>审核状态：</label>
+                        <el-select v-model="q.reviewState" placeholder="请选择">
+                            <el-option
+                                    :key="0"
+                                    label="待提交"
+                                    :value="0">
+                            </el-option>
+                            <el-option
+                                    :key="1"
+                                    label="审核中"
+                                    :value="1">
+                            </el-option>
+                            <el-option
+                                    :key="2"
+                                    label="通过"
+                                    :value="2">
+                            </el-option>
+                            <el-option
+                                    :key="3"
+                                    label="未通过"
+                                    :value="3">
+                            </el-option>
+                        </el-select>
+                        <input class="el-input__inner" type="text" placeholder="信息资源状态" v-model="q.reviewState" >
+                    </span>
+                    <span>
+                        <label>元数据标识：</label>
+                        <input class="el-input__inner" type="text" placeholder="元数据标识" v-model="q.metedataIdentifier" >
+                    </span>
+                    <span>
+                        <label>关键字：</label>
+                        <input class="el-input__inner" type="text" placeholder="关键字" v-model="q.keyword" >
                     </span>
                 </div>
                 <button class="clean" @click="clean">重置</button>
@@ -174,11 +204,18 @@
                             prop="meteType"
                             label="元数据类型"
                             width="120">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.meteType == 0">资源类型</span>
+                            <span v-if="scope.row.meteType == 1">服务类型</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="resourceCategory"
                             label="信息资源类型"
                             width="130">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.resourceCategory == 0">主题分类</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="categoryName"

@@ -220,7 +220,7 @@ div.line .item>div.inp{
 
 
 *::-webkit-scrollbar {
-    width: 0px;
+    width: 6px;
     height:6px;
 }
 *::-webkit-scrollbar-thumb {

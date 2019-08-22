@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>目录审核发布</title>
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -161,11 +161,18 @@
                             prop="meteType"
                             label="元数据类型"
                             width="120">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.meteType == 0">资源类型</span>
+                            <span v-if="scope.row.meteType == 1">服务类型</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="resourceCategory"
                             label="信息资源类型"
                             width="130">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.resourceCategory == 0">主题分类</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="categoryName"

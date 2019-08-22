@@ -15,8 +15,9 @@ function ziyuan() {
         legend: {
             orient: 'horizontal',
             top:'20',
+            // icon:'circle',
             itemWidth:30,
-            itemHeight:12,
+            itemHeight:11,
             itemGap:16,
             data: ['整车工程中心','人力资源部','用户体验及功能开发中心	','路特斯工程（中国）','吉利品牌研究院NL项目组']
         },

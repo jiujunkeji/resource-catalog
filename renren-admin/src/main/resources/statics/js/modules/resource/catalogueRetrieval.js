@@ -8,7 +8,11 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            name:''
+            resourceTitle:'',
+            resourceSign:'',
+            keyword:'',
+            metedataIdentifier:'',
+            reviewState:'',
         },
         showList: true,
         title: null,
@@ -204,13 +208,16 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/list1',
+                url: baseURL + 'resource/resourcemetedata/list2',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    catalogId:this.catalogId,
-                    type:2
+                    resourceTitle:'',
+                    resourceSign:'',
+                    keyword:'',
+                    metedataIdentifier:'',
+                    reviewState:'',
                 },
                 success: function(r){
                     if(r.code === 0){
@@ -245,7 +252,13 @@ var vm = new Vue({
             vm.getTableList();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q =  {
+                resourceTitle:'',
+                resourceSign:'',
+                keyword:'',
+                metedataIdentifier:'',
+                reviewState:'',
+            };
         },
     },
     created:function () {
