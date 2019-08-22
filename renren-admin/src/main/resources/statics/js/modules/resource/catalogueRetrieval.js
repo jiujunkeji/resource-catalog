@@ -213,16 +213,16 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    resourceTitle:'',
-                    resourceSign:'',
-                    keyword:'',
-                    metedataIdentifier:'',
-                    reviewState:'',
+                    resourceTitle:this.q.resourceTitle,
+                    resourceSign:this.q.resourceSign,
+                    keyword:this.q.keyword,
+                    metedataIdentifier:this.q.metedataIdentifier,
                 },
                 success: function(r){
                     if(r.code === 0){
+                        console.log(r);
                         vm.tableList = r.page.list;
-                        vm.totalPage = r.page.totalPage;
+                        vm.totalPage = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }
@@ -251,6 +251,7 @@ var vm = new Vue({
             vm.page = 1;
             vm.getTableList();
         },
+        // 重置
         clean:function () {
             vm.q =  {
                 resourceTitle:'',
@@ -260,6 +261,11 @@ var vm = new Vue({
                 reviewState:'',
             };
         },
+        // 查询
+        look:function () {
+            vm.page = 1;
+            vm.getTableList();
+        }
     },
     created:function () {
         this.getMenuList();

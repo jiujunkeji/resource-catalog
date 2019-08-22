@@ -11,6 +11,12 @@
             <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
             <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
             <style>
+                html,body{
+                    height: 100%;
+                }
+                #rrapp{
+                    height: 100%;
+                }
                 span.stop{
                     display: inline-block;
                     padding: 2px 4px;
@@ -64,6 +70,9 @@
                 .el-cascader{
                     width: 100%;
                 }
+                .divBox.table{
+                    max-height: calc(100% - 55px);
+                }
 
             </style>
 </head>
@@ -91,7 +100,7 @@
         <button class="look" @click="query">查询</button>
     </div>
 
-    <div class="divBox">
+    <div class="divBox table">
         <div class="grid-btn">
             <span class="title">
                 <i class="el-icon-s-operation"></i>

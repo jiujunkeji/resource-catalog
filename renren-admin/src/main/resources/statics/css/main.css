@@ -124,9 +124,12 @@ div.switchIn>span{
     padding-right: 20px;
 }
 div.switchIn label{
+    width: 112px;
     font-size: 16px;
     color: #404040;
     font-weight: 400;
+    text-align: justify;
+    text-align-last: justify;
     /*margin-left: ;*/
 }
 div.switchIn .el-input__inner{
@@ -220,7 +223,7 @@ div.line .item>div.inp{
 
 
 *::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
     height:6px;
 }
 *::-webkit-scrollbar-thumb {

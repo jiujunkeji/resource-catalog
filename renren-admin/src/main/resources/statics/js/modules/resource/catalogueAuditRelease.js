@@ -243,7 +243,7 @@ var vm = new Vue({
                 success: function(r){
                     if(r.code === 0){
                         vm.tableList = r.page.list;
-                        vm.totalPage = r.page.totalPage;
+                        vm.totalPage = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }

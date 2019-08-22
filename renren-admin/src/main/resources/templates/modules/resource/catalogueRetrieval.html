@@ -32,12 +32,13 @@
                 background: #fff;
                 box-shadow: 0 0 10px #eee;
                 margin-right: 10px;
+                overflow-y: auto;
             }
             .listCon{
                 width: calc(100% - 230px);
             }
-            .listCon .divBox{
-                /*height: calc(100% - 50px);*/
+            .listCon .divBox.table{
+                height: calc(100% - 55px);
             }
             /*.el-tree .el-tree-node.is-expanded>.el-tree-node__content{*/
                 /*background: #fff;*/
@@ -57,26 +58,7 @@
                 width: 90%;
                 margin: 0 5% 10px 5%;
             }
-            .el-select{
-                width: 100%;
-            }
-            .el-select .el-input__inner{
-                display: block;
-                width: 100%;
-                margin: 0;
-                height: 34px;
-                padding: 6px 12px;
-                font-size: 14px;
-                line-height: 1.42857143;
-                color: #555;
-                background-color: #f1f4fb;
-                background-image: none;
-                border: 1px solid #f1f4fb;
-                border-radius: 4px;
-                -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-                -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            }
+
             .el-popper[x-placement^=bottom]{
                 z-index:99999999999!important;
             }
@@ -94,6 +76,10 @@
                 background: #2593f3;
                 color: #fff;
                 border-color: #2593f3;
+            }
+            .switchIn .el-select{
+                width: 366px;
+                height: 31px;
             }
         </style>
         </head>
@@ -131,38 +117,12 @@
                 </div>
                 <div class="switchIn">
                     <span>
-                        <label>名称：</label>
+                        <label>信息资源名称：</label>
                         <input class="el-input__inner" type="text" placeholder="信息资源名称" v-model="q.resourceTitle" >
                     </span>
                     <span>
-                        <label>标识：</label>
+                        <label>信息资源标识：</label>
                         <input class="el-input__inner" type="text" placeholder="信息资源标识" v-model="q.resourceSign" >
-                    </span>
-                    <span>
-                        <label>审核状态：</label>
-                        <el-select v-model="q.reviewState" placeholder="请选择">
-                            <el-option
-                                    :key="0"
-                                    label="待提交"
-                                    :value="0">
-                            </el-option>
-                            <el-option
-                                    :key="1"
-                                    label="审核中"
-                                    :value="1">
-                            </el-option>
-                            <el-option
-                                    :key="2"
-                                    label="通过"
-                                    :value="2">
-                            </el-option>
-                            <el-option
-                                    :key="3"
-                                    label="未通过"
-                                    :value="3">
-                            </el-option>
-                        </el-select>
-                        <input class="el-input__inner" type="text" placeholder="信息资源状态" v-model="q.reviewState" >
                     </span>
                     <span>
                         <label>元数据标识：</label>
@@ -174,10 +134,10 @@
                     </span>
                 </div>
                 <button class="clean" @click="clean">重置</button>
-                <button class="look" @click="">查询</button>
+                <button class="look" @click="look">查询</button>
             </div>
 
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox table" style="margin-bottom: 0;">
                 <div class="grid-btn">
                     <span class="title">
                         <i class="el-icon-s-operation"></i>
