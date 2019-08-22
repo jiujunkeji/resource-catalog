@@ -68,14 +68,12 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
     public PageUtils queryPage2(Map<String, Object> params) {
         String resourceTitle = (String) params.get("resourceTitle");
         String resourceSign = (String) params.get("resourceSign");
-        String type = (String) params.get("reviewState");
         String metedataIdentifier = (String) params.get("metedataIdentifier");
         String keyword = (String) params.get("keyword");
 
         EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
         wrapper.eq(StringUtils.isNotBlank(resourceTitle),"resource_title",resourceTitle)
                 .eq(StringUtils.isNotBlank(resourceSign),"resource_sign",resourceSign)
-                .eq(StringUtils.isNotBlank(type),"review_state",type)
                 .eq(StringUtils.isNotBlank(metedataIdentifier),"metedata_identifier",metedataIdentifier)
                 .like(StringUtils.isNotBlank(keyword),"keyword",keyword);
         Page<ResourceMeteDataEntity> page = this.selectPage(
