@@ -68,7 +68,7 @@ public class ResourceMeteDataController extends AbstractController{
     @RequestMapping("/list2")
     public R list2(@RequestParam Map<String,Object> params){
         PageUtils page = resourceMeteDataService.queryPage2(params);
-        CatalogSearchEntity catalogSearchEntity = null;
+        CatalogSearchEntity catalogSearchEntity = new CatalogSearchEntity();
         catalogSearchEntity.setSearchDate(new Date());
         catalogSearchService.insert(catalogSearchEntity);
         return R.ok().put("page",page);
