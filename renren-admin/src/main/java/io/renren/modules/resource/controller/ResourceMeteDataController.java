@@ -93,6 +93,7 @@ public class ResourceMeteDataController extends AbstractController{
     @RequestMapping("/save")
 //    @RequiresPermissions("resource:resourcemetedata:save")
     public R save(@RequestBody ResourceMeteDataEntity resourceMeteData){
+        resourceMeteData.setCreateTime(new Date());
         resourceMeteData.setUpdateTime(new Date());
         resourceMeteData.setReviewState(0);
         resourceMeteData.setPushState(0);
@@ -138,9 +139,10 @@ public class ResourceMeteDataController extends AbstractController{
         Date date = new Date();
         DateFormat df = DateFormat.getDateInstance();
         String date2 = df.format(date);
+        int meteNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().like("create_time", date2));
         int pushNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().like("push_time", date2));
 
-        return R.ok().put("meteAll",meteAll).put("meteShare",meteShare).put("pushNew",pushNew);
+        return R.ok().put("meteAll",meteAll).put("meteShare",meteShare).put("pushNew",pushNew).put("meteNew",meteNew);
     }
 
 

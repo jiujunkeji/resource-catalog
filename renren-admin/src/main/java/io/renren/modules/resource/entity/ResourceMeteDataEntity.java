@@ -85,6 +85,10 @@ public class ResourceMeteDataEntity implements Serializable {
 	 */
 	private String metedataIdentifier;
 	/**
+	 * 创建时间
+	 */
+	private Date createTime;
+	/**
 	 * 更新时间
 	 */
 	private Date updateTime;
@@ -344,6 +348,14 @@ public class ResourceMeteDataEntity implements Serializable {
 	public String getMetedataIdentifier() {
 		return metedataIdentifier;
 	}
+	/**
+	 *获取：创建时间
+	 */
+	public Date getCreateTime() { return createTime; }
+	/**
+	 *设置：创建时间
+	 */
+	public void setCreateTime(Date createTime) { this.createTime = createTime; }
 	/**
 	 * 设置：更新时间
 	 */
