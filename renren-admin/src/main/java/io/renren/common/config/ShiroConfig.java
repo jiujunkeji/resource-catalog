@@ -16,6 +16,7 @@
 
 package io.renren.common.config;
 
+import io.renren.common.utils.Constant;
 import io.renren.modules.sys.shiro.RedisShiroSessionDAO;
 import io.renren.modules.sys.shiro.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
@@ -30,6 +31,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -70,12 +73,14 @@ public class ShiroConfig {
 
 
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) throws UnsupportedEncodingException {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
-        shiroFilter.setLoginUrl("/login.html");
-        shiroFilter.setUnauthorizedUrl("/");
+//        shiroFilter.setLoginUrl("/login.html");
 
+        String redirect_uri = URLEncoder.encode(Constant.REDIRECT_URI+"","UTF-8");
+        shiroFilter.setLoginUrl(Constant.AUTHORIZE_URI + "?client_id=" + Constant.CLIENT_ID + "&redirect_uri=" + redirect_uri +"&response_type=code");
+        shiroFilter.setUnauthorizedUrl("/");
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/swagger/**", "anon");
         filterMap.put("/v2/api-docs", "anon");
@@ -86,6 +91,7 @@ public class ShiroConfig {
         filterMap.put("/statics/**", "anon");
         filterMap.put("/login.html", "anon");
         filterMap.put("/sys/login", "anon");
+        filterMap.put("/getToken", "anon");
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/**", "authc");

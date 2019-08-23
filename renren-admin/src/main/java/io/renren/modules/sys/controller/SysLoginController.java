@@ -17,10 +17,19 @@
 package io.renren.modules.sys.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.InfoJson;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserRoleService;
+import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.shiro.ShiroUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +43,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * 登录相关
@@ -46,7 +56,11 @@ import java.io.IOException;
 public class SysLoginController {
 	@Autowired
 	private Producer producer;
-	
+	@Autowired
+	private SysUserService userService;
+	@Autowired
+	private SysUserRoleService sysUserRoleService;
+
 	@RequestMapping("captcha.jpg")
 	public void captcha(HttpServletResponse response)throws IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -90,7 +104,95 @@ public class SysLoginController {
 	    
 		return R.ok();
 	}
-	
+
+	/**
+	 * 获取access_token
+	 */
+	@RequestMapping(value = "/getToken", method = RequestMethod.GET)
+	public String getToken(String code, String state) {
+		System.out.println("code= " + code);
+		System.out.println("state= " + state);
+		Map params1 = new HashMap();
+		params1.put("clinet_id",Constant.CLIENT_ID);
+		params1.put("client_secret",Constant.CLIENT_SECRET);
+		params1.put("code",code);
+		params1.put("grant_type","authorization_code");
+		params1.put("redirect_uri",Constant.REDIRECT_URI);
+		JSONObject tokenRes = InfoJson.postJson(Constant.TOKEN_URI,params1);
+		System.out.println("tokenRes : " + tokenRes);
+		Map params2 = new HashMap();
+		params2.put("clientId",Constant.CLIENT_ID);
+		params2.put("accessToken",tokenRes.getString("access_token"));
+		params2.put("loginName",tokenRes.getString("loginName"));
+		JSONObject userRes = InfoJson.postJson(Constant.GET_USER_URI,params2);
+		System.out.println("userRes : " + userRes);
+
+		JSONObject data = userRes.getJSONObject("data");
+		JSONObject userInfo = data.getJSONObject("userInfo");
+		JSONArray roleList = data.getJSONArray("roleList");
+		oauthLogin(userInfo,roleList);
+		return "index";
+	}
+
+	/**
+	 * 验证用户并登录
+	 */
+	public void oauthLogin(JSONObject userInfo, JSONArray roleList) {
+		String idnumber = userInfo.getString("idnumber");
+		String password = "1";
+		SysUserEntity user = userService.selectOne(new EntityWrapper<SysUserEntity>().eq("idnumber",idnumber));
+		if(user == null){
+			user = new SysUserEntity();
+			user.setIdnumber(idnumber);
+			user.setDeptId(1L);
+			user.setStatus(1);
+			user.setUsername(userInfo.getString("loginName"));
+			user.setName(userInfo.getString("name"));
+			user.setMobile(userInfo.getString("mobile"));
+			user.setEmail(userInfo.getString("email"));
+			user.setCreateTime(new Date());
+			//sha256加密
+			String salt = RandomStringUtils.randomAlphanumeric(20);
+			user.setSalt(salt);
+			user.setPassword(ShiroUtils.sha256(password, user.getSalt()));
+			userService.insert(user);
+		}else{
+			user.setDeptId(1L);
+			user.setStatus(1);
+			user.setUsername(userInfo.getString("loginName"));
+			user.setName(userInfo.getString("name"));
+			user.setMobile(userInfo.getString("mobile"));
+			user.setEmail(userInfo.getString("email"));
+			user.setCreateTime(new Date());
+			//sha256加密
+			String salt = RandomStringUtils.randomAlphanumeric(20);
+			user.setSalt(salt);
+			user.setPassword(ShiroUtils.sha256(password, user.getSalt()));
+			userService.updateById(user);
+		}
+		List<Long> roleIdList = new ArrayList<Long>();
+		for(int i = 0; i < roleList.size(); i++){
+			switch (roleList.getString(i)){
+				case Constant.ROLE_ID_1:
+					roleIdList.add(1L);
+					break;
+				case Constant.ROLE_ID_2:
+					roleIdList.add(2L);
+					break;
+				case Constant.ROLE_ID_3:
+					roleIdList.add(3L);
+					break;
+				default:
+					break;
+			}
+		}
+		//保存用户与角色关系
+		sysUserRoleService.saveOrUpdate(user.getUserId(), roleIdList);
+		Subject subject = ShiroUtils.getSubject();
+		UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), password);
+		subject.login(token);
+	}
+
 	/**
 	 * 退出
 	 */

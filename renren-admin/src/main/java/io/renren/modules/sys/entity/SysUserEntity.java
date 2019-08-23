@@ -88,6 +88,8 @@ public class SysUserEntity implements Serializable {
 	 * 状态  0：禁用   1：正常
 	 */
 	private Integer status;
+
+	private String idnumber;
 	
 	/**
 	 * 角色ID列表
@@ -262,5 +264,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getIdnumber() {
+		return idnumber;
+	}
+
+	public void setIdnumber(String idnumber) {
+		this.idnumber = idnumber;
 	}
 }
