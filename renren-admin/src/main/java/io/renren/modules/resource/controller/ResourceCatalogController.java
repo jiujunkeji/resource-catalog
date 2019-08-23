@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.*;
 
 
@@ -141,6 +142,20 @@ public class ResourceCatalogController extends AbstractController{
             resourceCatalogService.updateBatchById(list);
         }*/
         return R.ok();
+    }
+
+    /**
+     * 统计
+     */
+    @RequestMapping("/stat")
+    public R stat(){
+        int catalogAll = resourceCatalogService.selectCount(new EntityWrapper<ResourceCatalogEntity>());
+        Date date = new Date();
+        DateFormat df = DateFormat.getDateInstance();
+        String date2 = df.format(date);
+        int catalogNew = resourceCatalogService.selectCount(new EntityWrapper<ResourceCatalogEntity>().like("create_time", date2));
+
+        return R.ok().put("catalogAll",catalogAll).put("catalogNew",catalogNew);
     }
 
     /**

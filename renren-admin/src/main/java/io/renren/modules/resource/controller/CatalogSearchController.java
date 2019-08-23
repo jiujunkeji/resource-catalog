@@ -100,7 +100,7 @@ public class CatalogSearchController {
         Date date = new Date();
         DateFormat df = DateFormat.getDateInstance();
         String date2 = df.format(date);
-        int callAll = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>().lt("search_date", date));
+        int callAll = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>());
         int callToday = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>().like("search_date", date2));
 
         return R.ok().put("callAll",callAll).put("callToday",callToday);

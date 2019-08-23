@@ -16,6 +16,7 @@ import io.renren.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
 import java.util.*;
 
 
@@ -134,8 +135,12 @@ public class ResourceMeteDataController extends AbstractController{
     public R stat(){
         int meteAll = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>());
         int meteShare = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().eq("push_state",1));
+        Date date = new Date();
+        DateFormat df = DateFormat.getDateInstance();
+        String date2 = df.format(date);
+        int pushNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().like("push_time", date2));
 
-        return R.ok().put("meteAll",meteAll).put("meteShare",meteShare);
+        return R.ok().put("meteAll",meteAll).put("meteShare",meteShare).put("pushNew",pushNew);
     }
 
 
