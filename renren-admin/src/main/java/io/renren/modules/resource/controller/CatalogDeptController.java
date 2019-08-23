@@ -36,7 +36,7 @@ public class CatalogDeptController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:catalogdept:list")
+    //@RequiresPermissions("resource:catalogdept:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = catalogDeptService.queryPage(params);
 
@@ -48,7 +48,7 @@ public class CatalogDeptController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("resource:catalogdept:info")
+    //@RequiresPermissions("resource:catalogdept:info")
     public R info(@PathVariable("id") Long id){
         CatalogDeptEntity catalogDept = catalogDeptService.selectById(id);
 
@@ -59,7 +59,7 @@ public class CatalogDeptController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:catalogdept:save")
+    //@RequiresPermissions("resource:catalogdept:save")
     public R save(@RequestBody CatalogDeptEntity catalogDept){
         catalogDeptService.insert(catalogDept);
 
@@ -70,7 +70,7 @@ public class CatalogDeptController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:catalogdept:update")
+    //@RequiresPermissions("resource:catalogdept:update")
     public R update(@RequestBody CatalogDeptEntity catalogDept){
         ValidatorUtils.validateEntity(catalogDept);
         catalogDeptService.updateAllColumnById(catalogDept);//全部更新
@@ -82,7 +82,7 @@ public class CatalogDeptController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:catalogdept:delete")
+    //@RequiresPermissions("resource:catalogdept:delete")
     public R delete(@RequestBody Long[] ids){
         catalogDeptService.deleteBatchIds(Arrays.asList(ids));
 

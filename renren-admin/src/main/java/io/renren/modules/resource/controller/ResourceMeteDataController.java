@@ -45,7 +45,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 列表
      */
     @RequestMapping("/list")
-//    @RequiresPermissions("resource:resourcemetedata:list")
+//    //@RequiresPermissions("resource:resourcemetedata:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = resourceMeteDataService.queryPage(params);
 
@@ -56,7 +56,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 列表
      */
     @RequestMapping("/list1")
-//    @RequiresPermissions("resource:resourcemetedata:list")
+//    //@RequiresPermissions("resource:resourcemetedata:list")
     public R list1(@RequestParam Map<String, Object> params){
         PageUtils page = resourceMeteDataService.queryPage1(params);
 
@@ -79,7 +79,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 信息
      */
     @RequestMapping("/info/{meteId}")
-//    @RequiresPermissions("resource:resourcemetedata:info")
+//    //@RequiresPermissions("resource:resourcemetedata:info")
     public R info(@PathVariable("meteId") Long meteId){
         ResourceMeteDataEntity resourceMeteData = resourceMeteDataService.selectById(meteId);
         List<ResourceFieldEntity> fieldEntityList = resourceFieldService.selectList(new EntityWrapper<ResourceFieldEntity>().eq("mete_id",meteId));
@@ -91,7 +91,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 保存
      */
     @RequestMapping("/save")
-//    @RequiresPermissions("resource:resourcemetedata:save")
+//    //@RequiresPermissions("resource:resourcemetedata:save")
     public R save(@RequestBody ResourceMeteDataEntity resourceMeteData){
         resourceMeteData.setCreateTime(new Date());
         resourceMeteData.setUpdateTime(new Date());
@@ -115,7 +115,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 修改
      */
     @RequestMapping("/update")
-//    @RequiresPermissions("resource:resourcemetedata:update")
+//    //@RequiresPermissions("resource:resourcemetedata:update")
     public R update(@RequestBody ResourceMeteDataEntity resourceMeteData){
         Long meteId = resourceMeteData.getMeteId();
         List<ResourceFieldEntity> resourceFieldEntityList = resourceMeteData.getFieldList();
@@ -150,7 +150,7 @@ public class ResourceMeteDataController extends AbstractController{
      * 删除
      */
     @RequestMapping("/delete")
-//    @RequiresPermissions("resource:resourcemetedata:delete")
+//    //@RequiresPermissions("resource:resourcemetedata:delete")
     public R delete(@RequestBody Long[] meteIds){
 //        resourceMeteDataService.deleteBatchIds(Arrays.asList(meteIds));
         List<ResourceMeteDataEntity> list = new ArrayList<ResourceMeteDataEntity>();

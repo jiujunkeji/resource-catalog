@@ -51,7 +51,7 @@ public class SysDeptController extends AbstractController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:dept:list")
+	//@RequiresPermissions("sys:dept:list")
 	public List<SysDeptEntity> list(){
 		List<SysDeptEntity> deptList = sysDeptService.queryList(new HashMap<String, Object>());
 
@@ -62,7 +62,7 @@ public class SysDeptController extends AbstractController {
 	 * 选择部门(添加、修改菜单)
 	 */
 	@RequestMapping("/select")
-	@RequiresPermissions("sys:dept:select")
+	//@RequiresPermissions("sys:dept:select")
 	public R select(){
 		List<SysDeptEntity> deptList = sysDeptService.queryList(new HashMap<String, Object>());
 
@@ -97,7 +97,7 @@ public class SysDeptController extends AbstractController {
 	 * 上级部门Id(管理员则为0)
 	 */
 	@RequestMapping("/info")
-	@RequiresPermissions("sys:dept:list")
+	//@RequiresPermissions("sys:dept:list")
 	public R info(){
 		long deptId = 0;
 		if(getUserId() != Constant.SUPER_ADMIN){
@@ -122,7 +122,7 @@ public class SysDeptController extends AbstractController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{deptId}")
-	@RequiresPermissions("sys:dept:info")
+	//@RequiresPermissions("sys:dept:info")
 	public R info(@PathVariable("deptId") Long deptId){
 		SysDeptEntity dept = sysDeptService.selectById(deptId);
 		
@@ -133,7 +133,7 @@ public class SysDeptController extends AbstractController {
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("sys:dept:save")
+	//@RequiresPermissions("sys:dept:save")
 	public R save(@RequestBody SysDeptEntity dept){
 		sysDeptService.insert(dept);
 		
@@ -144,7 +144,7 @@ public class SysDeptController extends AbstractController {
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("sys:dept:update")
+	//@RequiresPermissions("sys:dept:update")
 	public R update(@RequestBody SysDeptEntity dept){
 		sysDeptService.updateById(dept);
 		
@@ -155,7 +155,7 @@ public class SysDeptController extends AbstractController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:dept:delete")
+	//@RequiresPermissions("sys:dept:delete")
 	public R delete(long deptId){
 		//判断是否有子部门
 		List<Long> deptList = sysDeptService.queryDetpIdList(deptId);

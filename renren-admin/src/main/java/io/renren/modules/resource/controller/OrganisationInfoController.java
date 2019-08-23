@@ -31,7 +31,7 @@ public class OrganisationInfoController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:organisationinfo:list")
+    //@RequiresPermissions("resource:organisationinfo:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = organisationInfoService.queryPage(params);
 
@@ -52,7 +52,7 @@ public class OrganisationInfoController {
      * 信息
      */
     @RequestMapping("/info/{organisationId}")
-    @RequiresPermissions("resource:organisationinfo:info")
+    //@RequiresPermissions("resource:organisationinfo:info")
     public R info(@PathVariable("organisationId") Long organisationId){
         OrganisationInfoEntity organisationInfo = organisationInfoService.selectById(organisationId);
 
@@ -63,7 +63,7 @@ public class OrganisationInfoController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:organisationinfo:save")
+    //@RequiresPermissions("resource:organisationinfo:save")
     public R save(@RequestBody OrganisationInfoEntity organisationInfo){
         organisationInfoService.insert(organisationInfo);
 
@@ -74,7 +74,7 @@ public class OrganisationInfoController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:organisationinfo:update")
+    //@RequiresPermissions("resource:organisationinfo:update")
     public R update(@RequestBody OrganisationInfoEntity organisationInfo){
         ValidatorUtils.validateEntity(organisationInfo);
         organisationInfoService.updateAllColumnById(organisationInfo);//全部更新
@@ -86,7 +86,7 @@ public class OrganisationInfoController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:organisationinfo:delete")
+    //@RequiresPermissions("resource:organisationinfo:delete")
     public R delete(@RequestBody Long[] organisationIds){
         organisationInfoService.deleteBatchIds(Arrays.asList(organisationIds));
 

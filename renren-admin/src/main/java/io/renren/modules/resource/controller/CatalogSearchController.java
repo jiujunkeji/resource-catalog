@@ -39,7 +39,7 @@ public class CatalogSearchController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:catalogsearch:list")
+    //@RequiresPermissions("resource:catalogsearch:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = catalogSearchService.queryPage(params);
 
@@ -51,7 +51,7 @@ public class CatalogSearchController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("resource:catalogsearch:info")
+    //@RequiresPermissions("resource:catalogsearch:info")
     public R info(@PathVariable("id") Integer id){
         CatalogSearchEntity catalogSearch = catalogSearchService.selectById(id);
 
@@ -62,7 +62,7 @@ public class CatalogSearchController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:catalogsearch:save")
+    //@RequiresPermissions("resource:catalogsearch:save")
     public R save(@RequestBody CatalogSearchEntity catalogSearch){
         catalogSearchService.insert(catalogSearch);
 
@@ -73,7 +73,7 @@ public class CatalogSearchController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:catalogsearch:update")
+    //@RequiresPermissions("resource:catalogsearch:update")
     public R update(@RequestBody CatalogSearchEntity catalogSearch){
         ValidatorUtils.validateEntity(catalogSearch);
         catalogSearchService.updateAllColumnById(catalogSearch);//全部更新
@@ -85,7 +85,7 @@ public class CatalogSearchController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:catalogsearch:delete")
+    //@RequiresPermissions("resource:catalogsearch:delete")
     public R delete(@RequestBody Integer[] ids){
         catalogSearchService.deleteBatchIds(Arrays.asList(ids));
 

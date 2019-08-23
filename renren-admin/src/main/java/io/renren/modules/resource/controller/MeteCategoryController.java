@@ -31,7 +31,7 @@ public class MeteCategoryController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("resource:metecategory:list")
+    //@RequiresPermissions("resource:metecategory:list")
     public List<MeteCategoryEntity> list(@RequestParam Map<String, Object> params){
         /*List<MeteCategoryEntity> menuList = meteCategoryService.selectList(null);
         for(MeteCategoryEntity meteCategoryEntity : menuList){
@@ -72,7 +72,7 @@ public class MeteCategoryController {
      * 信息
      */
     @RequestMapping("/info/{meteCategoryId}")
-    @RequiresPermissions("resource:metecategory:info")
+    //@RequiresPermissions("resource:metecategory:info")
     public R info(@PathVariable("meteCategoryId") Long meteCategoryId){
         MeteCategoryEntity meteCategory = meteCategoryService.selectById(meteCategoryId);
         MeteCategoryEntity parentEntity = meteCategoryService.selectById(meteCategory.getParentId());
@@ -87,7 +87,7 @@ public class MeteCategoryController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("resource:metecategory:save")
+    //@RequiresPermissions("resource:metecategory:save")
     public R save(@RequestBody MeteCategoryEntity meteCategory){
         meteCategoryService.insert(meteCategory);
 
@@ -98,7 +98,7 @@ public class MeteCategoryController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("resource:metecategory:update")
+    //@RequiresPermissions("resource:metecategory:update")
     public R update(@RequestBody MeteCategoryEntity meteCategory){
         ValidatorUtils.validateEntity(meteCategory);
         meteCategoryService.updateAllColumnById(meteCategory);//全部更新
@@ -110,7 +110,7 @@ public class MeteCategoryController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("resource:metecategory:delete")
+    //@RequiresPermissions("resource:metecategory:delete")
     public R delete(@RequestBody Long meteCategoryId){
         meteCategoryService.deleteById(meteCategoryId);
         return R.ok();

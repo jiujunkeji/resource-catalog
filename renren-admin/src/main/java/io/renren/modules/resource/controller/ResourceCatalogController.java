@@ -67,7 +67,7 @@ public class ResourceCatalogController extends AbstractController{
      * 列表
      */
     @RequestMapping("/list")
-//    @RequiresPermissions("resource:resourcecatalog:list")
+//    //@RequiresPermissions("resource:resourcecatalog:list")
     public List<ResourceCatalogEntity> list(@RequestParam Map<String, Object> params){
 //        PageUtils page = resourceCatalogService.queryPage(params);
         String name = (String) params.get("name");
@@ -91,7 +91,7 @@ public class ResourceCatalogController extends AbstractController{
      * 信息
      */
     @RequestMapping("/info/{catalogId}")
-//    @RequiresPermissions("resource:resourcecatalog:info")
+//    //@RequiresPermissions("resource:resourcecatalog:info")
     public R info(@PathVariable("catalogId") Long catalogId){
         ResourceCatalogEntity resourceCatalog = resourceCatalogService.selectById(catalogId);
         ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(resourceCatalog.getParentId());
@@ -105,7 +105,7 @@ public class ResourceCatalogController extends AbstractController{
      * 保存
      */
     @RequestMapping("/save")
-//    @RequiresPermissions("resource:resourcecatalog:save")
+//    //@RequiresPermissions("resource:resourcecatalog:save")
     public R save(@RequestBody ResourceCatalogEntity resourceCatalog){
         resourceCatalogService.insert(resourceCatalog);
 
@@ -116,7 +116,7 @@ public class ResourceCatalogController extends AbstractController{
      * 修改
      */
     @RequestMapping("/update")
-//    @RequiresPermissions("resource:resourcecatalog:update")
+//    //@RequiresPermissions("resource:resourcecatalog:update")
     public R update(@RequestBody ResourceCatalogEntity resourceCatalog){
         ValidatorUtils.validateEntity(resourceCatalog);
         resourceCatalogService.updateAllColumnById(resourceCatalog);//全部更新
@@ -128,7 +128,7 @@ public class ResourceCatalogController extends AbstractController{
      * 删除
      */
     @RequestMapping("/delete")
-//    @RequiresPermissions("resource:resourcecatalog:delete")
+//    //@RequiresPermissions("resource:resourcecatalog:delete")
     public R delete(@RequestBody Long catalogId){
         ResourceCatalogEntity resourceCatalogEntity = resourceCatalogService.selectById(catalogId);
         resourceCatalogEntity.setIsDeleted(1);

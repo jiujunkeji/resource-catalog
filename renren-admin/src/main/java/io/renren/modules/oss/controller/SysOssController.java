@@ -64,7 +64,7 @@ public class SysOssController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:oss:all")
+	//@RequiresPermissions("sys:oss:all")
 	public R list(@RequestParam Map<String, Object> params){
 		PageUtils page = sysOssService.queryPage(params);
 
@@ -76,7 +76,7 @@ public class SysOssController {
      * 云存储配置信息
      */
     @RequestMapping("/config")
-    @RequiresPermissions("sys:oss:all")
+    //@RequiresPermissions("sys:oss:all")
     public R config(){
         CloudStorageConfig config = sysConfigService.getConfigObject(KEY, CloudStorageConfig.class);
 
@@ -88,7 +88,7 @@ public class SysOssController {
 	 * 保存云存储配置信息
 	 */
 	@RequestMapping("/saveConfig")
-	@RequiresPermissions("sys:oss:all")
+	//@RequiresPermissions("sys:oss:all")
 	public R saveConfig(@RequestBody CloudStorageConfig config){
 		//校验类型
 		ValidatorUtils.validateEntity(config);
@@ -114,7 +114,7 @@ public class SysOssController {
 	 * 上传文件
 	 */
 	@RequestMapping("/upload")
-	@RequiresPermissions("sys:oss:all")
+	//@RequiresPermissions("sys:oss:all")
 	public R upload(@RequestParam("file") MultipartFile file) throws Exception {
 		if (file.isEmpty()) {
 			throw new RRException("上传文件不能为空");
@@ -138,7 +138,7 @@ public class SysOssController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:oss:all")
+	//@RequiresPermissions("sys:oss:all")
 	public R delete(@RequestBody Long[] ids){
 		sysOssService.deleteBatchIds(Arrays.asList(ids));
 
