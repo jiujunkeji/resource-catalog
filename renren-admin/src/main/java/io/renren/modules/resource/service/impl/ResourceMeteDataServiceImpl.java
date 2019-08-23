@@ -75,7 +75,8 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
         wrapper.eq(StringUtils.isNotBlank(resourceTitle),"resource_title",resourceTitle)
                 .eq(StringUtils.isNotBlank(resourceSign),"resource_sign",resourceSign)
                 .eq(StringUtils.isNotBlank(metedataIdentifier),"metedata_identifier",metedataIdentifier)
-                .like(StringUtils.isNotBlank(keyword),"keyword",keyword);
+                .like(StringUtils.isNotBlank(keyword),"keyword",keyword)
+                .eq("push_state",1);
         Page<ResourceMeteDataEntity> page = this.selectPage(
                 new Query<ResourceMeteDataEntity>(params).getPage(),
                 wrapper
