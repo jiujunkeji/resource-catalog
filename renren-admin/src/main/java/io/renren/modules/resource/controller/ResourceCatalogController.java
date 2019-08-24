@@ -391,7 +391,7 @@ public class ResourceCatalogController extends AbstractController{
      * 获取授权信息
      */
     @RequestMapping("/selectGrant")
-    public R grant(@RequestParam Long catalogId){
+    public R grant(@RequestParam String catalogId){
         //获取之前授权的用户列表
         List<CatalogUserEntity> cataLogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("catalog_id",catalogId));
         //之前授权的用户id列表
@@ -403,7 +403,7 @@ public class ResourceCatalogController extends AbstractController{
         if(userIdList != null && userIdList.size() > 0){
             userList = userService.selectBatchIds(userIdList);
         }
-        //获取之前授权的部门列表
+        /*//获取之前授权的部门列表
         List<CatalogDeptEntity> cataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",catalogId));
         //之前授权的部门id列表
         List<Long> deptIdList = new ArrayList<Long>();
@@ -413,8 +413,8 @@ public class ResourceCatalogController extends AbstractController{
         List<SysDeptEntity> deptList = new ArrayList<SysDeptEntity>();
         if(deptIdList != null && deptIdList.size() > 0){
             deptList = deptService.selectBatchIds(deptIdList);
-        }
-        return R.ok().put("userList",userList).put("deptList",deptList);
+        }*/
+        return R.ok().put("userList",userList);
     }
 
     /**
@@ -442,7 +442,7 @@ public class ResourceCatalogController extends AbstractController{
         List<Long> deleteUserIdList = new ArrayList<Long>();
         deleteUserIdList = oldUserIdList;
         deleteUserIdList.removeAll(newUserIdList);
-        //获取之前授权的部门列表
+        /*//获取之前授权的部门列表
         List<CatalogDeptEntity> oldCataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",grantVM.getCatalogId()));
         //之前授权的部门id列表
         List<Long> oldDeptIdList = new ArrayList<Long>();
@@ -458,7 +458,7 @@ public class ResourceCatalogController extends AbstractController{
         //需要删除授权的部门id列表
         List<Long> deleteDeptIdList = new ArrayList<Long>();
         deleteDeptIdList = oldDeptIdList;
-        deleteDeptIdList.removeAll(newDeptIdList);
+        deleteDeptIdList.removeAll(newDeptIdList);*/
         //list:所有授权目录子级和父级（包括本身）的实体
         List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
         //idList:所有授权目录子级和父级（包括本身）的catalogId列表
@@ -490,7 +490,7 @@ public class ResourceCatalogController extends AbstractController{
                 }
             }
         }
-        if(deleteDeptIdList.size() > 0){
+        /*if(deleteDeptIdList.size() > 0){
             for(Long deptId : deleteDeptIdList){
                 if(catalogDeptService.selectDeptIsNull(deptId,parentCatalogId)){
                     //若没有授权，则授权所有子级
@@ -500,19 +500,19 @@ public class ResourceCatalogController extends AbstractController{
                     catalogDeptService.insert(new CatalogDeptEntity(grantVM.getCatalogId(),deptId));
                 }
             }
-        }
+        }*/
         //循环需要删除授权的用户列表
         if(deleteUserIdList.size() > 0) {
             for (Long userId : deleteUserIdList) {
                 catalogUserService.deleteBatch(idList,userId);
             }
         }
-        //循环需要删除授权的用户列表
+        /*//循环需要删除授权的部门列表
         if(deleteDeptIdList.size() > 0) {
             for (Long deptId : deleteDeptIdList) {
                 catalogDeptService.deleteBatch(idList,deptId);
             }
-        }
+        }*/
         return R.ok();
     }
 

@@ -90,10 +90,11 @@ public class SysUserController extends AbstractController {
 	 * 列表
 	 */
 	@RequestMapping("/selectList")
-	public List<SysUserDto> selectList(){
-		List<SysUserDto> list = new ArrayList<SysUserDto>();
-		List<SysDeptEntity> oneList = sysDeptService.selectList(new EntityWrapper<SysDeptEntity>().eq("del_flag",0));
-		for(SysDeptEntity dept : oneList){
+	public List<SysUserEntity> selectList(){
+		List<SysUserEntity> list = sysUserService.selectList(new EntityWrapper<SysUserEntity>().eq("status",1));
+		SysUserEntity admin = sysUserService.selectById(1L);
+		list.remove(admin);
+		/*for(SysDeptEntity dept : oneList){
 			if(sysUserService.selectCount(new EntityWrapper<SysUserEntity>().eq("dept_id",dept.getDeptId())) != 0){
 				SysUserDto dto = new SysUserDto();
 				dto.setDeptName(dept.getName());
@@ -101,7 +102,7 @@ public class SysUserController extends AbstractController {
 				dto.setUserList(userList);
 				list.add(dto);
 			}
-		}
+		}*/
 		return list;
 	}
 

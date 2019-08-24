@@ -31,7 +31,15 @@ public class CatalogUserEntity implements Serializable {
 	 */
 	private Long userId;
 
+	public CatalogUserEntity() {}
+
 	public CatalogUserEntity(Long catalogId, Long userId) {
+		this.catalogId = catalogId;
+		this.userId = userId;
+	}
+
+	public CatalogUserEntity(Long id, Long catalogId, Long userId) {
+		this.id = id;
 		this.catalogId = catalogId;
 		this.userId = userId;
 	}
