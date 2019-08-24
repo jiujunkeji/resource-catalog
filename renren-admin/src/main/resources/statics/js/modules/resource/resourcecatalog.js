@@ -405,7 +405,7 @@ var vm = new Vue({
 	},
 	created:function () {
         // this.h = height
-        this.getDept();
+        // this.getDept();
         this.getUser();
         // this.getUser();
     }
