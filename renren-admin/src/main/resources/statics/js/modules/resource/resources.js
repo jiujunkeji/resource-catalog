@@ -1,6 +1,6 @@
 $(function () {
-    ziyuan();
-    ziyuan1();
+
+
 })
 
 var vm = new Vue({
@@ -37,6 +37,7 @@ var vm = new Vue({
                     if(r.code == 0){
                         console.log(r);
                         vm.catalogsearchData = r;
+                        ziyuan(vm.catalogsearchData);
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
@@ -52,6 +53,7 @@ var vm = new Vue({
                     if(r.code == 0){
                         console.log(r);
                         vm.resourcecatalogData = r;
+                        ziyuan1(vm.resourcecatalogData);
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }

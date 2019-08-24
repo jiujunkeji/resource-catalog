@@ -41,7 +41,7 @@ var vm = new Vue({
 	data:{
 		user:{},
 		menuList:{},
-		main:"main.html",
+		main:"modules/resource/resources.html",
 		password:'',
 		newPassword:'',
         navTitle:"控制台",
@@ -108,7 +108,7 @@ var vm = new Vue({
         },
         // 回首页
         openHome:function () {
-            vm.main = 'main.html';
+            vm.main = 'modules/resource/resources.html';
             //导航菜单展开
             $(".sidebar-menu li").removeClass("active");
             vm.tab = 0;
@@ -118,7 +118,7 @@ var vm = new Vue({
 		    if(index == 0){
                 vm.topMenuList.splice(index,1);
                 vm.tab = 0;
-                vm.main = 'main.html';
+                vm.main = 'modules/resource/resources.html';
                 vm.history.splice(index,1);
                 console.log(vm.topMenuList);
                 console.log(vm.history);

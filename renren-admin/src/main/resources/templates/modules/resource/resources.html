@@ -8,14 +8,59 @@
             .chart{
                 display: inline-block;
                 width: calc(50% - 10px);
+                margin-right: 10px;
             }
             #statistics{
                 width: 100%;
-                height: 538px;
+                height: 438px;
             }
             #statistics1{
                 width: 100%;
-                height: 538px;
+                height: 438px;
+            }
+            .yuanshuju{
+                display: flex;
+                padding: 16px 0;
+            }
+            .yuanshuju .item{
+                flex:1;
+                padding: 0 20px;
+                margin-left: 20px;
+                border-right: 1px solid #f0f0f0;
+                position: relative;
+            }
+            .yuanshuju .item:before{
+                content: '';
+                position: absolute;
+                display: inline-block;
+                left: 0px;
+                top: 10px;
+                width: 12px;
+                height: 12px;
+                background: #fff;
+                border-radius: 6px;
+                border: 3px solid #0b56a7;
+            }
+            .yuanshuju .item:nth-child(2):before{
+                border: 3px solid #10ac84;
+            }
+            .yuanshuju .item:nth-child(3):before{
+                border: 3px solid #ffa514;
+            }
+            .yuanshuju .item:nth-child(4):before{
+                border: 3px solid #00dcff;
+            }
+            .yuanshuju span.title{
+                display: inline-block;
+                font-size: 26px;
+                font-weight: bold;
+                color: #404040;
+                margin-bottom: 10px;
+                letter-spacing: 1px;
+            }
+            .yuanshuju span.dec{
+                font-size: 16px;
+                color: #404040;
             }
         </style>
 
@@ -23,20 +68,46 @@
 <body>
 
 <div id="rrapp">
-    <div class="divBox chart" style="">
+    <div class="divBox" style="">
         <div class="grid-btn" style="border-bottom: 1px solid #eee">
             <span class="title">
-                <i class="el-icon-s-operation"></i>
-                资源统计
+                <i class="el-icon-menu"></i>
+                元数据统计
             </span>
         </div>
-        <div id="statistics"></div>
+        <div class="yuanshuju">
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteAll}}</span><br>
+                <span class="dec">采集元数据数</span>
+            </div>
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteNew}}</span><br>
+                <span class="dec">新增采集元数据数</span>
+            </div>
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteShare}}</span><br>
+                <span class="dec">共享元数据数</span>
+            </div>
+            <div class="item" style="border: 0">
+                <span class="title">{{resourcemeteData.pushNew}}</span><br>
+                <span class="dec">新增共享元数据数</span>
+            </div>
+        </div>
     </div>
     <div class="divBox chart" style="">
         <div class="grid-btn" style="border-bottom: 1px solid #eee">
             <span class="title">
-                <i class="el-icon-s-operation"></i>
-                资源统计
+                <i class="el-icon-s-help"></i>
+                访问数统计
+            </span>
+        </div>
+        <div id="statistics"></div>
+    </div>
+    <div class="divBox chart" style="margin-right: 0px">
+        <div class="grid-btn" style="border-bottom: 1px solid #eee">
+            <span class="title">
+                <i class="el-icon-s-help"></i>
+                目录数统计
             </span>
         </div>
         <div id="statistics1"></div>

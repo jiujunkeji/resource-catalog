@@ -76,7 +76,7 @@ var vm = new Vue({
         },
         gatntObj: {
             deptId:[],
-            userId:[],
+            userId:null,
         },
         imageUrl:'',
         fileData:null,
@@ -97,6 +97,11 @@ var vm = new Vue({
             value:'deptId',
             label:'deptName',
             children:'childrenList'
+        },
+        menuList:[],
+        props: {
+            label: 'name',
+            children: 'list',
         },
         // catalogList:
 	},
@@ -317,21 +322,6 @@ var vm = new Vue({
                 vm.openText = '展开筛选'
             }
         },
-        // 部门
-        // getDept:function () {
-        //     $.get(baseURL + "sys/dept/selectList", function(r){
-        //     // $.get(baseURL + "sys/dept/list", function(r){
-        //         console.log(r);
-        //         vm.dept = r;
-        //         // vm.menu.parentName = node.name;
-        //     })
-        // },
-        // deptChange:function (obj) {
-        //     console.log(obj);
-        //
-        //     // vm.gatntObj.deptId = obj;
-        //     // vm.getUser();
-        // },
         // 用户
         getUser:function () {
             $.get(baseURL + "sys/user/selectList", function(r){
@@ -342,6 +332,30 @@ var vm = new Vue({
         userChange:function (obj) {
             console.log(obj);
             vm.gatntObj.userId = obj;
+            var treeF = this.$refs.tree;
+            this.$refs.tree.setCheckedKeys([]);
+            $.ajax({
+                type: "GET",
+                url: baseURL + "resource/resourcecatalog/selectGrant",
+                data: {
+                    userId:vm.gatntObj.userId
+                },
+                success: function(r){
+                    if(r.code == 0){
+                        // vm.gatntObj.deptId = r.deptList;
+                        r.catalogIdList.forEach(function (item) {
+                            treeF.setChecked(item,true,false);
+                        })
+
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+            this.$refs.tree.setCheckedKeys([]);
+            // var idList = [1,5,7,8,9];
+
+
         },
         // 授权
         setGrant:function (id) {
@@ -351,8 +365,8 @@ var vm = new Vue({
                 url: baseURL + "resource/resourcecatalog/grant",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    userList:vm.gatntObj.userId,
-                    catalogId:id
+                    userId:vm.gatntObj.userId,
+                    catalogIdList:id
                 }),
                 success: function(r){
                     if(r.code == 0){
@@ -365,45 +379,173 @@ var vm = new Vue({
                 }
             });
         },
-        getGrant:function (id) {
-            $.ajax({
-                type: "GET",
-                url: baseURL + "resource/resourcecatalog/selectGrant",
-                data: {
-                    catalogId:id
+        getGrant:function () {
+		    var treeF = this.$refs.tree;
+            layer.open({
+                type: 1,
+                title: '授权',
+                content: $('#grant'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    console.log(treeF.getCheckedKeys());
+                    console.log(treeF.getHalfCheckedKeys());
+                    var allCheck = treeF.getHalfCheckedKeys().concat(treeF.getCheckedKeys());
+                    console.log(allCheck);
+                    vm.setGrant(allCheck);
+                    treeF.setCheckedKeys([]);
+                    vm.gatntObj.userId = null;
+                    layer.close(index);
                 },
-                success: function(r){
-                    if(r.code == 0){
-                        // vm.gatntObj.deptId = r.deptList;
-                        vm.gatntObj.userId = r.userIdList;
-                        layer.open({
-                            type: 1,
-                            title: '授权',
-                            content: $('#grant'), //这里content是一个普通的String
-                            skin: 'openClass',
-                            area: ['562px', '520px'],
-                            shadeClose: true,
-                            closeBtn:0,
-                            btn: ['确定','取消'],
-                            btn1:function (index) {
-                                vm.setGrant(id);
-                                layer.close(index);
-                            },
-                            btn2:function () {
-                                vm.reload();
+                btn2:function () {
+                    treeF.setCheckedKeys([]);
+                    vm.gatntObj.userId = null;
+                    vm.reload();
+
+                }
+            })
+
+        },
+        // 树结构目录获取
+        getMenuList: function (event) {
+            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+                var _len=0;
+                for(var i = 1;i<100;i++){
+                    if(i == 1){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        r.forEach(function (item) {
+                            if(item.parentId == 0){
+                                vm.menuList.push({
+                                    name:item.name,
+                                    id:item.catalogId,
+                                    list:[]
+                                })
+                                _len++;
                             }
                         })
-                    }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else if(i == 2){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            r.forEach(function (n) {
+                                if(n.parentId == item.id){
+                                    item.list.push({
+                                        name:n.name,
+                                        id:n.catalogId,
+                                        list:[]
+                                    })
+                                    _len++;
+                                }
+                            })
+                        })
+                    }else if(i == 3){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                r.forEach(function (n) {
+                                    if(n.parentId == i.id){
+                                        i.list.push({
+                                            name:n.name,
+                                            id:n.catalogId,
+                                            list:[]
+                                        })
+                                    }
+                                    _len++;
+                                })
+                            })
+
+                        })
+                    }else if(i == 4){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    r.forEach(function (n) {
+                                        if(n.parentId == j.id){
+                                            j.list.push({
+                                                name:n.name,
+                                                id:n.catalogId,
+                                                list:[]
+                                            })
+                                        }
+                                        _len++;
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 5){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        r.forEach(function (n) {
+                                            if(n.parentId == m.id){
+                                                m.list.push({
+                                                    name:n.name,
+                                                    id:n.catalogId,
+                                                    list:[]
+                                                })
+                                            }
+                                            _len++;
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 6){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        m.list.forEach(function (x) {
+                                            r.forEach(function (n) {
+                                                if(n.parentId == x.id){
+                                                    x.list.push({
+                                                        name:n.name,
+                                                        id:n.catalogId,
+                                                        list:[]
+                                                    })
+                                                }
+                                                _len++;
+                                            })
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
                     }
+
                 }
+
+
+                console.log(vm.menuList);
             });
-        }
+        },
 	},
 	created:function () {
         // this.h = height
         // this.getDept();
         this.getUser();
+        this.getMenuList();
         // this.getUser();
     }
 });
@@ -431,16 +573,13 @@ Menu.initColumn = function () {
         // }},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
-        {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+        {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
         	if(item.isUsed == 0){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
 			}
 			if(item.isUsed == 1){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
 			}
-        }},
-        {title: '操作', field: '', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            return '<button class="textB" onClick="grant('+item.catalogId+')">授权</button>';
         }}]
     return columns;
 };

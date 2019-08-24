@@ -1,4 +1,4 @@
-function ziyuan() {
+function ziyuan(data) {
     var myChart = echarts.init(document.getElementById('statistics'));
 
     var dataStyle = {
@@ -13,6 +13,8 @@ function ziyuan() {
             shadowColor: '#203665'
         }
     };
+    console.log(data);
+    var num = data.callAll - data.callToday;
 
     option = {
         color:['#ffa514','#3949ab','#00dcff','#2593f3','#0b56a7'],
@@ -23,7 +25,7 @@ function ziyuan() {
         },
         tooltip : {
             trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
+            // formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
             orient: 'horizontal',
@@ -32,7 +34,7 @@ function ziyuan() {
             itemWidth:30,
             itemHeight:11,
             itemGap:16,
-            data: ['整车工程中心','人力资源部']
+            data: ['往日访问量','当日访问量']
         },
         series : [
             {
@@ -56,7 +58,7 @@ function ziyuan() {
                         }
                     },
                     formatter: function(params){
-                        return "{a|"+params.value+"个}"+"\n\n{b|增长2%}";
+                        return "{a|"+data.callAll+"}"+"\n\n{b|总访问量}";
                     },
                     position: 'center',
                     textStyle: {
@@ -66,8 +68,8 @@ function ziyuan() {
                     }
                 },
                 data:[
-                    {value:2628,name:'整车工程中心'},
-                    {value:1797,name:'人力资源部'}
+                    {value:data.callToday,name:'当日访问量'},
+                    {value:num,name:'往日访问量'}
                 ],
                 itemStyle: {
                     emphasis: {
@@ -83,9 +85,9 @@ function ziyuan() {
     myChart.setOption(option);
 
 }
-function ziyuan1() {
+function ziyuan1(data) {
     var myChart = echarts.init(document.getElementById('statistics1'));
-
+    var num = data.catalogAll - data.catalogNew;
     var dataStyle = {
         normal: {
             label: {
@@ -117,7 +119,7 @@ function ziyuan1() {
             itemWidth:30,
             itemHeight:11,
             itemGap:16,
-            data: ['整车工程中心','人力资源部']
+            data: ['往日目录数','当日目录数']
         },
         series : [
             {
@@ -141,7 +143,7 @@ function ziyuan1() {
                         }
                     },
                     formatter: function(params){
-                        return "{a|"+params.value+"个}"+"\n\n{b|增长2%}";
+                        return "{a|"+data.catalogAll+"}"+"\n\n{b|总目录数}";
                     },
                     position: 'center',
                     textStyle: {
@@ -151,8 +153,8 @@ function ziyuan1() {
                     }
                 },
                 data:[
-                    {value:2628,name:'整车工程中心'},
-                    {value:1797,name:'人力资源部'}
+                    {value:data.catalogNew,name:'当日目录数'},
+                    {value:num,name:'往日目录数'}
                 ],
                 itemStyle: {
                     emphasis: {

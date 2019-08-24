@@ -1,37 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>欢迎页</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
-</head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <#include "/header.html">
+        <style>
+            .chart{
+                display: inline-block;
+                width: calc(50% - 10px);
+                margin-right: 10px;
+            }
+            #statistics{
+                width: 100%;
+                height: 438px;
+            }
+            #statistics1{
+                width: 100%;
+                height: 438px;
+            }
+            .yuanshuju{
+                display: flex;
+                padding: 16px 0;
+            }
+            .yuanshuju .item{
+                flex:1;
+                padding: 0 20px;
+                margin-left: 20px;
+                border-right: 1px solid #f0f0f0;
+                position: relative;
+            }
+            .yuanshuju .item:before{
+                content: '';
+                position: absolute;
+                display: inline-block;
+                left: 0px;
+                top: 10px;
+                width: 12px;
+                height: 12px;
+                background: #fff;
+                border-radius: 6px;
+                border: 3px solid #0b56a7;
+            }
+            .yuanshuju .item:nth-child(2):before{
+                border: 3px solid #10ac84;
+            }
+            .yuanshuju .item:nth-child(3):before{
+                border: 3px solid #ffa514;
+            }
+            .yuanshuju .item:nth-child(4):before{
+                border: 3px solid #00dcff;
+            }
+            .yuanshuju span.title{
+                display: inline-block;
+                font-size: 26px;
+                font-weight: bold;
+                color: #404040;
+                margin-bottom: 10px;
+                letter-spacing: 1px;
+            }
+            .yuanshuju span.dec{
+                font-size: 16px;
+                color: #404040;
+            }
+        </style>
+
+        </head>
 <body>
-<div class="panel panel-default" style="margin: 45px 50px 0 50px">
-    <!--<div class="panel-heading">基本信息</div>-->
-    <div style="padding: 10px 0 20px 10px;">
-        <h3>&nbsp;&nbsp;&nbsp;项目介绍</h3>
-        <ul>
-            <li>采用Spring、MyBatis、Shiro框架，开发的一套权限系统，极低门槛，拿来即用。</li>
-            <li>设计之初，就非常注重安全性，为企业系统保驾护航，让一切都变得如此简单。</li>
-            <li>提供了代码生成器，只需编写30%左右代码，其余的代码交给系统自动生成，可快速完成开发任务</li>
-            <li>推荐使用阿里云服务器部署项目，免费领取阿里云优惠券，请点击【<a href="https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=y93lfwbg&amp;productCode=dmspre&amp;utm_source=y93lfwbg" target="_blank">免费领取</a>】</li>
-        </ul>
 
-        <h3>&nbsp;&nbsp;&nbsp;获取帮助</h3>
-        <ul>
-            <li>Git地址：<a href="https://gitee.com/renrenio/resource-catalog" target="_blank">https://gitee.com/renrenio/resource-catalog</a></li>
-            <li>官方社区：<a href="http://www.renren.io/?s=index/Community" target="_blank">http://www.renren.io/?s=index/Community</a></li>
-            <li>如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持</li>
-        </ul>
-
-        <h3>&nbsp;&nbsp;&nbsp;官方QQ群</h3>
-        <ul>
-            <li>高级群：324780204(大牛云集，跟大牛学习新技能)</li>
-            <li>普通群：145799952(学习交流，互相解答各种疑问)</li>
-        </ul>
+<div id="rrapp">
+    <div class="divBox" style="">
+        <div class="grid-btn" style="border-bottom: 1px solid #eee">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                元数据统计
+            </span>
+        </div>
+        <div class="yuanshuju">
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteAll}}</span><br>
+                <span class="dec">采集元数据数</span>
+            </div>
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteNew}}</span><br>
+                <span class="dec">新增采集元数据数</span>
+            </div>
+            <div class="item">
+                <span class="title">{{resourcemeteData.meteShare}}</span><br>
+                <span class="dec">共享元数据数</span>
+            </div>
+            <div class="item" style="border: 0">
+                <span class="title">{{resourcemeteData.pushNew}}</span><br>
+                <span class="dec">新增共享元数据数</span>
+            </div>
+        </div>
     </div>
+    <div class="divBox chart" style="">
+        <div class="grid-btn" style="border-bottom: 1px solid #eee">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                访问数统计
+            </span>
+        </div>
+        <div id="statistics"></div>
+    </div>
+    <div class="divBox chart" style="margin-right: 0px">
+        <div class="grid-btn" style="border-bottom: 1px solid #eee">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                目录数统计
+            </span>
+        </div>
+        <div id="statistics1"></div>
+    </div>
+
 </div>
+
+<script src="${request.contextPath}/statics/js/echarts.min.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/chart.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/resources.js"></script>
 </body>
 </html>
