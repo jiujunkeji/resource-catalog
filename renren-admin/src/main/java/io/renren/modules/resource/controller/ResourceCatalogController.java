@@ -436,11 +436,11 @@ public class ResourceCatalogController extends AbstractController{
 
         //需要添加授权的用户id列表
         List<Long> addUserIdList = new ArrayList<Long>();
-        addUserIdList = newUserIdList;
+        addUserIdList.addAll(newUserIdList);
         addUserIdList.removeAll(oldUserIdList);
         //需要删除授权的用户id列表
         List<Long> deleteUserIdList = new ArrayList<Long>();
-        deleteUserIdList = oldUserIdList;
+        deleteUserIdList.addAll(oldUserIdList);
         deleteUserIdList.removeAll(newUserIdList);
         /*//获取之前授权的部门列表
         List<CatalogDeptEntity> oldCataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",grantVM.getCatalogId()));
