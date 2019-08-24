@@ -1,11 +1,15 @@
 $(function () {
     ziyuan();
+    ziyuan1();
 })
 
 var vm = new Vue({
     el:'#rrapp',
     data:{
-        textarea:''
+        textarea:'',
+        resourcemeteData:{},
+        catalogsearchData:{},
+        resourcecatalogData:{},
     },
     methods:{
         // 元数据统计
@@ -15,24 +19,9 @@ var vm = new Vue({
                 url: baseURL + "resource/resourcemetedata/stat",
                 success: function(r){
                     if(r.code == 0){
-                        vm.gatntObj.userId = r.userList;
-                        layer.open({
-                            type: 1,
-                            title: '授权',
-                            content: $('#grant'), //这里content是一个普通的String
-                            skin: 'openClass',
-                            area: ['562px', '520px'],
-                            shadeClose: true,
-                            closeBtn:0,
-                            btn: ['确定','取消'],
-                            btn1:function (index) {
-                                vm.setGrant(id);
-                                layer.close(index);
-                            },
-                            btn2:function () {
-                                vm.reload();
-                            }
-                        })
+                        console.log(r);
+                        vm.resourcemeteData = r;
+
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
@@ -41,14 +30,38 @@ var vm = new Vue({
         },
         // 访问量统计
         catalogsearch:function () {
-
+            $.ajax({
+                type: "GET",
+                url: baseURL + "resource/catalogsearch/stat",
+                success: function(r){
+                    if(r.code == 0){
+                        console.log(r);
+                        vm.catalogsearchData = r;
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
         },
         // 目录统计
         resourcecatalog:function () {
-            
+            $.ajax({
+                type: "GET",
+                url: baseURL + "resource/resourcecatalog/stat",
+                success: function(r){
+                    if(r.code == 0){
+                        console.log(r);
+                        vm.resourcecatalogData = r;
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
         }
     },
     created:function(){
-
+        this.resourcemetedata();
+        this.catalogsearch();
+        this.resourcecatalog();
     }
 })

@@ -345,11 +345,7 @@ var vm = new Vue({
         },
         // 授权
         setGrant:function (id) {
-		    var deptList = [];
-            vm.gatntObj.deptId.forEach(function (item) {
-                console.log(item)
-                deptList.push(item[item.length-1]);
-            })
+            var index = layer.load(2);
             $.ajax({
                 type: "POST",
                 url: baseURL + "resource/resourcecatalog/grant",
@@ -361,6 +357,7 @@ var vm = new Vue({
                 success: function(r){
                     if(r.code == 0){
                         vm.reload();
+                        layer.close(index);
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -378,7 +375,7 @@ var vm = new Vue({
                 success: function(r){
                     if(r.code == 0){
                         // vm.gatntObj.deptId = r.deptList;
-                        vm.gatntObj.userId = r.userList;
+                        vm.gatntObj.userId = r.userIdList;
                         layer.open({
                             type: 1,
                             title: '授权',
