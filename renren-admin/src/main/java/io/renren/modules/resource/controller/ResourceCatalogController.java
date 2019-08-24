@@ -407,9 +407,13 @@ public class ResourceCatalogController extends AbstractController{
      */
     @RequestMapping("/grant")
     public R grant(@RequestBody GrantVM grantVM){
-        if(grantVM.getUserId() != null && grantVM.getCatalogIdList() != null && grantVM.getCatalogIdList().size() > 0){
-            catalogUserService.delete(new EntityWrapper<CatalogUserEntity>().eq("user_id",grantVM.getUserId()));
-            catalogUserService.addBatch(grantVM.getCatalogIdList(),grantVM.getUserId());
+        if(grantVM.getUserId() != null){
+            if(grantVM.getCatalogIdList() != null && grantVM.getCatalogIdList().size() > 0){
+                catalogUserService.delete(new EntityWrapper<CatalogUserEntity>().eq("user_id",grantVM.getUserId()));
+                catalogUserService.addBatch(grantVM.getCatalogIdList(),grantVM.getUserId());
+            }else{
+                catalogUserService.delete(new EntityWrapper<CatalogUserEntity>().eq("user_id",grantVM.getUserId()));
+            }
         }
         return R.ok();
     }
