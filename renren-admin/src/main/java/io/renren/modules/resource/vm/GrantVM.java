@@ -12,31 +12,22 @@ import java.util.List;
  * @Description:
  */
 public class GrantVM {
-    private List<Long> userList = new ArrayList<Long>();;
-    private List<Long> deptList = new ArrayList<Long>();
-    private Long catalogId;
+    private Long userId;
+    private List<Long> catalogIdList;
 
-    public List<Long> getUserList() {
-        return userList;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserList(List<Long> userList) {
-        this.userList = userList;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public List<Long> getDeptList() {
-        return deptList;
+    public List<Long> getCatalogIdList() {
+        return catalogIdList;
     }
 
-    public void setDeptList(List<Long> deptList) {
-        this.deptList = deptList;
-    }
-
-    public Long getCatalogId() {
-        return catalogId;
-    }
-
-    public void setCatalogId(Long catalogId) {
-        this.catalogId = catalogId;
+    public void setCatalogIdList(List<Long> catalogIdList) {
+        this.catalogIdList = catalogIdList;
     }
 }

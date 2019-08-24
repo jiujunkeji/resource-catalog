@@ -55,13 +55,13 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
         }
         Set<Long> idSet = new HashSet<Long>();
         //普通权限，先查询他的部门权限和用户权限，将所有的catalogId添加到Set
-        List<CatalogDeptEntity> catalogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("dept_id",deptId));
+//        List<CatalogDeptEntity> catalogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("dept_id",deptId));
         List<CatalogUserEntity> catalogUserList = catalogUserService.selectList(new EntityWrapper<CatalogUserEntity>().eq("user_id",userId));
-        if(catalogDeptList != null && catalogDeptList.size() > 0){
-            for(CatalogDeptEntity catalogDeptEntity : catalogDeptList){
-                idSet.add(catalogDeptEntity.getCatalogId());
-            }
-        }
+//        if(catalogDeptList != null && catalogDeptList.size() > 0){
+//            for(CatalogDeptEntity catalogDeptEntity : catalogDeptList){
+//                idSet.add(catalogDeptEntity.getCatalogId());
+//            }
+//        }
         if(catalogUserList != null && catalogUserList.size() > 0){
             for(CatalogUserEntity catalogUserEntity : catalogUserList){
                 idSet.add(catalogUserEntity.getCatalogId());
