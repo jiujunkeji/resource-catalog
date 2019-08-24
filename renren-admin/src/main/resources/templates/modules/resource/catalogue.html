@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>编目管理</title>
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -205,6 +205,11 @@
                     <el-table-column
                             prop="updateTime"
                             label="更新时间"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="createTime"
+                            label="创建时间"
                             width="130">
                     </el-table-column>
                     <el-table-column

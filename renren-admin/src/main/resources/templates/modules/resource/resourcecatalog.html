@@ -211,27 +211,18 @@
 
     <div id="grant" class="panel panel-default" style="display: none">
         <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">部门名称</div>
-                <div class="col-sm-10">
-                    <!--<el-select v-model="gatntObj.deptId" multiple placeholder="请选择" @change="deptChange">-->
-                        <!--<el-option-->
-                                <!--v-for="item in dept"-->
-                                <!--:key="item.organisationId"-->
-                                <!--:label="item.organisationName"-->
-                                <!--:value="item.organisationId">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                    <el-cascader
-                            v-model="gatntObj.deptId"
-                            :options="dept"
-                            :props="props"
-                            :show-all-levels="false"
-                            @change="deptChange"
-                            clearable></el-cascader>
-                    <!--<input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" @click="menuTree" readonly="readonly" placeholder="部门名称"/>-->
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label">部门名称</div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<el-cascader-->
+                            <!--v-model="gatntObj.deptId"-->
+                            <!--:options="dept"-->
+                            <!--:props="props"-->
+                            <!--:show-all-levels="false"-->
+                            <!--@change="deptChange"-->
+                            <!--clearable></el-cascader>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label">用户名称</div>
                 <div class="col-sm-10">
@@ -248,16 +239,6 @@
                             </el-option>
                         </el-option-group>
                     </el-select>
-
-                    <!--<el-select v-model="gatntObj.userId" placeholder="请选择" @focus="getUser" @change="userChange">-->
-                        <!--<el-option-->
-                                <!--v-for="item in user"-->
-                                <!--:key="item.userId"-->
-                                <!--:label="item.username"-->
-                                <!--:value="item.userId">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                    <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="用户"/>-->
                 </div>
             </div>
 
