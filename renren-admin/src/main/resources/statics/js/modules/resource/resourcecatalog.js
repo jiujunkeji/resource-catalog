@@ -173,8 +173,8 @@ var vm = new Vue({
             };
             vm.getMenu();
 		},
-		update: function (event) {
-			var catalogId = getCatalogId();
+		update: function (id) {
+			var catalogId = id;
 			if(catalogId == null){
 				return ;
 			}
@@ -223,8 +223,8 @@ var vm = new Vue({
 				}
 			});
 		},
-		del: function (event) {
-			var catalogIds = getCatalogId();
+		del: function (id) {
+			var catalogIds = id;
             console.log(catalogIds);
 			if(catalogIds == null){
 				return ;
@@ -561,7 +561,7 @@ var Menu = {
  */
 Menu.initColumn = function () {
     var columns = [
-        {field: 'selectItem', radio: true},
+        // {field: 'selectItem', radio: true},
         {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
         // {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
         //     if(item.type == 0){
@@ -573,13 +573,16 @@ Menu.initColumn = function () {
         // }},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
-        {title: '操作', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+        {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
         	if(item.isUsed == 0){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
 			}
 			if(item.isUsed == 1){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
 			}
+        }},
+        {title: '操作', field: '', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+            return '<i class="el-icon-edit" style="margin-right: 10px" onclick="updateT('+item.catalogId+')"></i>   <i class="el-icon-delete" onclick="delT('+item.catalogId+')"></i>'
         }}]
     return columns;
 };
@@ -612,15 +615,18 @@ function getCatalogId () {
     }
 }
 
-function grant(id) {
-    vm.getGrant(id);
+function updateT(id) {
+    vm.update(id);
+}
+function delT(id) {
+    vm.del(id);
 }
 
 
 $(function () {
     var colunms = Menu.initColumn();
     var table = new TreeTable(Menu.id, baseURL + "resource/resourcecatalog/list", colunms);
-    table.setExpandColumn(1);
+    table.setExpandColumn(0);
     table.setIdField("catalogId");
     table.setCodeField("catalogId");
     table.setParentCodeField("parentId");
