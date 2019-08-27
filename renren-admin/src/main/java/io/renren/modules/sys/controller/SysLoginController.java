@@ -172,7 +172,7 @@ public class SysLoginController {
 		}
 		List<Long> roleIdList = new ArrayList<Long>();
 		for(int i = 0; i < roleList.size(); i++){
-			switch (roleList.getString(i)){
+			switch (roleList.getJSONObject(i).getString("roleCode")){
 				case Constant.ROLE_ID_1:
 					roleIdList.add(1L);
 					break;
