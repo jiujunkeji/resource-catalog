@@ -92,6 +92,7 @@ public class ShiroConfig {
         filterMap.put("/login.html", "anon");
         filterMap.put("/sys/login", "anon");
         filterMap.put("/getToken", "anon");
+        filterMap.put("/api/resource/selectCatalogList", "anon");
         filterMap.put("/api/resource/selectMeteData", "anon");
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/captcha.jpg", "anon");

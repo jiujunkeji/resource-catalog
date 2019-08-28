@@ -2,12 +2,15 @@ package io.renren.modules.resource.api;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.R;
+import io.renren.modules.resource.dto.ResourceCatalogDto;
+import io.renren.modules.resource.dto.ResourceMeteDataDto;
 import io.renren.modules.resource.entity.*;
 import io.renren.modules.resource.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +57,29 @@ public class MeteDataApi {
         wrapper
                 .like(StringUtils.isNotEmpty(name), "name", name)
                 .eq("is_deleted",0);
-//        List<ResourceCatalogEntity> list = resourceCatalogService.selectList(wrapper);
-        List<ResourceCatalogEntity> data = resourceCatalogService.selectOgList(wrapper,og.getOrganisationId());
+        List<ResourceCatalogEntity> list = resourceCatalogService.selectOgList(wrapper,og.getOrganisationId());
+        List<ResourceCatalogDto> data = new ArrayList<ResourceCatalogDto>();
+        if(list != null && list.size() > 0){
+            for(ResourceCatalogEntity catalog : list){
+                ResourceCatalogDto dto = new ResourceCatalogDto();
+                dto.setCatalogId(catalog.getCatalogId());
+                dto.setName(catalog.getName());
+                dto.setParentId(catalog.getParentId());
+                ResourceCatalogEntity parentResourceCatalogEntity = resourceCatalogService.selectById(catalog.getParentId());
+                if(parentResourceCatalogEntity != null){
+                    dto.setParentName(parentResourceCatalogEntity.getName());
+                }else{
+                    dto.setParentName("");
+                }
+                dto.setRemark(catalog.getRemark());
+                if(catalog.getType() != null && catalog.getType() == 0){
+                    dto.setType("资源目录");
+                }else{
+                    dto.setType("");
+                }
+                data.add(dto);
+            }
+        }
         CatalogSearchEntity catalogSearchEntity = new CatalogSearchEntity();
         catalogSearchEntity.setSearchDate(new Date());
         catalogSearchService.insert(catalogSearchEntity);
@@ -88,7 +112,30 @@ public class MeteDataApi {
         EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
         wrapper.eq(StringUtils.isNotEmpty(catalog_id),"catalog_id",params.get("catalog_id"))
                 .eq("push_state",1);
-        List<ResourceMeteDataEntity> data = resourceMeteDataService.selectList(wrapper);
+        List<ResourceMeteDataEntity> list = resourceMeteDataService.selectList(wrapper);
+        List<ResourceMeteDataDto> data = new ArrayList<ResourceMeteDataDto>();
+        if(list != null && list.size() > 0){
+            for(ResourceMeteDataEntity mete : list){
+                ResourceMeteDataDto dto = new ResourceMeteDataDto();
+                dto.setCatagoryCode(mete.getCatagoryCode());
+                dto.setCatalogName(mete.getCatalogName());
+                dto.setCategoryName(mete.getCategoryName());
+                dto.setKeyword(mete.getKeyword());
+                dto.setMetedataIdentifier(mete.getMetedataIdentifier());
+                dto.setMeteId(mete.getMeteId());
+                if(mete.getMeteType() == 0){
+                    dto.setMeteType("资源类型");
+                }else{
+                    dto.setMeteType("服务类型");
+                }
+                dto.setOrganisationName(mete.getOrganisationName());
+                dto.setResourceAbstract(mete.getResourceAbstract());
+                dto.setResourceSign(mete.getResourceSign());
+                dto.setResourceTitle(mete.getResourceTitle());
+                dto.setResourceCategory("主题分类");
+                data.add(dto);
+            }
+        }
         CatalogSearchEntity catalogSearchEntity = new CatalogSearchEntity();
         catalogSearchEntity.setSearchDate(new Date());
         catalogSearchService.insert(catalogSearchEntity);

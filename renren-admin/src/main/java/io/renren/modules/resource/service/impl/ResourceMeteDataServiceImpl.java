@@ -66,13 +66,16 @@ public class ResourceMeteDataServiceImpl extends ServiceImpl<ResourceMeteDataDao
 
     @Override
     public PageUtils queryPage2(Map<String, Object> params) {
+        String catalogId = (String) params.get("catalogId");
         String resourceTitle = (String) params.get("resourceTitle");
         String resourceSign = (String) params.get("resourceSign");
         String metedataIdentifier = (String) params.get("metedataIdentifier");
         String keyword = (String) params.get("keyword");
 
         EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
-        wrapper.eq(StringUtils.isNotBlank(resourceTitle),"resource_title",resourceTitle)
+        wrapper.eq("is_deleted",0)
+                .eq(StringUtils.isNotEmpty(catalogId),"catalog_id",catalogId)
+                .eq(StringUtils.isNotBlank(resourceTitle),"resource_title",resourceTitle)
                 .eq(StringUtils.isNotBlank(resourceSign),"resource_sign",resourceSign)
                 .eq(StringUtils.isNotBlank(metedataIdentifier),"metedata_identifier",metedataIdentifier)
                 .like(StringUtils.isNotBlank(keyword),"keyword",keyword)
