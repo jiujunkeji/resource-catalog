@@ -38,7 +38,16 @@ public class OrganisationInfoController {
 
         return R.ok().put("page", page);
     }
+    /**
+     * 列表
+     */
+    @RequestMapping("/selectList")
+    //@RequiresPermissions("resource:organisationinfo:list")
+    public List<OrganisationInfoEntity> selectList(){
+        List<OrganisationInfoEntity> list = organisationInfoService.selectList(null);
 
+        return list;
+    }
     /**
      * select列表
      */
