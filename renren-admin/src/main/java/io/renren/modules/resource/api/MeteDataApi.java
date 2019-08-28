@@ -44,11 +44,11 @@ public class MeteDataApi {
         String access_secret = (String) params.get("access_secret");
         String name = (String) params.get("catalog_name");
         if(StringUtils.isBlank(access_key) || StringUtils.isBlank(access_secret)){
-            return R.error("access_key/access_secret can't be null");
+            return R.error(501,"access_key/access_secret can't be null");
         }
         OrganisationInfoEntity og = organisationInfoService.selectOne(new EntityWrapper<OrganisationInfoEntity>().eq("access_key",access_key).eq("access_secret",access_secret));
         if(og == null){
-            return R.error("Access Info error");
+            return R.error(502,"Access Info error");
         }
         EntityWrapper<ResourceCatalogEntity> wrapper = new EntityWrapper<ResourceCatalogEntity>();
         wrapper
@@ -72,18 +72,18 @@ public class MeteDataApi {
         String access_secret = (String) params.get("access_secret");
         String catalog_id = (String) params.get("catalog_id");
         if(StringUtils.isBlank(access_key) || StringUtils.isBlank(access_secret)){
-            return R.error("access_key/access_secret can't be null");
+            return R.error(501,"access_key/access_secret can't be null");
         }
         if(StringUtils.isBlank(catalog_id)){
-            return R.error("catalog_id can't be null");
+            return R.error(501,"catalog_id can't be null");
         }
         OrganisationInfoEntity og = organisationInfoService.selectOne(new EntityWrapper<OrganisationInfoEntity>().eq("access_key",access_key).eq("access_secret",access_secret));
         if(og == null){
-            return R.error("Access Info error");
+            return R.error(502,"Access Info error");
         }
         CatalogDeptEntity catalogDeptEntity = catalogDeptService.selectOne(new EntityWrapper<CatalogDeptEntity>().eq("catalog_id",catalog_id).eq("organisation_id",og.getOrganisationId()));
         if(catalogDeptEntity == null){
-            return R.error("No permission for this catalog");
+            return R.error(503,"No permission for this catalog");
         }
         EntityWrapper<ResourceMeteDataEntity> wrapper = new EntityWrapper<ResourceMeteDataEntity>();
         wrapper.eq(StringUtils.isNotEmpty(catalog_id),"catalog_id",params.get("catalog_id"))
