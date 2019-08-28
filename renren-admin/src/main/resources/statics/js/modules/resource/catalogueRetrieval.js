@@ -213,6 +213,7 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
+                    catalogId:this.catalogId,
                     resourceTitle:this.q.resourceTitle,
                     resourceSign:this.q.resourceSign,
                     keyword:this.q.keyword,
