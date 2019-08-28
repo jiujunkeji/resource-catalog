@@ -403,6 +403,21 @@ public class ResourceCatalogController extends AbstractController{
     }
 
     /**
+     * 获取授权信息
+     */
+    @RequestMapping("/selectOgGrant")
+    public R selectOgGrant(@RequestParam Long organisationId){
+        //获取之前授权的用户列表
+        List<CatalogDeptEntity> cataLogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("organisation_id",organisationId));
+        //之前授权的用户id列表
+        List<Long> catalogIdList = new ArrayList<Long>();
+        for(CatalogDeptEntity catalogDeptEntity : cataLogDeptList){
+            catalogIdList.add(catalogDeptEntity.getCatalogId());
+        }
+        return R.ok().put("catalogIdList",catalogIdList);
+    }
+
+    /**
      * 授权
      */
     @RequestMapping("/grant")
@@ -417,5 +432,19 @@ public class ResourceCatalogController extends AbstractController{
         }
         return R.ok();
     }
-
+    /**
+     * 授权
+     */
+    @RequestMapping("/grantOg")
+    public R grantOg(@RequestBody GrantVM grantVM){
+        if(grantVM.getOrganisationId() != null){
+            if(grantVM.getCatalogIdList() != null && grantVM.getCatalogIdList().size() > 0){
+                catalogDeptService.delete(new EntityWrapper<CatalogDeptEntity>().eq("organisation_id",grantVM.getOrganisationId()));
+                catalogDeptService.addBatch(grantVM.getCatalogIdList(),grantVM.getOrganisationId());
+            }else{
+                catalogDeptService.delete(new EntityWrapper<CatalogDeptEntity>().eq("organisation_id",grantVM.getOrganisationId()));
+            }
+        }
+        return R.ok();
+    }
 }

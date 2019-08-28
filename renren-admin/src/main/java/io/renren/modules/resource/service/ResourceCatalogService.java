@@ -21,6 +21,8 @@ public interface ResourceCatalogService extends IService<ResourceCatalogEntity> 
 
     List<ResourceCatalogEntity> selectUserList(EntityWrapper<ResourceCatalogEntity> wrapper, Long userId, Long deptId);
 
+    List<ResourceCatalogEntity> selectOgList(EntityWrapper<ResourceCatalogEntity> wrapper, Long organisationId);
+
     void insertCatalog(ResourceCatalogEntity catalogEntity);
 
     ResourceCatalogEntity selectCatalog(ResourceCatalogEntity catalogEntity);

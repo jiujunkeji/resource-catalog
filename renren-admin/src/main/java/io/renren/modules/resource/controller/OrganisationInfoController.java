@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 /**
@@ -65,8 +66,11 @@ public class OrganisationInfoController {
     @RequestMapping("/save")
     //@RequiresPermissions("resource:organisationinfo:save")
     public R save(@RequestBody OrganisationInfoEntity organisationInfo){
+        String key = getRandomString(20);
+        String secret = getRandomString(20);
+        organisationInfo.setAccessKey(key);
+        organisationInfo.setAccessSecret(secret);
         organisationInfoService.insert(organisationInfo);
-
         return R.ok();
     }
 
@@ -93,4 +97,14 @@ public class OrganisationInfoController {
         return R.ok();
     }
 
+    public static String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random=new Random();
+        StringBuffer sb=new StringBuffer();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
 }

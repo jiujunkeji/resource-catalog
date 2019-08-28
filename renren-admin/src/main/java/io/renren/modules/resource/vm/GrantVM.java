@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class GrantVM {
     private Long userId;
+    private Long organisationId;
     private List<Long> catalogIdList;
 
     public Long getUserId() {
@@ -21,6 +22,14 @@ public class GrantVM {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public List<Long> getCatalogIdList() {

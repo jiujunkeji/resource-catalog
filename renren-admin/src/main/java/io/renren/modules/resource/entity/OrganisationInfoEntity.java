@@ -39,6 +39,14 @@ public class OrganisationInfoEntity implements Serializable {
 	private String phone;
 
 	/**
+	 * access_key
+	 */
+	private String accessKey;
+	/**
+	 * access_secret
+	 */
+	private String accessSecret;
+	/**
 	 * 设置：
 	 */
 	public void setOrganisationId(Long organisationId) {
@@ -97,5 +105,21 @@ public class OrganisationInfoEntity implements Serializable {
 	 */
 	public String getPhone() {
 		return phone;
+	}
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public String getAccessSecret() {
+		return accessSecret;
+	}
+
+	public void setAccessSecret(String accessSecret) {
+		this.accessSecret = accessSecret;
 	}
 }

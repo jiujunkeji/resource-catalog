@@ -31,6 +31,7 @@ public class CatalogDeptEntity implements Serializable {
 	 */
 	private Long deptId;
 
+	private Long organisationId;
 	public CatalogDeptEntity(Long catalogId, Long deptId) {
 		this.catalogId = catalogId;
 		this.deptId = deptId;
@@ -73,4 +74,11 @@ public class CatalogDeptEntity implements Serializable {
 		return deptId;
 	}
 
+	public Long getOrganisationId() {
+		return organisationId;
+	}
+
+	public void setOrganisationId(Long organisationId) {
+		this.organisationId = organisationId;
+	}
 }

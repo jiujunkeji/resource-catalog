@@ -76,6 +76,28 @@ public class ResourceCatalogServiceImpl extends ServiceImpl<ResourceCatalogDao, 
     }
 
     @Override
+    public List<ResourceCatalogEntity> selectOgList(EntityWrapper<ResourceCatalogEntity> wrapper, Long organisationId) {
+        List<ResourceCatalogEntity> allList = new ArrayList<ResourceCatalogEntity>();
+        List<ResourceCatalogEntity> list = new ArrayList<ResourceCatalogEntity>();
+        allList = this.selectList(wrapper);
+        Set<Long> idSet = new HashSet<Long>();
+        //普通权限，先查询他的部门权限，将所有的catalogId添加到Set
+        List<CatalogDeptEntity> catalogDeptList = catalogDeptService.selectList(new EntityWrapper<CatalogDeptEntity>().eq("organisation_id",organisationId));
+
+        if(catalogDeptList != null && catalogDeptList.size() > 0){
+            for(CatalogDeptEntity catalogDeptEntity : catalogDeptList){
+                idSet.add(catalogDeptEntity.getCatalogId());
+            }
+        }
+        for(ResourceCatalogEntity catalog : allList){
+            if(idSet.contains(catalog.getCatalogId())){
+                list.add(catalog);
+            }
+        }
+        return list;
+    }
+
+    @Override
     public void insertCatalog(ResourceCatalogEntity catalogEntity) {
         Long parentId;
         if(StringUtils.isNotEmpty(catalogEntity.getThreeName())){
