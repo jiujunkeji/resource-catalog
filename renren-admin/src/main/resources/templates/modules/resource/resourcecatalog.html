@@ -117,6 +117,7 @@
             <!--</div>-->
             <!--<el-button size="medium" type="primary" @click="query">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
             <div class="right">
+                <el-button size="medium" type="primary" @click="getOutGrant">外部授权</el-button>&nbsp;&nbsp;
                 <el-button size="medium" type="primary" @click="getGrant">授权</el-button>&nbsp;&nbsp;
                 <el-button size="medium" type="primary" @click="downTemplate">下载目录模板</el-button>&nbsp;&nbsp;
                 <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
@@ -237,6 +238,34 @@
                 ref="tree"
                 highlight-current
                 :props="props">
+        </el-tree>
+    </div>
+    <div id="grantOut" class="panel panel-default" style="display: none">
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-10">
+                    <el-select v-model="gatntObj.deptId" placeholder="请选择" @change="deptChange">
+                        <el-option
+                                v-for="item in dept"
+                                :key="item.organisationId"
+                                :label="item.organisationName"
+                                :value="item.organisationId">
+                        </el-option>
+                    </el-select>
+
+                </div>
+            </div>
+        </form>
+        <el-tree
+                :data="menuListOut"
+                show-checkbox
+                :default-expand-all="true"
+                node-key="id"
+                ref="tree1"
+                highlight-current
+                :props="propsOut">
         </el-tree>
     </div>
 

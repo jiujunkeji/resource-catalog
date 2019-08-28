@@ -46,6 +46,7 @@ var vm = new Vue({
         totalPage:0,
         checkIdList:[],
         page:1,
+        password:{},
 
 	},
 	methods: {
@@ -199,6 +200,25 @@ var vm = new Vue({
             vm.page = currentPage;
             vm.getTableList();
         },
+        // 查看密钥
+        lookPassword:function (obj) {
+		    console.log(obj);
+		    vm.password = obj;
+            layer.open({
+                type: 1,
+                title: '查看密钥',
+                content: $('#lookPassword'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['600px', '320px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定'],
+                btn1:function (index) {
+                    layer.close(index);
+                }
+
+            })
+        }
 	},
 	created:function () {
 		this.getTableList();

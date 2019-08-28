@@ -75,7 +75,7 @@ var vm = new Vue({
             parentName:''
         },
         gatntObj: {
-            deptId:[],
+            deptId:null,
             userId:null,
         },
         imageUrl:'',
@@ -92,12 +92,18 @@ var vm = new Vue({
             }
         ],
         user:[],
-        props: {
-		    multiple: true,
-            value:'deptId',
-            label:'deptName',
-            children:'childrenList'
+        dept:[],
+        // props: {
+		 //    multiple: true,
+        //     value:'deptId',
+        //     label:'deptName',
+        //     children:'childrenList'
+        // },
+        propsOut: {
+            label: 'name',
+            children: 'list',
         },
+        menuListOut:[],
         menuList:[],
         props: {
             label: 'name',
@@ -322,6 +328,42 @@ var vm = new Vue({
                 vm.openText = '展开筛选'
             }
         },
+        // 机构
+        getDept:function () {
+            $.get(baseURL + "resource/organisationinfo/selectList", function(r){
+                console.log(r);
+                vm.dept = r;
+            })
+        },
+        deptChange:function (obj) {
+            console.log(obj);
+            vm.gatntObj.deptId = obj;
+            var treeF = this.$refs.tree1;
+            this.$refs.tree1.setCheckedKeys([]);
+            $.ajax({
+                type: "GET",
+                url: baseURL + "resource/resourcecatalog/selectOgGrant",
+                data: {
+                    organisationId:vm.gatntObj.deptId
+                },
+                success: function(r){
+                    if(r.code == 0){
+                        console.log(r);
+                        // vm.gatntObj.deptId = r.deptList;
+                        r.catalogIdList.forEach(function (item) {
+                            treeF.setChecked(item,true,false);
+                        })
+
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+            // this.$refs.tree1.setCheckedKeys([]);
+            // var idList = [1,5,7,8,9];
+
+
+        },
         // 用户
         getUser:function () {
             $.get(baseURL + "sys/user/selectList", function(r){
@@ -398,6 +440,60 @@ var vm = new Vue({
                     vm.setGrant(allCheck);
                     treeF.setCheckedKeys([]);
                     vm.gatntObj.userId = null;
+                    layer.close(index);
+                },
+                btn2:function () {
+                    treeF.setCheckedKeys([]);
+                    vm.gatntObj.userId = null;
+                    vm.reload();
+
+                }
+            })
+
+        },
+        // 外部授权
+        setOutGrant:function (id) {
+            var index = layer.load(2);
+            $.ajax({
+                type: "POST",
+                url: baseURL + "resource/resourcecatalog/grantOg",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    organisationId:vm.gatntObj.deptId,
+                    catalogIdList:id
+                }),
+                success: function(r){
+                    if(r.code == 0){
+                        vm.reload();
+                        layer.close(index);
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else{
+                        layer.close(index);
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+        },
+        getOutGrant:function () {
+		    vm.menuListOut = vm.menuList;
+            var treeF = this.$refs.tree1;
+            layer.open({
+                type: 1,
+                title: '授权',
+                content: $('#grantOut'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '520px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    console.log(treeF.getCheckedKeys());
+                    console.log(treeF.getHalfCheckedKeys());
+                    var allCheck = treeF.getHalfCheckedKeys().concat(treeF.getCheckedKeys());
+                    console.log(allCheck);
+                    vm.setOutGrant(allCheck);
+                    treeF.setCheckedKeys([]);
+                    vm.gatntObj.deptId = null;
                     layer.close(index);
                 },
                 btn2:function () {
@@ -545,6 +641,7 @@ var vm = new Vue({
         // this.h = height
         // this.getDept();
         this.getUser();
+        this.getDept();
         this.getMenuList();
         // this.getUser();
     }
