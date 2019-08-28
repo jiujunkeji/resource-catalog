@@ -20,8 +20,8 @@ public interface CatalogDeptService extends IService<CatalogDeptEntity> {
 
     Boolean selectDeptIsNull(Long deptId, Long catalogId);
 
-    void addBatch(List<Long> idList, Long deptId);
+    void addBatch(List<Long> idList, Long organisationId);
 
-    void deleteBatch(List<Long> idList, Long deptId);
+    void deleteBatch(List<Long> idList, Long organisationId);
 }
 

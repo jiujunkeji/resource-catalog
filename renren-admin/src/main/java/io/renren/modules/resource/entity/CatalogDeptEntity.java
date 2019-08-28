@@ -32,9 +32,16 @@ public class CatalogDeptEntity implements Serializable {
 	private Long deptId;
 
 	private Long organisationId;
-	public CatalogDeptEntity(Long catalogId, Long deptId) {
+	public CatalogDeptEntity(Long catalogId, Long organisationId) {
+		this.catalogId = catalogId;
+		this.organisationId = organisationId;
+	}
+
+	public CatalogDeptEntity(Long id, Long catalogId, Long deptId, Long organisationId) {
+		this.id = id;
 		this.catalogId = catalogId;
 		this.deptId = deptId;
+		this.organisationId = organisationId;
 	}
 
 	/**

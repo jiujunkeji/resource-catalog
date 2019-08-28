@@ -40,18 +40,18 @@ public class CatalogDeptServiceImpl extends ServiceImpl<CatalogDeptDao, CatalogD
     }
 
     @Override
-    public void addBatch(List<Long> idList, Long deptId) {
+    public void addBatch(List<Long> idList, Long organisationId) {
         List<CatalogDeptEntity> list = new ArrayList<CatalogDeptEntity>();
         for(Long id : idList){
-            list.add(new CatalogDeptEntity(id,deptId));
+            list.add(new CatalogDeptEntity(id,organisationId));
         }
         this.insertBatch(list);
     }
 
     @Override
-    public void deleteBatch(List<Long> idList, Long deptId) {
+    public void deleteBatch(List<Long> idList, Long organisationId) {
         for(Long id : idList){
-            this.delete(new EntityWrapper<CatalogDeptEntity>().eq("dept_id",deptId).eq("catalog_id",id));
+            this.delete(new EntityWrapper<CatalogDeptEntity>().eq("organisation_id",organisationId).eq("catalog_id",id));
         }
     }
 }
