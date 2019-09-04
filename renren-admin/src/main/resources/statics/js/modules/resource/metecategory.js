@@ -208,10 +208,10 @@ var Menu = {
 Menu.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
-        {title: '分类名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '分类名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '260px'},
         {title: '分类类型', field: 'categoryType', align: 'center', valign: 'middle', sortable: true, width: '180px'},
-        {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '分类代码', field: 'code', align: 'center', valign: 'middle', sortable: true, width: '80px',}]
+        {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: ''},
+        {title: '分类代码', field: 'code', align: 'center', valign: 'middle', sortable: true, width: '100px',}]
     return columns;
 };
 

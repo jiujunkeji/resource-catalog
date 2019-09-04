@@ -659,7 +659,7 @@ var Menu = {
 Menu.initColumn = function () {
     var columns = [
         // {field: 'selectItem', radio: true},
-        {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '260px'},
         // {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
         //     if(item.type == 0){
         //         return '资源';
@@ -668,8 +668,8 @@ Menu.initColumn = function () {
         //         return '服务';
         //     }
         // }},
-        {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '80px',},
+        {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: ''},
+        {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '200px',},
         {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
         	if(item.isUsed == 0){
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
@@ -678,8 +678,8 @@ Menu.initColumn = function () {
                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
 			}
         }},
-        {title: '操作', field: '', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            return '<i class="el-icon-edit" style="margin-right: 10px" onclick="updateT('+item.catalogId+')"></i>   <i class="el-icon-delete" onclick="delT('+item.catalogId+')"></i>'
+        {title: '操作', field: '', align: 'left', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+            return '<i class="el-icon-edit" style="margin-left: 10px" onclick="updateT('+item.catalogId+')"></i> <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" onclick="delT('+item.catalogId+')"></i>'
         }}]
     return columns;
 };
