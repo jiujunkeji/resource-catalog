@@ -186,7 +186,7 @@ var vm = new Vue({
 			}
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
                 area: ['562px', '520px'],
