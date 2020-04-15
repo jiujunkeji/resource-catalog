@@ -39,7 +39,7 @@ public class ResourceMeteDataEntity implements Serializable {
 	/**
 	 * 资源分类编码
 	 */
-	private String catagoryCode;
+	private String categoryCode;
 	/**
 	 * 资源分类
 	 */
@@ -219,14 +219,14 @@ public class ResourceMeteDataEntity implements Serializable {
 	/**
 	 * 设置：资源分类编码
 	 */
-	public void setCatagoryCode(String catagoryCode) {
-		this.catagoryCode = catagoryCode;
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
 	}
 	/**
 	 * 获取：资源分类编码
 	 */
-	public String getCatagoryCode() {
-		return catagoryCode;
+	public String getCategoryCode() {
+		return categoryCode;
 	}
 	/**
 	 * 设置：资源分类

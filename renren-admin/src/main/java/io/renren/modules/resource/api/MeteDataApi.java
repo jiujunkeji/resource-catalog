@@ -117,7 +117,7 @@ public class MeteDataApi {
         if(list != null && list.size() > 0){
             for(ResourceMeteDataEntity mete : list){
                 ResourceMeteDataDto dto = new ResourceMeteDataDto();
-                dto.setCatagoryCode(mete.getCatagoryCode());
+                dto.setCatagoryCode(mete.getCategoryCode());
                 dto.setCatalogName(mete.getCatalogName());
                 dto.setCategoryName(mete.getCategoryName());
                 dto.setKeyword(mete.getKeyword());
