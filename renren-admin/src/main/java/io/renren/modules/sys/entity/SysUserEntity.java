@@ -90,6 +90,10 @@ public class SysUserEntity implements Serializable {
 	private Integer status;
 
 	private String idnumber;
+
+	private String accessToken;
+
+	private String refreshToken;
 	
 	/**
 	 * 角色ID列表
@@ -272,5 +276,21 @@ public class SysUserEntity implements Serializable {
 
 	public void setIdnumber(String idnumber) {
 		this.idnumber = idnumber;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 }

@@ -136,11 +136,14 @@ public class ResourceMeteDataController extends AbstractController{
     public R stat(){
         int meteAll = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>());
         int meteShare = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().eq("push_state",1));
-        Date date = new Date();
-        DateFormat df = DateFormat.getDateInstance();
-        String date2 = df.format(date);
-        int meteNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().like("create_time", date2));
-        int pushNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().like("push_time", date2));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date zero = calendar.getTime();
+        int meteNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().gt("create_time", zero));
+        int pushNew = resourceMeteDataService.selectCount(new EntityWrapper<ResourceMeteDataEntity>().gt("push_time", zero));
 
         return R.ok().put("meteAll",meteAll).put("meteShare",meteShare).put("pushNew",pushNew).put("meteNew",meteNew);
     }

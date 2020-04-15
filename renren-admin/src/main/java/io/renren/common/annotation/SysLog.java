@@ -32,6 +32,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SysLog {
-
+	String type() default "";
+	String content() default "";
 	String value() default "";
+	String menuId() default "";
 }

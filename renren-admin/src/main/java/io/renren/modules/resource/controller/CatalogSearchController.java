@@ -2,6 +2,7 @@ package io.renren.modules.resource.controller;
 
 import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -97,11 +98,14 @@ public class CatalogSearchController {
      */
     @RequestMapping("/stat")
     public R stat(){
-        Date date = new Date();
-        DateFormat df = DateFormat.getDateInstance();
-        String date2 = df.format(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date zero = calendar.getTime();
         int callAll = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>());
-        int callToday = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>().like("search_date", date2));
+        int callToday = catalogSearchService.selectCount(new EntityWrapper<CatalogSearchEntity>().gt("search_date", zero));
 
         return R.ok().put("callAll",callAll).put("callToday",callToday);
     }

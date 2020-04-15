@@ -27,6 +27,8 @@ public class Constant {
 	public static final int SUPER_ADMIN = 1;
     /** 数据权限过滤 */
 	public static final String SQL_FILTER = "sql_filter";
+    /** 子系统编号 */
+    public static final String SYS_NUM = "sys_num";
     /** 应用唯一标识 */
     public static final String CLIENT_ID = "client_id";
     /** 应用密钥 */
@@ -37,8 +39,14 @@ public class Constant {
     public static final String REDIRECT_URI = "http://localhost:8080/resource-catalog/getToken";
     /** 获取access_token接口*/
     public static final String TOKEN_URI = "http://localhost:8081/renren-api/oauth/token";
+    /** 刷新access_token接口*/
+    public static final String REFRESH_TOKEN_URI = "https://xxx.xxx.xxx/oauth/token";
     /** 获取用户信息接口*/
     public static final String GET_USER_URI = "http://localhost:8081/renren-api/oauth/getUserInfoById";
+    /** 审计接口*/
+    public static final String OPERATION_URI = "https://***/***/***";
+    /** 鉴权接口*/
+    public static final String AUTHMENU_URI = "https://***/***/***";
 
     /** 中心角色1（目录创建人员）*/
     public static final String ROLE_ID_1 = "R00001";

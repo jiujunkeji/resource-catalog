@@ -1,6 +1,7 @@
 package io.renren.modules.resource.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import io.renren.common.annotation.SysLog;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.resource.entity.CatalogDeptEntity;
@@ -66,6 +67,7 @@ public class ResourceCatalogController extends AbstractController{
     /**
      * 列表
      */
+    @SysLog(type = "3", content = "目录")
     @RequestMapping("/list")
 //    //@RequiresPermissions("resource:resourcecatalog:list")
     public List<ResourceCatalogEntity> list(@RequestParam Map<String, Object> params){
@@ -107,8 +109,24 @@ public class ResourceCatalogController extends AbstractController{
     @RequestMapping("/save")
 //    //@RequiresPermissions("resource:resourcecatalog:save")
     public R save(@RequestBody ResourceCatalogEntity resourceCatalog){
+        resourceCatalog.setCreateUserId(getUserId());
+        resourceCatalog.setCreateUserName(getUser().getName());
+        resourceCatalog.setCreateTime(new Date());
+        resourceCatalog.setUpdateTime(new Date());
         resourceCatalogService.insert(resourceCatalog);
 
+        //添加权限
+        List<ResourceCatalogEntity> catalogList = new ArrayList<ResourceCatalogEntity>();
+        List<CatalogUserEntity> catalogUserList = new ArrayList<CatalogUserEntity>();
+        catalogList = resourceCatalogService.selectParentCatalogList(catalogList,resourceCatalog);
+        for(ResourceCatalogEntity catalog : catalogList){
+            if(catalogUserService.selectCount(new EntityWrapper<CatalogUserEntity>().eq("user_id",getUserId()).eq("catalog_id",catalog.getCatalogId())) == 0){
+                catalogUserList.add(new CatalogUserEntity(catalog.getCatalogId(),getUserId()));
+            }
+        }
+        if(catalogUserList != null && catalogUserList.size() > 0){
+            catalogUserService.insertBatch(catalogUserList);
+        }
         return R.ok();
     }
 
@@ -118,9 +136,10 @@ public class ResourceCatalogController extends AbstractController{
     @RequestMapping("/update")
 //    //@RequiresPermissions("resource:resourcecatalog:update")
     public R update(@RequestBody ResourceCatalogEntity resourceCatalog){
-        ValidatorUtils.validateEntity(resourceCatalog);
-        resourceCatalogService.updateAllColumnById(resourceCatalog);//全部更新
-
+//        ValidatorUtils.validateEntity(resourceCatalog);
+//        resourceCatalogService.updateAllColumnById(resourceCatalog);//全部更新
+        resourceCatalog.setUpdateTime(new Date());
+        resourceCatalogService.updateById(resourceCatalog);
         return R.ok();
     }
 
@@ -150,10 +169,13 @@ public class ResourceCatalogController extends AbstractController{
     @RequestMapping("/stat")
     public R stat(){
         int catalogAll = resourceCatalogService.selectCount(new EntityWrapper<ResourceCatalogEntity>());
-        Date date = new Date();
-        DateFormat df = DateFormat.getDateInstance();
-        String date2 = df.format(date);
-        int catalogNew = resourceCatalogService.selectCount(new EntityWrapper<ResourceCatalogEntity>().like("create_time", date2));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date zero = calendar.getTime();
+        int catalogNew = resourceCatalogService.selectCount(new EntityWrapper<ResourceCatalogEntity>().gt("create_time", zero));
 
         return R.ok().put("catalogAll",catalogAll).put("catalogNew",catalogNew);
     }
@@ -169,8 +191,8 @@ public class ResourceCatalogController extends AbstractController{
             String fn = URLEncoder.encode(fileName,"UTF-8");
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-            String filePath = getClass().getClassLoader().getResource("TAB1/" + pathName).getPath();
-            System.out.println(filePath);
+            String filePath = getClass().getClassLoader().getResource("tab1/" + pathName).getPath();
+            System.out.println("模板文件地址" + filePath);
             FileInputStream input = new FileInputStream(filePath);
             OutputStream out = response.getOutputStream();
             byte[] b = new byte[2048];
@@ -236,6 +258,18 @@ public class ResourceCatalogController extends AbstractController{
             catalogEntity.setUpdateTime(new Date());
             catalogEntity.setUpdateTime(new Date());
             resourceCatalogService.insertCatalog(catalogEntity);
+            //添加权限
+            List<ResourceCatalogEntity> catalogList = new ArrayList<ResourceCatalogEntity>();
+            List<CatalogUserEntity> catalogUserList = new ArrayList<CatalogUserEntity>();
+            catalogList = resourceCatalogService.selectParentCatalogList(catalogList,catalogEntity);
+            for(ResourceCatalogEntity catalog : catalogList){
+                if(catalogUserService.selectCount(new EntityWrapper<CatalogUserEntity>().eq("user_id",getUserId()).eq("catalog_id",catalog.getCatalogId())) == 0){
+                    catalogUserList.add(new CatalogUserEntity(catalog.getCatalogId(),getUserId()));
+                }
+            }
+            if(catalogUserList != null && catalogUserList.size() > 0){
+                catalogUserService.insertBatch(catalogUserList);
+            }
         }
         xlsFile.delete();
         return R.ok();

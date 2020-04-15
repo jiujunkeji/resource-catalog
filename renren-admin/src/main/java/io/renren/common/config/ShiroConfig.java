@@ -78,8 +78,9 @@ public class ShiroConfig {
         shiroFilter.setSecurityManager(securityManager);
 //        shiroFilter.setLoginUrl("/login.html");
 
-        String redirect_uri = URLEncoder.encode(Constant.REDIRECT_URI+"","UTF-8");
-        shiroFilter.setLoginUrl(Constant.AUTHORIZE_URI + "?client_id=" + Constant.CLIENT_ID + "&redirect_uri=" + redirect_uri +"&response_type=code");
+//        String redirect_uri = URLEncoder.encode(Constant.REDIRECT_URI+"","UTF-8");
+//        shiroFilter.setLoginUrl(Constant.AUTHORIZE_URI + "?client_id=" + Constant.CLIENT_ID + "&redirect_uri=" + redirect_uri +"&response_type=code");
+        shiroFilter.setLoginUrl("/login.html");
         shiroFilter.setUnauthorizedUrl("/");
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/swagger/**", "anon");

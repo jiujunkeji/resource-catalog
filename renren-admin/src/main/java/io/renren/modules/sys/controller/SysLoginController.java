@@ -130,20 +130,22 @@ public class SysLoginController {
 		JSONObject data = userRes.getJSONObject("data");
 		JSONObject userInfo = data.getJSONObject("userInfo");
 		JSONArray roleList = data.getJSONArray("roleList");
-		oauthLogin(userInfo,roleList);
+		oauthLogin(userInfo,roleList,tokenRes.getString("access_token"),tokenRes.getString("refresh_token"));
 		return "index";
 	}
 
 	/**
 	 * 验证用户并登录
 	 */
-	public void oauthLogin(JSONObject userInfo, JSONArray roleList) {
+	public void oauthLogin(JSONObject userInfo, JSONArray roleList, String accessToken, String refreshToken) {
 		String idnumber = userInfo.getString("idnumber");
 		String password = "1";
 		SysUserEntity user = userService.selectOne(new EntityWrapper<SysUserEntity>().eq("idnumber",idnumber));
 		if(user == null){
 			user = new SysUserEntity();
 			user.setIdnumber(idnumber);
+			user.setAccessToken(accessToken);
+			user.setRefreshToken(refreshToken);
 			user.setDeptId(1L);
 			user.setStatus(1);
 			user.setUsername(userInfo.getString("loginName"));
@@ -157,6 +159,8 @@ public class SysLoginController {
 			user.setPassword(ShiroUtils.sha256(password, user.getSalt()));
 			userService.insert(user);
 		}else{
+			user.setAccessToken(accessToken);
+			user.setRefreshToken(refreshToken);
 			user.setDeptId(1L);
 			user.setStatus(1);
 			user.setUsername(userInfo.getString("loginName"));
@@ -201,5 +205,4 @@ public class SysLoginController {
 		ShiroUtils.logout();
 		return "redirect:login.html";
 	}
-	
 }

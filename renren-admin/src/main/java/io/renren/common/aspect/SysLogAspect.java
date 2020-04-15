@@ -16,16 +16,21 @@
 
 package io.renren.common.aspect;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 
 
 import io.renren.common.annotation.SysLog;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.InfoJson;
 import io.renren.modules.sys.entity.SysLogEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysLogService;
 import io.renren.common.utils.HttpContextUtils;
 import io.renren.common.utils.IPUtils;
 
+import io.renren.modules.sys.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -37,7 +42,10 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 系统日志，切面处理类
@@ -50,6 +58,8 @@ import java.util.Date;
 public class SysLogAspect {
 	@Autowired
 	private SysLogService sysLogService;
+	@Autowired
+	private SysUserService sysUserService;
 	
 	@Pointcut("@annotation(io.renren.common.annotation.SysLog)")
 	public void logPointCut() { 
@@ -73,40 +83,66 @@ public class SysLogAspect {
 	private void saveSysLog(ProceedingJoinPoint joinPoint, long time) {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
-
-		SysLogEntity sysLog = new SysLogEntity();
 		SysLog syslog = method.getAnnotation(SysLog.class);
-		if(syslog != null){
-			//注解上的描述
-			sysLog.setOperation(syslog.value());
+		if(syslog != null) {
+			//用户名
+			SysUserEntity user = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+			String username = user.getUsername();
+			String name = user.getName();
+			String refreshToken = user.getRefreshToken();
+			if(StringUtils.isNotEmpty(syslog.type())){
+				SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Map params = new HashMap();
+				params.put("sysNum", Constant.SYS_NUM);
+				params.put("systemSecret", Constant.CLIENT_SECRET);
+				params.put("userName", name);
+				params.put("loginName", username);
+				params.put("operationType", syslog.type());
+				params.put("content", syslog.content());
+				params.put("dateTime", s.format(new Date()));
+				JSONObject result = InfoJson.postJson(Constant.OPERATION_URI, params);
+				String code = result.getString("RetCode");
+				if ("S".equals(code)) {
+					System.out.println("审计日志保存成功");
+				} else {
+					System.out.println("审计日志保存失败");
+					System.out.println("失败原因：" + result.getString("RetMsg"));
+				}
+			}
+			if(StringUtils.isNotEmpty(syslog.menuId())){
+				//刷新token
+				Map params1 = new HashMap();
+				params1.put("clinet_id",Constant.CLIENT_ID);
+				params1.put("client_secret",Constant.CLIENT_SECRET);
+				params1.put("refresh_token",refreshToken);
+				params1.put("grant_type","refresh_token");
+				params1.put("scope","all");
+				JSONObject tokenRes = InfoJson.postJson(Constant.REFRESH_TOKEN_URI,params1);
+				String token = tokenRes.getString("access_token");
+				if(StringUtils.isNotEmpty(token)){
+					//更新user的token值
+					String reToken = tokenRes.getString("refresh_token");
+					user.setAccessToken(token);
+					user.setRefreshToken(reToken);
+					sysUserService.updateById(user);
+					//调用鉴权方法
+					Map params2 = new HashMap();
+					params2.put("clientId",Constant.CLIENT_ID);
+					params2.put("accessToken",token);
+					params2.put("loginName",username);
+					params2.put("menuId",syslog.menuId());
+					JSONObject authMenuRes = InfoJson.postJson(Constant.AUTHMENU_URI,params2);
+					if(authMenuRes.getInteger("code") == 0){
+						System.out.println("鉴权成功");
+					}else{
+						System.out.println("鉴权失败");
+					}
+				}else{
+					System.out.println("刷新token失败");
+				}
+			}
 		}
-
-		//请求的方法名
-		String className = joinPoint.getTarget().getClass().getName();
-		String methodName = signature.getName();
-		sysLog.setMethod(className + "." + methodName + "()");
-
-		//请求的参数
-		Object[] args = joinPoint.getArgs();
-		try{
-			String params = new Gson().toJson(args[0]);
-			sysLog.setParams(params);
-		}catch (Exception e){
-
-		}
-
-		//获取request
-		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
-		//设置IP地址
-		sysLog.setIp(IPUtils.getIpAddr(request));
-
-		//用户名
-		String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
-		sysLog.setUsername(username);
-
-		sysLog.setTime(time);
-		sysLog.setCreateDate(new Date());
-		//保存系统日志
-		sysLogService.insert(sysLog);
 	}
+
+
 }

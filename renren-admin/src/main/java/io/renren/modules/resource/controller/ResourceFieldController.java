@@ -124,7 +124,7 @@ public class ResourceFieldController {
             String fn = URLEncoder.encode(fileName,"UTF-8");
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-            String filePath = getClass().getClassLoader().getResource("TAB1/" + pathName).getPath();
+            String filePath = getClass().getClassLoader().getResource("tab1/" + pathName).getPath();
             FileInputStream input = new FileInputStream(filePath);
             OutputStream out = response.getOutputStream();
             byte[] b = new byte[2048];

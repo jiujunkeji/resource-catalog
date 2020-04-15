@@ -45,7 +45,7 @@ public class MeteDataApi {
         System.out.println("name:" + params.get("name"));
         String access_key = (String) params.get("access_key");
         String access_secret = (String) params.get("access_secret");
-        String name = (String) params.get("catalog_name");
+        String name = (String) params.get("name");
         if(StringUtils.isBlank(access_key) || StringUtils.isBlank(access_secret)){
             return R.error(501,"access_key/access_secret can't be null");
         }
@@ -73,9 +73,9 @@ public class MeteDataApi {
                 }
                 dto.setRemark(catalog.getRemark());
                 if(catalog.getType() != null && catalog.getType() == 0){
-                    dto.setType("资源目录");
+                    dto.setType("资源类型");
                 }else{
-                    dto.setType("");
+                    dto.setType("服务类型");
                 }
                 data.add(dto);
             }
