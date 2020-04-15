@@ -89,7 +89,7 @@ var vm = new Vue({
                 area: ['600px', '520px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['新增','取消'],
+                btn: ['修改','取消'],
                 btn1:function (index) {
                     vm.saveOrUpdate();
                     layer.close(index);

@@ -44,7 +44,7 @@ var vm = new Vue({
             meteType:null,
             categoryId:null,
             categoryName:'',
-            categoryCode:'',
+            catagoryCode:'',
             catalogId:'',
             catalogName:''
         },

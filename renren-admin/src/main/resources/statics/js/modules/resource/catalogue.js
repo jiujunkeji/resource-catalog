@@ -47,7 +47,7 @@ var vm = new Vue({
             meteType:null,
             categoryId:null,
             categoryName:'',
-            categoryCode:'',
+            catagoryCode:'',
             catalogId:'',
             catalogName:'',
             fieldList:[]
@@ -160,8 +160,8 @@ var vm = new Vue({
                     //选择上级菜单
                     vm.resourceMeteData.categoryId = node[0].meteCategoryId;
                     vm.resourceMeteData.categoryName = node[0].name;
-                    vm.resourceMeteData.categoryCode = node[0].code;
-                    console.log(vm.resourceMeteData.categoryCode);
+                    vm.resourceMeteData.catagoryCode = node[0].code;
+                    console.log(vm.resourceMeteData.catagoryCode);
                     layer.close(index);
                 }
             });
@@ -174,7 +174,7 @@ var vm = new Vue({
                 meteType:null,
                 categoryId:null,
                 categoryName:'',
-                categoryCode:'',
+                catagoryCode:'',
                 catalogId:'',
                 catalogName:'',
                 fieldList:[]
@@ -423,7 +423,13 @@ var vm = new Vue({
 
                 }
 
-
+                var _list = [{
+                    name:'全部',
+                    id:null,
+                    list:[]
+                }]
+                _list[0].list = vm.menuList;
+                vm.menuList = _list;
                 console.log(vm.menuList);
             });
         },
@@ -465,8 +471,9 @@ var vm = new Vue({
         // 树目录点击事件
         handleNodeClick:function(data) {
             console.log(data);
+            console.log(JSON.stringify(data.id) == 'null');
 
-            if(data.list.length == 0){
+            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
                 vm.getTableList();
