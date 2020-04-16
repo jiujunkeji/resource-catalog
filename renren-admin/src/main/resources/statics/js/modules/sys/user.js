@@ -1,49 +1,9 @@
 $(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/user/list',
-        datatype: "json",
-        colModel: [			
-			{ label: '用户ID', name: 'userId', index: "user_id", width: 45, key: true },
-			{ label: '用户名', name: 'username', width: 75 },
-            { label: '所属部门', name: 'deptName', sortable: false, width: 75 },
-			{ label: '邮箱', name: 'email', width: 90 },
-			{ label: '手机号', name: 'mobile', width: 100 },
-			{ label: '状态', name: 'status', width: 60, formatter: function(value, options, row){
-				return value === 0 ? 
-					'<span class="label label-danger">禁用</span>' : 
-					'<span class="label label-success">正常</span>';
-			}},
-			{ label: '创建时间', name: 'createTime', index: "create_time", width: 85}
-        ],
-		viewrecords: true,
-        height: 385,
-        rowNum: 10,
-		rowList : [10,30,50],
-        rownumbers: false,
-        rownumWidth: 0,
-        autowidth:true,
-        multiselect: true,
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page", 
-            rows:"limit", 
-            order: "order"
-        },
-        gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
-    });
 
-    var _height = $('.divBox').eq(0).find('.switchIn').height();
-    var height = _height + 45 + 70;
-    vm.h = height;
+
+   var _height = $('.divBox').eq(0).find('.switchIn').height();
+   var height = _height + 45 + 70;
+   vm.h = height;
 });
 var setting = {
     data: {
@@ -59,6 +19,33 @@ var setting = {
     }
 };
 var ztree;
+
+// var vm = new Vue({
+//     el:'#rrapp',
+//     created:function(){
+//         this.getList()
+//     },
+//     data:{
+//         tableList:[],
+//         totalPage:'',
+//         userId:'',
+//         name:'',
+//         deptName:'',
+//         email:'',
+//         mobile:'',
+//         page:1,
+//         props: {
+//             label: 'name',
+//             children: 'list',
+//         },
+//         createTime:'',
+//         toggleSelection:'',
+//         layerPage:''
+//     },
+//     methods:{
+//
+//     }
+// })
 
 var vm = new Vue({
     el:'#rrapp',
@@ -78,6 +65,9 @@ var vm = new Vue({
         open:true,
         openText:'展开筛选',
         h:0,
+        tableList:[],
+        totalPage:0,
+        page:1
     },
     methods: {
         query: function () {
@@ -216,6 +206,39 @@ var vm = new Vue({
                 vm.open = true;
                 vm.openText = '展开筛选'
             }
+        },
+        // 获取表格数据
+        getList:function(){
+            $.ajax({
+                url:baseURL + 'sys/user/list',
+                dataType: 'json',
+                data: {
+
+                },
+                success: function(res){
+                    console.log(res);
+                    if(res.code == 0){
+                        vm.tableList = res.page.list;
+                        vm.totalPage = res.page.totalCount;
+                        console.log('111111');
+                        console.log(vm.tableList)
+                    }else{
+                        alert(res.msg);
+                    }
+                }
+            })
+        },
+        toggleSelection:function () {
+            
+        },
+        // 分页
+        layerPage:function (currentPage) {
+            console.log(currentPage);
+            vm.page = currentPage;
+            vm.getTableList();
         }
-    }
+    },
+    created:function(){
+        this.getList()
+    },
 });

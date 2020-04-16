@@ -1,17 +1,22 @@
 //生成菜单
+// '	<a v-if="item.type === 0 && !item.url && typeof(item.url) != undefined && item.url != 0" :href="\'#\'+item.url">',    fa-sort-asc
 var menuItem = Vue.extend({
     name: 'menu-item',
     props:{item:{}},
     template:[
         '<li>',
-        '	<a v-if="item.type === 0" href="javascript:;">',
+        '	<a v-if="item.type === 0 && !item.url && typeof(item.url) != undefined && item.url != 0" href="javascript:;">',
         '		<i v-if="item.icon != null" :class="item.icon"></i>',
         '		<span>{{item.name}}</span>',
         '		<i class="fa fa-angle-right pull-right"></i>',
         '	</a>',
-        '	<ul v-if="item.type === 0" class="treeview-menu">',
+        '	<ul v-if="item.type === 0 && !item.url && typeof(item.url) != undefined && item.url != 0" class="treeview-menu">',
         '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
         '	</ul>',
+        '	<a v-if="item.type === 0 && !(!item.url && typeof(item.url) != undefined && item.url != 0)" @click="toOpen(item)" :href="\'#\'+item.url">',
+        '		<i v-if="item.icon != null" :class="item.icon"></i>',
+        '		<span>{{item.name}}</span>',
+        '	</a>',
 
         '	<a v-if="item.type === 1 && item.parentId === 0" :href="\'#\'+item.url">',
         '		<i v-if="item.icon != null" :class="item.icon"></i>',
@@ -27,7 +32,7 @@ var menuItem = Vue.extend({
 //iframe自适应
 $(window).on('resize', function() {
 	var $content = $('.content');
-	$content.height($(this).height() - 40);
+	$content.height($(this).height() - 36);
 	$content.find('iframe').each(function() {
 		$(this).height($content.height());
 	});
@@ -158,10 +163,13 @@ var vm = new Vue({
 function routerList(router, menuList){
 	for(var key in menuList){
 		var menu = menuList[key];
+
 		if(menu.type == 0){
 			routerList(router, menu.list);
+            console.log(menu);
 		}else if(menu.type == 1){
 			router.add('#'+menu.url, function() {
+
 				var url = window.location.hash;
 				//替换iframe的url
 			    vm.main = url.replace('#', '');

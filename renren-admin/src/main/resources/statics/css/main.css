@@ -363,6 +363,12 @@ body {
     -ms-animation: fadein 0.5s linear 1;
     /*animation: fadein1 1s linear 1;*/
 }
+.jump-btn{
+    border: 1px solid #DCDFE6!important;
+    color: #606266!important;
+    margin-right: 12px;
+    border-radius: 4px;
+}
 
 
 

@@ -279,7 +279,7 @@
                         background
                         pager-count="1"
                         :current-page="page"
-                        layout="prev, pager, next, jumper"
+                        layout="prev, pager, next, jumper,total,->,slot"
                         @current-change="layerPage"
                         :total="totalPage">
                 </el-pagination>
