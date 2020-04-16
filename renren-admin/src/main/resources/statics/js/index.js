@@ -29,6 +29,27 @@ var menuItem = Vue.extend({
 });
 // <i v-if="item.icon != null" :class="item.icon"></i><i v-else class="fa fa-circle-o"></i>
 
+// template:[
+//     '<li>',
+//     '	<a v-if="item.type === 0" href="javascript:;">',
+//     '		<i v-if="item.icon != null" :class="item.icon"></i>',
+//     '		<span>{{item.name}}</span>',
+//     '		<i class="fa fa-angle-right pull-right"></i>',
+//     '	</a>',
+//     '	<ul v-if="item.type === 0" class="treeview-menu">',
+//     '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
+//     '	</ul>',
+//
+//     '	<a v-if="item.type === 1 && item.parentId === 0" :href="\'#\'+item.url">',
+//     '		<i v-if="item.icon != null" :class="item.icon"></i>',
+//     '		<span>{{item.name}}</span>',
+//     '	</a>',
+//
+//     '	<a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url" @click="toOpen(item)"> {{item.name}}</a>',
+//     '</li>'
+// ].join('')
+
+
 //iframe自适应
 $(window).on('resize', function() {
 	var $content = $('.content');
