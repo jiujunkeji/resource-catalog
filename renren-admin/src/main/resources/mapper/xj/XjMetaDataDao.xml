@@ -5,8 +5,8 @@
 
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.xj.entity.XjMetaDataEntity" id="xjMetaDataMap">
-        <result property="fieldId" column="field_id"/>
         <result property="meteId" column="mete_id"/>
+        <result property="meteNumber" column="mete_number"/>
         <result property="cnName" column="cn_name"/>
         <result property="euName" column="eu_name"/>
         <result property="euShortName" column="eu_short_name"/>
@@ -19,6 +19,8 @@
         <result property="judgeMandatory" column="judge_mandatory"/>
         <result property="definition" column="definition"/>
         <result property="isDisabled" column="is_disabled"/>
+        <result property="meteSetId" column="mete_set_id"/>
+        <result property="meteCategoryId" column="mete_category_id"/>
         <result property="createUserId" column="create_user_id"/>
         <result property="createDate" column="create_date"/>
         <result property="updateTime" column="update_time"/>

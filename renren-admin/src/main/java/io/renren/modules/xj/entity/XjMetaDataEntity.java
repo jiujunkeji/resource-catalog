@@ -7,25 +7,25 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 元数据表
  * 
- * 
- * @author fanwei
- * @email 3275869736@qq.com
- * @date 2020-04-22 13:31:15
+ * @author wangdehai
+ * @email 594340717@qq.com
+ * @date 2020-04-22 15:46:35
  */
 @TableName("xj_meta_data")
 public class XjMetaDataEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 主键
-	 */
-	@TableId
-	private Long fieldId;
-	/**
 	 * 编号
 	 */
+	@TableId
 	private Long meteId;
+	/**
+	 * 元数据编号
+	 */
+	private String meteNumber;
 	/**
 	 * 中文名称
 	 */
@@ -75,6 +75,14 @@ public class XjMetaDataEntity implements Serializable {
 	 */
 	private Integer isDisabled;
 	/**
+	 * 
+	 */
+	private Long meteSetId;
+	/**
+	 * 
+	 */
+	private Long meteCategoryId;
+	/**
 	 * 创建用户id
 	 */
 	private Integer createUserId;
@@ -88,18 +96,6 @@ public class XjMetaDataEntity implements Serializable {
 	private Date updateTime;
 
 	/**
-	 * 设置：主键
-	 */
-	public void setFieldId(Long fieldId) {
-		this.fieldId = fieldId;
-	}
-	/**
-	 * 获取：主键
-	 */
-	public Long getFieldId() {
-		return fieldId;
-	}
-	/**
 	 * 设置：编号
 	 */
 	public void setMeteId(Long meteId) {
@@ -110,6 +106,18 @@ public class XjMetaDataEntity implements Serializable {
 	 */
 	public Long getMeteId() {
 		return meteId;
+	}
+	/**
+	 * 设置：元数据编号
+	 */
+	public void setMeteNumber(String meteNumber) {
+		this.meteNumber = meteNumber;
+	}
+	/**
+	 * 获取：元数据编号
+	 */
+	public String getMeteNumber() {
+		return meteNumber;
 	}
 	/**
 	 * 设置：中文名称
@@ -254,6 +262,30 @@ public class XjMetaDataEntity implements Serializable {
 	 */
 	public Integer getIsDisabled() {
 		return isDisabled;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setMeteSetId(Long meteSetId) {
+		this.meteSetId = meteSetId;
+	}
+	/**
+	 * 获取：
+	 */
+	public Long getMeteSetId() {
+		return meteSetId;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setMeteCategoryId(Long meteCategoryId) {
+		this.meteCategoryId = meteCategoryId;
+	}
+	/**
+	 * 获取：
+	 */
+	public Long getMeteCategoryId() {
+		return meteCategoryId;
 	}
 	/**
 	 * 设置：创建用户id

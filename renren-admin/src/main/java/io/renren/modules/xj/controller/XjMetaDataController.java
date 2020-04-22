@@ -20,11 +20,11 @@ import io.renren.common.utils.R;
 
 
 /**
- * 
+ * 元数据表
  *
- * @author fanwei
- * @email 3275869736@qq.com
- * @date 2020-04-22 13:31:15
+ * @author wangdehai
+ * @email 594340717@qq.com
+ * @date 2020-04-22 15:46:35
  */
 @RestController
 @RequestMapping("xj/xjmetadata")
@@ -47,10 +47,10 @@ public class XjMetaDataController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{fieldId}")
+    @RequestMapping("/info/{meteId}")
     //@RequiresPermissions("xj:xjmetadata:info")
-    public R info(@PathVariable("fieldId") Long fieldId){
-        XjMetaDataEntity xjMetaData = xjMetaDataService.selectById(fieldId);
+    public R info(@PathVariable("meteId") Long meteId){
+        XjMetaDataEntity xjMetaData = xjMetaDataService.selectById(meteId);
 
         return R.ok().put("xjMetaData", xjMetaData);
     }
@@ -83,8 +83,8 @@ public class XjMetaDataController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("xj:xjmetadata:delete")
-    public R delete(@RequestBody Long[] fieldIds){
-        xjMetaDataService.deleteBatchIds(Arrays.asList(fieldIds));
+    public R delete(@RequestBody Long[] meteIds){
+        xjMetaDataService.deleteBatchIds(Arrays.asList(meteIds));
 
         return R.ok();
     }

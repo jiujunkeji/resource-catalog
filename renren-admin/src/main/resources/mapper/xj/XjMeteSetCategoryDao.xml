@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.xj.dao.XjMeteSetCategoryDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.xj.entity.XjMeteSetCategoryEntity" id="xjMeteSetCategoryMap">
+        <result property="meteCategorySetId" column="mete_category_set_id"/>
+        <result property="metaCategorySetNumber" column="meta_category_set_number"/>
+        <result property="categorySetType" column="category_set_type"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="sortSetCode" column="sort_set_code"/>
+        <result property="isDisabled" column="is_disabled"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+</mapper>

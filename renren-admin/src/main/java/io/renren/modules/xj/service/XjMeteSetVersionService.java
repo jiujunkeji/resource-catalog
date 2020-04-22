@@ -2,18 +2,18 @@ package io.renren.modules.xj.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
-import io.renren.modules.xj.entity.XjMetaDataEntity;
+import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
 
 import java.util.Map;
 
 /**
- * 元数据表
+ * 元数据集版本变更历史记录表
  *
  * @author wangdehai
  * @email 594340717@qq.com
  * @date 2020-04-22 15:46:35
  */
-public interface XjMetaDataService extends IService<XjMetaDataEntity> {
+public interface XjMeteSetVersionService extends IService<XjMeteSetVersionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 }
