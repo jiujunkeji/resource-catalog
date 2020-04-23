@@ -1,6 +1,9 @@
 package io.renren.modules.xj.service.impl;
 
+import io.renren.modules.resource.entity.MeteCategoryEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +27,33 @@ public class XjMeteCategoryServiceImpl extends ServiceImpl<XjMeteCategoryDao, Xj
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<XjMeteCategoryEntity> searchFindByMeteCategoryNumberOrName(String str) {
+        //先判断是否是根据编号查询
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList = this.selectList(new EntityWrapper<XjMeteCategoryEntity>().eq("meta_category_number", str));
+        if (xjMeteCategoryEntityList.size() == 0 || xjMeteCategoryEntityList == null) {
+            //再去根据名称查询
+            xjMeteCategoryEntityList = this.selectList(new EntityWrapper<XjMeteCategoryEntity>().like("name", str));
+
+        }
+        return xjMeteCategoryEntityList;
+    }
+
+    @Override
+    public List<XjMeteCategoryEntity> updateEnabledState(Long mete_category_id) {
+        EntityWrapper<XjMeteCategoryEntity> wrapper=new EntityWrapper<>();
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=this.selectList(wrapper.eq("mete_category_id",mete_category_id));
+        return xjMeteCategoryEntityList;
+    }
+
+    @Override
+    public List<XjMeteCategoryEntity> updateDisabledState(Long mete_category_id) {
+        EntityWrapper<XjMeteCategoryEntity> wrapper=new EntityWrapper<>();
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=this.selectList(wrapper.eq("mete_category_id",mete_category_id));
+        return xjMeteCategoryEntityList;
+
     }
 
 }
