@@ -46,10 +46,7 @@ public class XjMetaDataSetEntity implements Serializable {
 	 * 当前版本
 	 */
 	private String currentVersion;
-	/**
-	 * 版本id
-	 */
-	private Long versionId;
+
 	/**
 	 * 
 	 */
@@ -151,18 +148,7 @@ public class XjMetaDataSetEntity implements Serializable {
 	public String getCurrentVersion() {
 		return currentVersion;
 	}
-	/**
-	 * 设置：版本id
-	 */
-	public void setVersionId(Long versionId) {
-		this.versionId = versionId;
-	}
-	/**
-	 * 获取：版本id
-	 */
-	public Long getVersionId() {
-		return versionId;
-	}
+
 	/**
 	 * 设置：
 	 */

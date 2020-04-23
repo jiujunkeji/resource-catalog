@@ -508,6 +508,7 @@ var vm = new Vue({
         // 树结构目录获取
         getMenuList: function (event) {
             $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+                console.log(r);
                 var _len=0;
                 for(var i = 1;i<100;i++){
                     if(i == 1){

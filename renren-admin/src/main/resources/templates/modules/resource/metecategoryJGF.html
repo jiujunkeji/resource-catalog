@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>编目管理</title>
+    <title>元数据集发布</title>
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -101,7 +101,7 @@
             }
 
         </style>
-</head>
+        </head>
 <body>
 <div id="rrapp" v-cloak>
     <div class="box" v-show="showList">
@@ -124,8 +124,7 @@
         <div class="listCon">
             <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
             <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">通过</button>
-            <button :class="tab == 3 ? 'el-button active' : 'el-button'" @click="tabClick(3)">未通过</button>
+            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
             <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">
@@ -151,31 +150,31 @@
                             width="40">
                     </el-table-column>
                     <!--<el-table-column-->
-                            <!--prop="meteType"-->
-                            <!--label="元数据类型"-->
-                            <!--width="120">-->
-                        <!--<template slot-scope="scope">-->
-                            <!--<span v-if="scope.row.meteType == 0">资源类型</span>-->
-                            <!--<span v-if="scope.row.meteType == 1">服务类型</span>-->
-                        <!--</template>-->
+                    <!--prop="meteType"-->
+                    <!--label="元数据类型"-->
+                    <!--width="120">-->
+                    <!--<template slot-scope="scope">-->
+                    <!--<span v-if="scope.row.meteType == 0">资源类型</span>-->
+                    <!--<span v-if="scope.row.meteType == 1">服务类型</span>-->
+                    <!--</template>-->
                     <!--</el-table-column>-->
                     <!--<el-table-column-->
-                            <!--prop="resourceCategory"-->
-                            <!--label="信息资源类型"-->
-                            <!--width="130">-->
-                        <!--<template slot-scope="scope">-->
-                            <!--<span v-if="scope.row.resourceCategory == 0">主题分类</span>-->
-                        <!--</template>-->
+                    <!--prop="resourceCategory"-->
+                    <!--label="信息资源类型"-->
+                    <!--width="130">-->
+                    <!--<template slot-scope="scope">-->
+                    <!--<span v-if="scope.row.resourceCategory == 0">主题分类</span>-->
+                    <!--</template>-->
                     <!--</el-table-column>-->
                     <!--<el-table-column-->
-                            <!--prop="categoryName"-->
-                            <!--label="资源分类"-->
-                            <!--width="120">-->
+                    <!--prop="categoryName"-->
+                    <!--label="资源分类"-->
+                    <!--width="120">-->
                     <!--</el-table-column>-->
                     <!--<el-table-column-->
-                            <!--prop="catagoryCode"-->
-                            <!--label="资源分类编码"-->
-                            <!--width="130">-->
+                    <!--prop="catagoryCode"-->
+                    <!--label="资源分类编码"-->
+                    <!--width="130">-->
                     <!--</el-table-column>-->
                     <el-table-column
                             prop="resourceTitle"
@@ -188,9 +187,9 @@
                             width="">
                     </el-table-column>
                     <!--<el-table-column-->
-                            <!--prop="keyword"-->
-                            <!--label="关键字"-->
-                            <!--width="130">-->
+                    <!--prop="keyword"-->
+                    <!--label="关键字"-->
+                    <!--width="130">-->
                     <!--</el-table-column>-->
                     <el-table-column
                             prop="resourceSign"
@@ -198,9 +197,9 @@
                             width="130">
                     </el-table-column>
                     <!--<el-table-column-->
-                            <!--prop="metedataIdentifier"-->
-                            <!--label="元数据标识"-->
-                            <!--width="130">-->
+                    <!--prop="metedataIdentifier"-->
+                    <!--label="元数据标识"-->
+                    <!--width="130">-->
                     <!--</el-table-column>-->
                     <el-table-column
                             prop="updateTime"
@@ -248,7 +247,6 @@
                     </el-table-column>
                     <el-table-column
                             label="发布状态"
-                            v-if="tab == 2"
                             width="90">
                         <template slot-scope="scope">
                             <el-tag
@@ -271,11 +269,8 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.meteId)" v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3" title="编辑"></i> <span v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3" style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" @click="del(scope.row.meteId)" v-if="scope.row.reviewState == 0" title="删除"></i>
-                            <i class="el-icon-document" @click="del(scope.row.meteId)" v-if="scope.row.reviewState == 3" title="审核记录"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.meteId)" v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3"></i> <span v-if="scope.row.reviewState == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" @click="del(scope.row.meteId)" v-if="scope.row.reviewState == 0"></i>
                             <el-button v-if="scope.row.reviewState == 1" type="text" @click="revoke(scope.row.meteId)">撤回</el-button>
-                            <el-button v-if="scope.row.reviewState == 2" type="text" @click="revoke(scope.row.meteId)">查看</el-button>
-                            <!--<el-button v-if="scope.row.reviewState == 3" type="text" @click="revoke(scope.row.meteId)">审核记录</el-button>-->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -309,34 +304,34 @@
             </div>
             <div class="line">
                 <!--<div class="item">-->
-                    <!--<label>元数据类型</label>-->
-                    <!--<div class="inp">-->
-                        <!--<el-select v-model="resourceMeteData.meteType" placeholder="请选择">-->
-                            <!--<el-option-->
-                                    <!--:key="0"-->
-                                    <!--label="资源类型"-->
-                                    <!--:value="0">-->
-                            <!--</el-option>-->
-                            <!--<el-option-->
-                                    <!--:key="1"-->
-                                    <!--label="服务类型"-->
-                                    <!--:value="1">-->
-                            <!--</el-option>-->
-                        <!--</el-select>-->
-                    <!--</div>-->
+                <!--<label>元数据类型</label>-->
+                <!--<div class="inp">-->
+                <!--<el-select v-model="resourceMeteData.meteType" placeholder="请选择">-->
+                <!--<el-option-->
+                <!--:key="0"-->
+                <!--label="资源类型"-->
+                <!--:value="0">-->
+                <!--</el-option>-->
+                <!--<el-option-->
+                <!--:key="1"-->
+                <!--label="服务类型"-->
+                <!--:value="1">-->
+                <!--</el-option>-->
+                <!--</el-select>-->
+                <!--</div>-->
                 <!--</div>-->
                 <!--<div class="item">-->
-                    <!--<label>信息资源类型</label>-->
-                    <!--<div class="inp">-->
-                        <!--<el-select v-model="resourceMeteData.resourceCategory" placeholder="请选择">-->
-                            <!--<el-option-->
-                                    <!--:key="0"-->
-                                    <!--label="主题分类"-->
-                                    <!--:value="0">-->
-                            <!--</el-option>-->
-                        <!--</el-select>-->
-                        <!--&lt;!&ndash;<input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>&ndash;&gt;-->
-                    <!--</div>-->
+                <!--<label>信息资源类型</label>-->
+                <!--<div class="inp">-->
+                <!--<el-select v-model="resourceMeteData.resourceCategory" placeholder="请选择">-->
+                <!--<el-option-->
+                <!--:key="0"-->
+                <!--label="主题分类"-->
+                <!--:value="0">-->
+                <!--</el-option>-->
+                <!--</el-select>-->
+                <!--&lt;!&ndash;<input type="text" class="form-control" v-model="resourceMeteData.resourceCategory" placeholder="信息资源类型（主题分类）"/>&ndash;&gt;-->
+                <!--</div>-->
                 <!--</div>-->
                 <div class="item">
                     <label>目录名称</label>
@@ -371,6 +366,9 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
                     </div>
                 </div>
+
+            </div>
+            <div class="line">
                 <div class="item">
                     <label>资源提供单位</label>
                     <div class="inp">
@@ -384,6 +382,14 @@
                         </el-select>
                     </div>
                 </div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <!--<div class="item">-->
+                <!--<label>关键字</label>-->
+                <!--<div class="inp">-->
+                <!--<input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>-->
+                <!--</div>-->
+                <!--</div>-->
 
             </div>
             <div class="line">
@@ -476,9 +482,9 @@
                     </template>
                 </el-table-column>
                 <!--<el-table-column-->
-                        <!--prop="keyword"-->
-                        <!--label="关键字"-->
-                        <!--width="">-->
+                <!--prop="keyword"-->
+                <!--label="关键字"-->
+                <!--width="">-->
                 <!--</el-table-column>-->
                 <el-table-column
                         prop="createDate"
@@ -583,16 +589,16 @@
                 </div>
             </div>
             <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label">关键字</div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" v-model="fileData.keyword" placeholder="关键字"/>-->
-                <!--</div>-->
+            <!--<div class="col-sm-2 control-label">关键字</div>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" class="form-control" v-model="fileData.keyword" placeholder="关键字"/>-->
+            <!--</div>-->
             <!--</div>-->
             <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label">更新时间</div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" v-model="fileData.updateTime" placeholder="更新时间"/>-->
-                <!--</div>-->
+            <!--<div class="col-sm-2 control-label">更新时间</div>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" class="form-control" v-model="fileData.updateTime" placeholder="更新时间"/>-->
+            <!--</div>-->
             <!--</div>-->
 
         </form>
