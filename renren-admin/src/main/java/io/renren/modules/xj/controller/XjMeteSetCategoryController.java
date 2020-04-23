@@ -1,9 +1,11 @@
 package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +45,45 @@ public class XjMeteSetCategoryController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 条件查询（根据元数据分类编号或者分类名称）
+     */
+    @RequestMapping("/queryList")
+    //@RequiresPermissions("resource:metecategory:list")
+    public R queryList(@RequestParam Map<String, Object> params){
+        PageUtils meteSetCategoryEntities=xjMeteSetCategoryService.searchFindByMeteSetCategoryNumberOrName(params);
+        return R.ok().put("meteSetCategoryEntities",meteSetCategoryEntities);
+    }
 
+    /**
+     * 元数据分类一键启用
+     */
+    @RequestMapping("/updateEnabledState")
+    public R updateEnabledState(@RequestBody Long[] meteCategorySetIds){
+        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=xjMeteSetCategoryService.updateEnabledState(meteCategorySetIds);
+        if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
+            for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
+                xjMeteSetCategoryEntity.setIsDisabled(0);
+                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+            }
+        }
+        return R.ok();
+    }
+
+    /**
+     * 元数据分类一键禁用
+     */
+    @RequestMapping("/updateDisabledState")
+    public R updateDisabledState(@RequestBody Long[] meteCategorySetIds){
+        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=xjMeteSetCategoryService.updateEnabledState(meteCategorySetIds);
+        if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
+            for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
+                xjMeteSetCategoryEntity.setIsDisabled(1);
+                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+            }
+        }
+        return R.ok();
+    }
     /**
      * 信息
      */
