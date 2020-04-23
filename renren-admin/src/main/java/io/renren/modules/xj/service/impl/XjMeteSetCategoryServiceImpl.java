@@ -4,6 +4,9 @@ import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -49,8 +52,9 @@ public class XjMeteSetCategoryServiceImpl extends ServiceImpl<XjMeteSetCategoryD
 
     @Override
     public List<XjMeteSetCategoryEntity> updateEnabledState(Long[] mete_category_set_ids) {
-        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=null;
-        for(Long meteCategorySetId:mete_category_set_ids){
+        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=new ArrayList<>();
+        List<Long> list= Arrays.asList(mete_category_set_ids);
+        for(Long meteCategorySetId:list){
             XjMeteSetCategoryEntity xjMeteSetCategoryEntity=this.selectOne(new EntityWrapper<XjMeteSetCategoryEntity>().eq("mete_category_set_id",meteCategorySetId));
             xjMeteSetCategoryEntityList.add(xjMeteSetCategoryEntity);
         }
@@ -59,8 +63,9 @@ public class XjMeteSetCategoryServiceImpl extends ServiceImpl<XjMeteSetCategoryD
 
     @Override
     public List<XjMeteSetCategoryEntity> updateDisabledState(Long[] mete_category_set_ids) {
-        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=null;
-        for(Long meteCategorySetId:mete_category_set_ids){
+        List<XjMeteSetCategoryEntity> xjMeteSetCategoryEntityList=new ArrayList<>();
+        List<Long> list= Arrays.asList(mete_category_set_ids);
+        for(Long meteCategorySetId:list){
             XjMeteSetCategoryEntity xjMeteSetCategoryEntity=this.selectOne(new EntityWrapper<XjMeteSetCategoryEntity>().eq("mete_category_set_id",meteCategorySetId));
             xjMeteSetCategoryEntityList.add(xjMeteSetCategoryEntity);
         }

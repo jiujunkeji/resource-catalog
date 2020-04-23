@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.xj.entity.XjMetaDataEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,19 @@ import java.util.Map;
 public interface XjMetaDataService extends IService<XjMetaDataEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 元数据搜索(可根据编号或者中文名称)
+     */
+    PageUtils searchFindByMeteDataNumberOrName(Map<String, Object> params);
+
+    /**
+     * 元数据启用
+     */
+    public List<XjMetaDataEntity> updateEnabledState(Long[] mete_ids);
+
+    /**元数据禁用
+     */
+    public List<XjMetaDataEntity> updateDisabledState(Long[] mete_ids);
 }
 

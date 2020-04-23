@@ -56,7 +56,7 @@ public class XjMeteSetCategoryController {
     }
 
     /**
-     * 元数据分类一键启用
+     * 元数据集分类一键启用
      */
     @RequestMapping("/updateEnabledState")
     public R updateEnabledState(@RequestBody Long[] meteCategorySetIds){
@@ -64,14 +64,14 @@ public class XjMeteSetCategoryController {
         if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
             for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
                 xjMeteSetCategoryEntity.setIsDisabled(0);
-                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+                xjMeteSetCategoryService.updateById(xjMeteSetCategoryEntity);
             }
         }
         return R.ok();
     }
 
     /**
-     * 元数据分类一键禁用
+     * 元数据集分类一键禁用
      */
     @RequestMapping("/updateDisabledState")
     public R updateDisabledState(@RequestBody Long[] meteCategorySetIds){
@@ -79,8 +79,9 @@ public class XjMeteSetCategoryController {
         if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
             for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
                 xjMeteSetCategoryEntity.setIsDisabled(1);
-                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+                xjMeteSetCategoryService.updateById(xjMeteSetCategoryEntity);
             }
+
         }
         return R.ok();
     }

@@ -306,13 +306,13 @@ var vm = new Vue({
                         list:[]
                     })
                 })
-                // var _list = [{
-                //     name:'全部',
-                //     id:null,
-                //     list:[]
-                // }]
-                // _list[0].list = vm.menuList;
-                // vm.menuList = _list;
+                var _list = [{
+                    name:'元数据分类',
+                    id:null,
+                    list:[]
+                }]
+                _list[0].list = vm.menuList;
+                vm.menuList = _list;
                 // console.log(vm.menuList);
             });
         },
