@@ -225,12 +225,12 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetecategory/queryList',
+                url: baseURL + 'xj/xjmetecategory/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-
+                    params:''
                 },
                 success: function(r){
                     console.log(r);
