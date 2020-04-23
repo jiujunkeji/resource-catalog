@@ -31,7 +31,7 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
         Page<XjSafeEntity> page = this.selectPage(
                 new Query<XjSafeEntity>(params).getPage(),
                 new EntityWrapper<XjSafeEntity>()
-                        .like(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
+                        .eq(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
         );
 
         return new PageUtils(page);

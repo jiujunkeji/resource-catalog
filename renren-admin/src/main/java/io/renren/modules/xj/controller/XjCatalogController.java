@@ -44,11 +44,39 @@ public class XjCatalogController extends AbstractController{
     @Autowired
     private XjSafeService safeService;
     /**
-     * 列表
+     * 目录列表
      */
-//    @SysLog(type = "3", content = "目录")
     @RequestMapping("/list")
     public List<XjCatalogEntity> list(@RequestParam Map<String, Object> params){
+        String name = (String) params.get("name");
+        EntityWrapper<XjCatalogEntity> wrapper = new EntityWrapper<XjCatalogEntity>();
+        wrapper
+                .like(StringUtils.isNotEmpty(name), "name", name)
+                .eq("is_deleted",0);
+        List<XjCatalogEntity> list = xjCatalogService.selectList(wrapper);
+        for(XjCatalogEntity xjCatalogEntity : list){
+            XjCatalogEntity parentXjCatalogEntity = xjCatalogService.selectById(xjCatalogEntity.getParentId());
+            if(parentXjCatalogEntity != null){
+                xjCatalogEntity.setParentName(parentXjCatalogEntity.getCatalogName());
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 目录分页列表（维护）
+     */
+//    @SysLog(type = "3", content = "目录")
+    @RequestMapping("/page")
+    public R page(@RequestParam Map<String, Object> params){
+        PageUtils page = xjCatalogService.queryPage(params);
+        return R.ok().put("page",page);
+    }
+    /**
+     * 获取我的目录列表（安全级别控制）
+     */
+    @RequestMapping("/myList")
+    public List<XjCatalogEntity> myList(@RequestParam Map<String, Object> params){
         String name = (String) params.get("name");
         EntityWrapper<XjCatalogEntity> wrapper = new EntityWrapper<XjCatalogEntity>();
         wrapper
@@ -63,7 +91,6 @@ public class XjCatalogController extends AbstractController{
         }
         return list;
     }
-
     /**
      * 信息
      */
@@ -95,6 +122,10 @@ public class XjCatalogController extends AbstractController{
         xjCatalog.setCreateUserName(getUser().getName());
         xjCatalog.setCreateTime(new Date());
         xjCatalogService.insert(xjCatalog);
+        //设置元数据标识
+        String metedataIdentifier = "metadata_ " + xjCatalog.getCategoryId() + "-" + xjCatalog.getCatalogId();
+        xjCatalog.setMetedataIdentifier(metedataIdentifier);
+        xjCatalogService.updateById(xjCatalog);
         //设置目录的默认安全级别
         safeService.setDefaultSafe(xjCatalog.getCatalogId());
         return R.ok();

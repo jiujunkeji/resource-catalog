@@ -3,9 +3,11 @@ package io.renren.modules.xj.service.impl;
 import io.renren.common.utils.Constant;
 import io.renren.modules.resource.entity.CatalogUserEntity;
 import io.renren.modules.resource.entity.ResourceCatalogEntity;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.xj.entity.XjSafeEntity;
 import io.renren.modules.xj.service.XjSafeService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +32,28 @@ public class XjCatalogServiceImpl extends ServiceImpl<XjCatalogDao, XjCatalogEnt
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String name = (String)params.get("name");
+        String reviewState = (String)params.get("reviewState");
+        String pushState = (String)params.get("pushState");
+        EntityWrapper<XjCatalogEntity> wrapper = new EntityWrapper<XjCatalogEntity>();
+        if(StringUtils.isNotBlank(reviewState)){
+            wrapper.eq("review_state",reviewState);
+        }else if(StringUtils.isNotBlank(pushState)){
+            wrapper.eq("push_state",pushState);
+        }
+
+        wrapper.like(StringUtils.isNotBlank(reviewState),"catalog_name",name);
+        wrapper.eq("is_deleted",0);
         Page<XjCatalogEntity> page = this.selectPage(
                 new Query<XjCatalogEntity>(params).getPage(),
-                new EntityWrapper<XjCatalogEntity>()
+                wrapper
         );
-
+        for(XjCatalogEntity xjCatalogEntity : page.getRecords()){
+            XjCatalogEntity parentXjCatalogEntity = this.selectById(xjCatalogEntity.getParentId());
+            if(parentXjCatalogEntity != null){
+                xjCatalogEntity.setParentName(parentXjCatalogEntity.getCatalogName());
+            }
+        }
         return new PageUtils(page);
     }
 
