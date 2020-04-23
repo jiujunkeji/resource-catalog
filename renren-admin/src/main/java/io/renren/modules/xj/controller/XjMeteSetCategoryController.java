@@ -64,7 +64,7 @@ public class XjMeteSetCategoryController {
         if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
             for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
                 xjMeteSetCategoryEntity.setIsDisabled(0);
-                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+                xjMeteSetCategoryService.updateById(xjMeteSetCategoryEntity);
             }
         }
         return R.ok();
@@ -79,8 +79,9 @@ public class XjMeteSetCategoryController {
         if(xjMeteSetCategoryEntityList!=null && xjMeteSetCategoryEntityList.size()>0){
             for(XjMeteSetCategoryEntity xjMeteSetCategoryEntity:xjMeteSetCategoryEntityList){
                 xjMeteSetCategoryEntity.setIsDisabled(1);
-                xjMeteSetCategoryService.update(xjMeteSetCategoryEntity,null);
+                xjMeteSetCategoryService.updateById(xjMeteSetCategoryEntity);
             }
+
         }
         return R.ok();
     }
