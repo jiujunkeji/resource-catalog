@@ -27,8 +27,10 @@ import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
 import io.renren.modules.sys.dto.SysUserDto;
 import io.renren.modules.sys.entity.SysDeptEntity;
+import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
+import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.sys.service.SysUserRoleService;
 import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.shiro.ShiroUtils;
@@ -58,7 +60,8 @@ public class SysUserController extends AbstractController {
 	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysDeptService sysDeptService;
-	
+	@Autowired
+	private SysDictService dictService;
 	/**
 	 * 所有用户列表
 	 */
@@ -154,7 +157,10 @@ public class SysUserController extends AbstractController {
 	//@RequiresPermissions("sys:user:save")
 	public R save(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, AddGroup.class);
-		
+		//设置默认安全等级
+		SysDictEntity defaultSafe = dictService.selectOne(new EntityWrapper<SysDictEntity>().eq("type","safe_level_default"));
+		user.setSafeCode(defaultSafe.getCode());
+		user.setSafe(defaultSafe.getValue());
 		sysUserService.save(user);
 		
 		return R.ok();

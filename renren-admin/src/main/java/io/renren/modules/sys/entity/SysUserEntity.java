@@ -66,7 +66,14 @@ public class SysUserEntity implements Serializable {
 	@NotBlank(message="密码不能为空", groups = AddGroup.class)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
-
+	/**
+	 * 安全等级code
+	 */
+	private int safeCode;
+	/**
+	 * 安全等级
+	 */
+	private String safe;
 	/**
 	 * 盐
 	 */
@@ -292,5 +299,21 @@ public class SysUserEntity implements Serializable {
 
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+
+	public int getSafeCode() {
+		return safeCode;
+	}
+
+	public void setSafeCode(int safeCode) {
+		this.safeCode = safeCode;
+	}
+
+	public String getSafe() {
+		return safe;
+	}
+
+	public void setSafe(String safe) {
+		this.safe = safe;
 	}
 }

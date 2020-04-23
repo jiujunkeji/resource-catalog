@@ -25,7 +25,9 @@ import com.google.code.kaptcha.Producer;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.InfoJson;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.sys.service.SysUserRoleService;
 import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.shiro.ShiroUtils;
@@ -60,6 +62,8 @@ public class SysLoginController {
 	private SysUserService userService;
 	@Autowired
 	private SysUserRoleService sysUserRoleService;
+	@Autowired
+	private SysDictService dictService;
 
 	@RequestMapping("captcha.jpg")
 	public void captcha(HttpServletResponse response)throws IOException {
@@ -157,6 +161,10 @@ public class SysLoginController {
 			String salt = RandomStringUtils.randomAlphanumeric(20);
 			user.setSalt(salt);
 			user.setPassword(ShiroUtils.sha256(password, user.getSalt()));
+			//设置安全等级
+			SysDictEntity defaultSafe = dictService.selectOne(new EntityWrapper<SysDictEntity>().eq("type","safe_level_default"));
+			user.setSafeCode(defaultSafe.getCode());
+			user.setSafe(defaultSafe.getValue());
 			userService.insert(user);
 		}else{
 			user.setAccessToken(accessToken);
@@ -172,6 +180,12 @@ public class SysLoginController {
 			String salt = RandomStringUtils.randomAlphanumeric(20);
 			user.setSalt(salt);
 			user.setPassword(ShiroUtils.sha256(password, user.getSalt()));
+			if(user.getSafe() == null){
+				//设置安全等级
+				SysDictEntity defaultSafe = dictService.selectOne(new EntityWrapper<SysDictEntity>().eq("type","safe_level_default"));
+				user.setSafeCode(defaultSafe.getCode());
+				user.setSafe(defaultSafe.getValue());
+			}
 			userService.updateById(user);
 		}
 		List<Long> roleIdList = new ArrayList<Long>();
