@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -110,7 +111,8 @@ public class XjCatalogEntity implements Serializable {
 
 	@TableField(exist = false)
 	private String parentName;
-
+	@TableField(exist = false)
+	private List<XjMetaDataEntity> meteDataList;
 	/**
 	 * 设置：目录id
 	 */
@@ -370,5 +372,13 @@ public class XjCatalogEntity implements Serializable {
 
 	public void setCreateUserName(String createUserName) {
 		this.createUserName = createUserName;
+	}
+
+	public List<XjMetaDataEntity> getMeteDataList() {
+		return meteDataList;
+	}
+
+	public void setMeteDataList(List<XjMetaDataEntity> meteDataList) {
+		this.meteDataList = meteDataList;
 	}
 }

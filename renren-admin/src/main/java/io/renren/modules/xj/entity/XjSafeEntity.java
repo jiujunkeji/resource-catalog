@@ -31,6 +31,14 @@ public class XjSafeEntity implements Serializable {
 	 */
 	private String catalogName;
 	/**
+	 * 安全类型code
+	 */
+	private Integer safeTypeCode;
+	/**
+	 * 安全类型
+	 */
+	private String safeType;
+	/**
 	 * 安全等级code
 	 */
 	private Integer safeCode;
@@ -46,6 +54,7 @@ public class XjSafeEntity implements Serializable {
 	 * 加密方式
 	 */
 	private String encrypt;
+
 	/**
 	 * 备注
 	 */
@@ -146,5 +155,21 @@ public class XjSafeEntity implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+
+	public Integer getSafeTypeCode() {
+		return safeTypeCode;
+	}
+
+	public void setSafeTypeCode(Integer safeTypeCode) {
+		this.safeTypeCode = safeTypeCode;
+	}
+
+	public String getSafeType() {
+		return safeType;
+	}
+
+	public void setSafeType(String safeType) {
+		this.safeType = safeType;
 	}
 }

@@ -183,8 +183,13 @@ public class SysLoginController {
 			if(user.getSafe() == null){
 				//设置安全等级
 				SysDictEntity defaultSafe = dictService.selectOne(new EntityWrapper<SysDictEntity>().eq("type","safe_level_default"));
-				user.setSafeCode(defaultSafe.getCode());
-				user.setSafe(defaultSafe.getValue());
+				if(defaultSafe != null){
+					user.setSafeCode(defaultSafe.getCode());
+					user.setSafe(defaultSafe.getValue());
+				}else{
+					user.setSafeCode(5);
+					user.setSafe("五级");
+				}
 			}
 			userService.updateById(user);
 		}

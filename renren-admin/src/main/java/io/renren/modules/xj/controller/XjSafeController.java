@@ -3,7 +3,10 @@ package io.renren.modules.xj.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjCatalogEntity;
+import io.renren.modules.xj.service.XjCatalogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +34,8 @@ import io.renren.common.utils.R;
 public class XjSafeController {
     @Autowired
     private XjSafeService xjSafeService;
-
+    @Autowired
+    private XjCatalogService catalogService;
     /**
      * 列表
      */
@@ -43,6 +47,21 @@ public class XjSafeController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 查询单条目录的安全信息
+     */
+    @RequestMapping("/getInfo/{catalogId}")
+    //@RequiresPermissions("xj:xjsafe:info")
+    public R getInfo(@PathVariable("catalogId") Long catalogId){
+        XjSafeEntity xjSafe = xjSafeService.selectOne(
+                new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalogId)
+        );
+        if(xjSafe != null){
+            return R.ok().put("xjSafe", xjSafe);
+        }else{
+            return R.ok().put("xjSafe",xjSafeService.setDefaultSafe(catalogId));
+        }
+    }
 
     /**
      * 信息
@@ -61,8 +80,13 @@ public class XjSafeController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjsafe:save")
     public R save(@RequestBody XjSafeEntity xjSafe){
+        int count = xjSafeService.selectCount(
+                new EntityWrapper<XjSafeEntity>().eq("catalog_id",xjSafe.getCatalogId())
+        );
+        if(count > 0){
+            return R.error("该条目录已有安全级别");
+        }
         xjSafeService.insert(xjSafe);
-
         return R.ok();
     }
 
@@ -72,7 +96,18 @@ public class XjSafeController {
     @RequestMapping("/update")
     //@RequiresPermissions("xj:xjsafe:update")
     public R update(@RequestBody XjSafeEntity xjSafe){
-        ValidatorUtils.validateEntity(xjSafe);
+        //判断安全级别是否小于上级
+        XjCatalogEntity catalog = catalogService.selectById(xjSafe.getCatalogId());
+        XjSafeEntity parentSafe = xjSafeService.selectOne(
+                new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalog.getParentId())
+        );
+        if(parentSafe != null && parentSafe.getSafe() != null){
+            if(xjSafe.getSafeCode() > parentSafe.getSafeCode()){
+                return R.error("安全级别不能低于上级目录");
+            }
+        }else{
+            return R.error("请先设置上级目录安全等级");
+        }
         xjSafeService.updateAllColumnById(xjSafe);//全部更新
         
         return R.ok();

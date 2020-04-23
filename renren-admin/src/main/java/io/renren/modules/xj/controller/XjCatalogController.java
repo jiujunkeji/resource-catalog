@@ -1,19 +1,18 @@
 package io.renren.modules.xj.controller;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.validator.ValidatorUtils;
-import io.renren.modules.resource.entity.ResourceCatalogEntity;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.SysDictEntity;
+import io.renren.modules.sys.service.SysDictService;
+import io.renren.modules.xj.entity.XjMetaDataEntity;
 import io.renren.modules.xj.entity.XjSafeEntity;
+import io.renren.modules.xj.service.XjMetaDataService;
 import io.renren.modules.xj.service.XjSafeService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +39,10 @@ import io.renren.common.utils.R;
 public class XjCatalogController extends AbstractController{
     @Autowired
     private XjCatalogService xjCatalogService;
-
+    @Autowired
+    private XjMetaDataService metaDataService;
+    @Autowired
+    private XjSafeService safeService;
     /**
      * 列表
      */
@@ -73,6 +75,13 @@ public class XjCatalogController extends AbstractController{
         if(parentXjCatalog != null){
             xjCatalog.setParentName(parentXjCatalog.getCatalogName());
         }
+        List<XjMetaDataEntity> meteDataList = new ArrayList<>();
+        if(xjCatalog.getMeteSetId() != null && xjCatalog.getMeteSetId() != 0L){
+            meteDataList = metaDataService.selectList(new EntityWrapper<XjMetaDataEntity>().eq("mete_set_id",xjCatalog.getMeteSetId()));
+            if(meteDataList != null && meteDataList.size() > 0){
+                xjCatalog.setMeteDataList(meteDataList);
+            }
+        }
         return R.ok().put("xjCatalog", xjCatalog);
     }
 
@@ -86,7 +95,8 @@ public class XjCatalogController extends AbstractController{
         xjCatalog.setCreateUserName(getUser().getName());
         xjCatalog.setCreateTime(new Date());
         xjCatalogService.insert(xjCatalog);
-
+        //设置目录的默认安全级别
+        safeService.setDefaultSafe(xjCatalog.getCatalogId());
         return R.ok();
     }
 

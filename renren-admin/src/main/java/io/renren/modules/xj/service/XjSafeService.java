@@ -16,5 +16,7 @@ import java.util.Map;
 public interface XjSafeService extends IService<XjSafeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    XjSafeEntity setDefaultSafe(Long catalogId);
 }
 
