@@ -1,5 +1,6 @@
 package io.renren.modules.xj.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -75,6 +76,18 @@ public class XjCatalogEntity implements Serializable {
 	 */
 	private Long meteSetId;
 	/**
+	 * 是否使用（0：停用；1：使用）
+	 */
+	private int isUsed = 1;
+	/**
+	 * 创建人id
+	 */
+	private Long createUserId;
+	/**
+	 * 创建人
+	 */
+	private String createUserName;
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -85,15 +98,18 @@ public class XjCatalogEntity implements Serializable {
 	/**
 	 * 审核状态（0：待提交；1：待审核；2：通过；3：未通过）
 	 */
-	private Integer reviewState;
+	private Integer reviewState = 0;
 	/**
 	 * 发布状态（0：未发布；1：发布）
 	 */
-	private Integer pushState;
+	private Integer pushState = 0;
 	/**
 	 * 是否删除（0：未删除；1：删除）
 	 */
-	private Integer isDeleted;
+	private Integer isDeleted = 0;
+
+	@TableField(exist = false)
+	private String parentName;
 
 	/**
 	 * 设置：目录id
@@ -322,5 +338,37 @@ public class XjCatalogEntity implements Serializable {
 	 */
 	public Integer getIsDeleted() {
 		return isDeleted;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public int getIsUsed() {
+		return isUsed;
+	}
+
+	public void setIsUsed(int isUsed) {
+		this.isUsed = isUsed;
+	}
+
+	public Long getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
 	}
 }

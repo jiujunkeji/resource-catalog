@@ -69,7 +69,7 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 安全等级code
 	 */
-	private int safeCode;
+	private Integer safeCode;
 	/**
 	 * 安全等级
 	 */
@@ -301,11 +301,11 @@ public class SysUserEntity implements Serializable {
 		this.refreshToken = refreshToken;
 	}
 
-	public int getSafeCode() {
+	public Integer getSafeCode() {
 		return safeCode;
 	}
 
-	public void setSafeCode(int safeCode) {
+	public void setSafeCode(Integer safeCode) {
 		this.safeCode = safeCode;
 	}
 
