@@ -162,7 +162,6 @@ public class SysUserController extends AbstractController {
 		user.setSafeCode(defaultSafe.getCode());
 		user.setSafe(defaultSafe.getValue());
 		sysUserService.save(user);
-		
 		return R.ok();
 	}
 	
