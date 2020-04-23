@@ -20,11 +20,11 @@ import io.renren.common.utils.R;
 
 
 /**
- * 元数据集版本变更历史记录表
+ * 元数据集变更版本表
  *
  * @author wangdehai
  * @email 594340717@qq.com
- * @date 2020-04-22 15:46:35
+ * @date 2020-04-23 17:29:47
  */
 @RestController
 @RequestMapping("xj/xjmetesetversion")

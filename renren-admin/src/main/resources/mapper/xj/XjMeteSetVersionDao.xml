@@ -6,9 +6,13 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.xj.entity.XjMeteSetVersionEntity" id="xjMeteSetVersionMap">
         <result property="versionId" column="version_id"/>
-        <result property="versionNumber" column="version_number"/>
-        <result property="versionChangeDetails" column="version_change_details"/>
         <result property="meteSetId" column="mete_set_id"/>
+        <result property="meteSetNumber" column="mete_set_number"/>
+        <result property="cnName" column="cn_name"/>
+        <result property="euName" column="eu_name"/>
+        <result property="euShortName" column="eu_short_name"/>
+        <result property="versionNumber" column="version_number"/>
+        <result property="meteCategorySetId" column="mete_category_set_id"/>
         <result property="createUserId" column="create_user_id"/>
         <result property="createDate" column="create_date"/>
         <result property="updateTime" column="update_time"/>
