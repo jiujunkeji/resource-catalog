@@ -23,7 +23,8 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q: {
-            name:null
+            name:'',
+            metaCategoryNumber:null,
         },
 		showList: true,
 		title: null,
@@ -166,8 +167,6 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-
-
             layer.confirm('确定要删除选中的记录？', function(index1){
 				$.ajax({
 					type: "POST",
@@ -215,7 +214,7 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:this.q.name
+                    params:this.q
                 },
                 success: function(r){
                     console.log(r);
@@ -236,30 +235,50 @@ var vm = new Vue({
             vm.getTableList();
         },
         //启用
-        open:function () {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'xj/xjmetecategory/updateEnabledState',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: JSON.stringify(vm.checkIdList),
-                success: function(r){
-                    console.log(r);
-                }
-            });
+        openC:function () {
+            layer.confirm('确定要启动选中的分类？', function(index31){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + 'xj/xjmetecategory/updateEnabledState',
+                    contentType: "application/json",
+                    // dataType: 'json',
+                    data: JSON.stringify(vm.checkIdList),
+                    success: function(r){
+                        console.log(r);
+                        if(r.code == 0){
+                            layer.close(index31);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+
+                        }else {
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+
+                    }
+                });
+            })
+
         },
         // 禁用
-        close:function () {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'xj/xjmetecategory/updateDisabledState',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: JSON.stringify(vm.checkIdList),
-                success: function(r){
-                    console.log(r);
-                }
-            });
+        closeC:function () {
+            layer.confirm('确定要禁用选中的分类？', function(index32){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + 'xj/xjmetecategory/updateDisabledState',
+                    contentType: "application/json",
+                    // dataType: 'json',
+                    data: JSON.stringify(vm.checkIdList),
+                    success: function(r){
+                        console.log(r);
+                        if(r.code == 0){
+                            layer.close(index31);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+
+                        }else {
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            })
         }
 	},
 	created:function () {

@@ -48,8 +48,12 @@
         </div>
         <div class="switchIn">
             <span>
-                <label>编号／名称：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号／分类名称" v-model="q.name" >
+                <label>分类编号：</label>
+                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.name" >
+            </span>
+            <span>
+                <label>分类名称：</label>
+                <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.metaCategoryNumber" >
             </span>
         </div>
         <button class="clean" @click="clean">重置</button>
@@ -74,8 +78,8 @@
                     <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
                     <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
                 </#if>
-                <el-button size="medium" type="primary" @click="open">启用</el-button>&nbsp;&nbsp;
-                <el-button size="medium" type="primary" @click="close">禁用</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="openC">启用</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="closeC">禁用</el-button>&nbsp;&nbsp;
             </div>
         </div>
         <el-table
