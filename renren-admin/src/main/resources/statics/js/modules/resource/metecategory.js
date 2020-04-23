@@ -23,7 +23,7 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q: {
-            name:''
+            name:null
         },
 		showList: true,
 		title: null,
@@ -60,24 +60,14 @@ var vm = new Vue({
         // 表格选中方法
         toggleSelection:function(selection) {
             console.log(selection);
-            vm.checkIdList = selection;
-        },
-        getMenu: function(menuId){
-            //加载菜单树
-            $.get(baseURL + "resource/metecategory/list", function(r){
-                console.log(r);
-                // r.push({
-                //     parentId:-1,
-                //     meteCategoryId:0,
-                //     name:'一级目录'
-                // })
-                ztree = $.fn.zTree.init($("#menuTree"), setting, r);
-                var node = ztree.getNodeByParam("meteCategoryId", vm.meteCategory.parentId);
-                ztree.selectNode(node);
-                console.log(node);
-                // vm.menu.parentName = node.name;
+            vm.checkIdList = [];
+            selection.forEach(function(item,i){
+                vm.checkIdList.push(item.meteCategoryId)
             })
+            console.log(vm.checkIdList);
+
         },
+
         menuTree: function(){
             layer.open({
                 type: 1,
@@ -125,7 +115,6 @@ var vm = new Vue({
                 parentId:null,
                 parentName:''
 			};
-            vm.getMenu();
 		},
 		update: function (event) {
 			var meteCategoryId = getMeteCategoryId();
@@ -144,6 +133,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     vm.saveOrUpdate();
                     layer.close(index);
+
                 },
                 btn2:function () {
                     vm.reload();
@@ -154,13 +144,12 @@ var vm = new Vue({
             vm.title = "修改";
             
             vm.getInfo(meteCategoryId);
-            vm.getMenu();
 		},
 		saveOrUpdate: function (event) {
             if(vm.validator()){
                 return ;
             }
-			var url = vm.meteCategory.meteCategoryId == null ? "resource/metecategory/save" : "resource/metecategory/update";
+			var url = vm.meteCategory.meteCategoryId == null ? "xj/xjmetecategory/save" : "xj/xjmetecategory/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -177,18 +166,14 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var meteCategoryIds = getMeteCategoryId();
-			console.log(meteCategoryIds);
-			if(meteCategoryIds == null){
-				return ;
-			}
+
 
             layer.confirm('确定要删除选中的记录？', function(index1){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "resource/metecategory/delete",
+				    url: baseURL + "xj/xjmetecategory/delete",
                     contentType: "application/json",
-				    data: JSON.stringify(meteCategoryIds),
+				    data: JSON.stringify(vm.checkIdList),
 				    success: function(r){
 						if(r.code == 0){
                             vm.reload();
@@ -204,7 +189,7 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "resource/metecategory/info/"+meteCategoryId, function(r){
+			$.get(baseURL + "xj/xjmetecategory/info/"+meteCategoryId, function(r){
                 vm.meteCategory = r.meteCategory;
                 console.log('修改')
                 console.log(vm.meteCategory)
@@ -230,16 +215,17 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:''
+                    params:this.q.name
                 },
                 success: function(r){
                     console.log(r);
-                    // if(r.code === 0){
-                    //     vm.tableList = r.page.list;
-                    //     vm.totalPage = r.page.totalCount;
-                    // }else{
-                    //     alert(r.msg);
-                    // }
+                    // vm.tableList = r;
+                    if(r.code === 0){
+                        vm.tableList = r.meteCategoryEntities.list;
+                        vm.totalPage = r.meteCategoryEntities.totalCount;
+                    }else{
+                        alert(r.msg);
+                    }
                 }
             });
         },
@@ -249,7 +235,32 @@ var vm = new Vue({
             vm.page = currentPage;
             vm.getTableList();
         },
-        //
+        //启用
+        open:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetecategory/updateEnabledState',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: JSON.stringify(vm.checkIdList),
+                success: function(r){
+                    console.log(r);
+                }
+            });
+        },
+        // 禁用
+        close:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetecategory/updateDisabledState',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: JSON.stringify(vm.checkIdList),
+                success: function(r){
+                    console.log(r);
+                }
+            });
+        }
 	},
 	created:function () {
 	    this.getTableList();

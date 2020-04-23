@@ -27,8 +27,9 @@
                     color: #fff;
                     font-size: 12px;
                 }
-                .el-button--primary{
-
+                .el-select-dropdown{
+                    z-index:100000000!important;
+                    width: 193px;
                 }
             </style>
 </head>
@@ -73,6 +74,8 @@
                     <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
                     <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
                 </#if>
+                <el-button size="medium" type="primary" @click="open">启用</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="close">禁用</el-button>&nbsp;&nbsp;
             </div>
         </div>
         <el-table
@@ -126,7 +129,7 @@
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <i class="el-icon-edit" @click="update(scope.row.meteId)" v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3"></i>
+                    <i class="el-icon-edit" @click="update(scope.row.meteCategoryId)"></i>
                 </template>
             </el-table-column>
         </el-table>
@@ -151,41 +154,43 @@
     <div style="display: none" id="addUp" class="panel panel-default">
         <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
-														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">分类类型</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="meteCategory.categoryType" placeholder="分类类型"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">分类名称</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="meteCategory.name" placeholder="分类名称"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">分类代码</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="meteCategory.code" placeholder="分类代码"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">上级目录</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" style="cursor:pointer;" v-model="meteCategory.parentName" placeholder="上级目录" @click="menuTree" readonly="readonly"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">描述</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="meteCategory.remark" placeholder="描述"/>
-                        </div>
-                    </div>
-							            <div class="form-group">
-                <div class="col-sm-2 control-label"></div>
-                <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>-->
-                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">分类编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.metaCategoryNumber" placeholder="分类编码"/>
+                </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">分类名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.name" placeholder="分类名称"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">排序码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.sortCode" placeholder="排序码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否禁用</div>
+                <div class="col-sm-10">
+                    <el-select v-model="meteCategory.isDisabled" placeholder="请选择">
+                        <el-option
+                                key="0"
+                                label="否"
+                                value="0">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="是"
+                                value="1">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+
         </form>
     </div>
 
