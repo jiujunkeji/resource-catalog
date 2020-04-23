@@ -27,10 +27,10 @@ public interface XjMeteCategoryService extends IService<XjMeteCategoryEntity> {
     /**
      * 元数据分类一键启用
      */
-    public List<XjMeteCategoryEntity> updateEnabledState(Long mete_category_id);
+    public List<XjMeteCategoryEntity> updateEnabledState(Long[] mete_category_ids);
 
     /**
      */
-    public List<XjMeteCategoryEntity> updateDisabledState(Long mete_category_id);
+    public List<XjMeteCategoryEntity> updateDisabledState(Long[] mete_category_ids);
 }
 

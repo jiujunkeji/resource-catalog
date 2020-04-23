@@ -65,8 +65,8 @@ public class XjMeteCategoryController {
      * 元数据分类一键启用
      */
     @RequestMapping("/updateEnabledState")
-    public R updateEnabledState(@RequestParam Long meteCategoryId){
-        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=xjMeteCategoryService.updateEnabledState(meteCategoryId);
+    public R updateEnabledState(@RequestBody Long[] meteCategoryIds){
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=xjMeteCategoryService.updateEnabledState(meteCategoryIds);
         if(xjMeteCategoryEntityList!=null && xjMeteCategoryEntityList.size()>0){
             for(XjMeteCategoryEntity xjMeteCategoryEntity:xjMeteCategoryEntityList){
                 xjMeteCategoryEntity.setIsDisabled(0);
@@ -80,8 +80,8 @@ public class XjMeteCategoryController {
      * 元数据分类一键禁用
      */
     @RequestMapping("/updateDisabledState")
-    public R updateDisabledState(@RequestParam Long meteCategoryId){
-        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=xjMeteCategoryService.updateEnabledState(meteCategoryId);
+    public R updateDisabledState(@RequestBody Long[] meteCategoryIds){
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=xjMeteCategoryService.updateEnabledState(meteCategoryIds);
         if(xjMeteCategoryEntityList!=null && xjMeteCategoryEntityList.size()>0){
             for(XjMeteCategoryEntity xjMeteCategoryEntity:xjMeteCategoryEntityList){
                 xjMeteCategoryEntity.setIsDisabled(1);

@@ -20,11 +20,11 @@ public interface XjMeteCategoryDao extends BaseMapper<XjMeteCategoryEntity> {
     public List<XjMeteCategoryEntity> searchFindByMeteCategoryNumberOrName(String str);
 
     /**
-     * 元数据分类一键启用
+     * 元数据分类启用
      */
-    public List<XjMeteCategoryEntity> updateEnabledState(Long mete_category_id);
+    public List<XjMeteCategoryEntity> updateEnabledState(Long[] mete_category_ids);
 
-    /**元数据分类一键禁用
+    /**元数据分类禁用
      */
-    public List<XjMeteCategoryEntity> updateDisabledState(Long mete_category_id);
+    public List<XjMeteCategoryEntity> updateDisabledState(Long[] mete_category_ids);
 }
