@@ -22,11 +22,11 @@ public interface XjMeteSetCategoryDao extends BaseMapper<XjMeteSetCategoryEntity
     PageUtils searchFindByMeteSetCategoryNumberOrName(Map<String, Object> params);
 
     /**
-     * 元数据分类启用
+     * 元数据集分类启用
      */
     public List<XjMeteSetCategoryEntity> updateEnabledState(Long[] mete_category_set_ids);
 
-    /**元数据分类禁用
+    /**元数据集分类禁用
      */
     public List<XjMeteSetCategoryEntity> updateDisabledState(Long[] mete_category_set_ids);
 }

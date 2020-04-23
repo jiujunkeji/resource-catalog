@@ -56,7 +56,7 @@ public class XjMeteSetCategoryController {
     }
 
     /**
-     * 元数据分类一键启用
+     * 元数据集分类一键启用
      */
     @RequestMapping("/updateEnabledState")
     public R updateEnabledState(@RequestBody Long[] meteCategorySetIds){
@@ -71,7 +71,7 @@ public class XjMeteSetCategoryController {
     }
 
     /**
-     * 元数据分类一键禁用
+     * 元数据集分类一键禁用
      */
     @RequestMapping("/updateDisabledState")
     public R updateDisabledState(@RequestBody Long[] meteCategorySetIds){
