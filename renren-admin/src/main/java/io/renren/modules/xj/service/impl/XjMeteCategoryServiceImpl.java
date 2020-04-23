@@ -1,6 +1,10 @@
 package io.renren.modules.xj.service.impl;
 
+import io.renren.modules.resource.entity.MeteCategoryEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +28,44 @@ public class XjMeteCategoryServiceImpl extends ServiceImpl<XjMeteCategoryDao, Xj
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public PageUtils searchFindByMeteCategoryNumberOrName(Map<String, Object> params) {
+        String metaCategoryNumber = (String) params.get("metaCategoryNumber");
+        String name = (String) params.get("name");
+        Page<XjMeteCategoryEntity> page =null;
+        if (StringUtils.isNotBlank(metaCategoryNumber) && StringUtils.isBlank(name)) {
+            page = this.selectPage(new Query<XjMeteCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("meta_category_number", metaCategoryNumber));
+            return new PageUtils(page);
+        } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaCategoryNumber)) {
+            page = this.selectPage(new Query<XjMeteCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("name", name));
+            return new PageUtils(page);
+        }
+        return new PageUtils(page);
+    }
+
+
+
+    @Override
+    public List<XjMeteCategoryEntity> updateEnabledState(Long[] mete_category_ids) {
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=null;
+        for(Long meteCategoryId:mete_category_ids){
+            XjMeteCategoryEntity xjMeteCategoryEntity=this.selectOne(new EntityWrapper<XjMeteCategoryEntity>().eq("mete_category_id",meteCategoryId));
+            xjMeteCategoryEntityList.add(xjMeteCategoryEntity);
+        }
+        return xjMeteCategoryEntityList;
+    }
+
+    @Override
+    public List<XjMeteCategoryEntity> updateDisabledState(Long[] mete_category_ids) {
+        List<XjMeteCategoryEntity> xjMeteCategoryEntityList=null;
+        for(Long meteCategoryId:mete_category_ids){
+            XjMeteCategoryEntity xjMeteCategoryEntity=this.selectOne(new EntityWrapper<XjMeteCategoryEntity>().eq("mete_category_id",meteCategoryId));
+            xjMeteCategoryEntityList.add(xjMeteCategoryEntity);
+        }
+        return xjMeteCategoryEntityList;
+
     }
 
 }
