@@ -41,7 +41,7 @@ public class XjMeteSetCategoryServiceImpl extends ServiceImpl<XjMeteSetCategoryD
         } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaCategorySetNumber)) {
             page = this.selectPage(new Query<XjMeteSetCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteSetCategoryEntity>().eq("name", name));
             return new PageUtils(page);
-        }else if(params==null){
+        }else if(StringUtils.isBlank(metaCategorySetNumber) && StringUtils.isBlank(name)){
             return queryPage(params);
         }
         return new PageUtils(page);
