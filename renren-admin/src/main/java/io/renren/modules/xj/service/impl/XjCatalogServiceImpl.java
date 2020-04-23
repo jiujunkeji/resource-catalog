@@ -42,7 +42,7 @@ public class XjCatalogServiceImpl extends ServiceImpl<XjCatalogDao, XjCatalogEnt
             wrapper.eq("push_state",pushState);
         }
 
-        wrapper.like(StringUtils.isNotBlank(reviewState),"catalog_name",name);
+        wrapper.like(StringUtils.isNotBlank(name),"catalog_name",name);
         wrapper.eq("is_deleted",0);
         Page<XjCatalogEntity> page = this.selectPage(
                 new Query<XjCatalogEntity>(params).getPage(),
