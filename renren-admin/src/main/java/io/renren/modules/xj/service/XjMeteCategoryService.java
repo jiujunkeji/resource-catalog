@@ -1,5 +1,6 @@
 package io.renren.modules.xj.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.xj.dao.XjMeteCategoryDao;
@@ -22,7 +23,7 @@ public interface XjMeteCategoryService extends IService<XjMeteCategoryEntity> {
     /**
      * 元数据分类搜索(可根据分类编号或者分类名称)
      */
-    public List<XjMeteCategoryEntity> searchFindByMeteCategoryNumberOrName(String str);
+    PageUtils searchFindByMeteCategoryNumberOrName(Map<String, Object> params);
 
     /**
      * 元数据分类一键启用

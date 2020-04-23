@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import io.renren.common.utils.PageUtils;
 import io.renren.common.validator.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,12 +54,9 @@ public class XjMeteCategoryController {
      */
     @RequestMapping("/queryList")
     //@RequiresPermissions("resource:metecategory:list")
-    public R queryList(@RequestParam String str){
-        List<XjMeteCategoryEntity> meteCategoryEntities=xjMeteCategoryService.searchFindByMeteCategoryNumberOrName(str);
-        if(meteCategoryEntities!=null && meteCategoryEntities.size()>0){
-            return R.ok().put("meteCategoryList",meteCategoryEntities);
-        }
-        return R.error();
+    public R queryList(@RequestParam Map<String, Object> params){
+        PageUtils meteCategoryEntities=xjMeteCategoryService.searchFindByMeteCategoryNumberOrName(params);
+        return R.ok().put("meteCategoryEntities",meteCategoryEntities);
     }
 
     /**
