@@ -298,29 +298,146 @@ var vm = new Vue({
         },
         // 树结构目录获取
         getMenuList: function (event) {
-            $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
-                r.forEach(function(item,i){
-                    vm.menuList.push({
-                        name:item.name,
-                        id:item.meteCategoryId,
-                        list:[]
-                    })
-                })
-                // var _list = [{
-                //     name:'全部',
-                //     id:null,
-                //     list:[]
-                // }]
-                // _list[0].list = vm.menuList;
-                // vm.menuList = _list;
-                // console.log(vm.menuList);
+            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+                var _len=0;
+                for(var i = 1;i<100;i++){
+                    if(i == 1){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        r.forEach(function (item) {
+                            if(item.parentId == 0){
+                                vm.menuList.push({
+                                    name:item.name,
+                                    id:item.catalogId,
+                                    list:[]
+                                })
+                                _len++;
+                            }
+                        })
+                    }else if(i == 2){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            r.forEach(function (n) {
+                                if(n.parentId == item.id){
+                                    item.list.push({
+                                        name:n.name,
+                                        id:n.catalogId,
+                                        list:[]
+                                    })
+                                    _len++;
+                                }
+                            })
+                        })
+                    }else if(i == 3){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                r.forEach(function (n) {
+                                    if(n.parentId == i.id){
+                                        i.list.push({
+                                            name:n.name,
+                                            id:n.catalogId,
+                                            list:[]
+                                        })
+                                    }
+                                    _len++;
+                                })
+                            })
+
+                        })
+                    }else if(i == 4){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    r.forEach(function (n) {
+                                        if(n.parentId == j.id){
+                                            j.list.push({
+                                                name:n.name,
+                                                id:n.catalogId,
+                                                list:[]
+                                            })
+                                        }
+                                        _len++;
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 5){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        r.forEach(function (n) {
+                                            if(n.parentId == m.id){
+                                                m.list.push({
+                                                    name:n.name,
+                                                    id:n.catalogId,
+                                                    list:[]
+                                                })
+                                            }
+                                            _len++;
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 6){
+                        if(_len == r.length){
+                            return ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        m.list.forEach(function (x) {
+                                            r.forEach(function (n) {
+                                                if(n.parentId == x.id){
+                                                    x.list.push({
+                                                        name:n.name,
+                                                        id:n.catalogId,
+                                                        list:[]
+                                                    })
+                                                }
+                                                _len++;
+                                            })
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
+                    }
+
+                }
+
+                var _list = [{
+                    name:'全部',
+                    id:null,
+                    list:[]
+                }]
+                _list[0].list = vm.menuList;
+                vm.menuList = _list;
+                console.log(vm.menuList);
             });
         },
         // 获取表格列表
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/queryList',
+                url: baseURL + 'resource/resourcemetedata/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {

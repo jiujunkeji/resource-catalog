@@ -230,7 +230,7 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:''
+
                 },
                 success: function(r){
                     console.log(r);

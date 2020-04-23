@@ -55,8 +55,8 @@ public class XjMeteCategoryController {
     @RequestMapping("/queryList")
     //@RequiresPermissions("resource:metecategory:list")
     public R queryList(@RequestParam Map<String, Object> params){
-        PageUtils meteCategoryEntities=xjMeteCategoryService.searchFindByMeteCategoryNumberOrName(params);
-        return R.ok().put("meteCategoryEntities",meteCategoryEntities);
+        PageUtils page=xjMeteCategoryService.searchFindByMeteCategoryNumberOrName(params);
+        return R.ok().put("page",page);
     }
 
     /**
