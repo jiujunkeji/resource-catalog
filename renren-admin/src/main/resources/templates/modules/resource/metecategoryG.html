@@ -300,6 +300,7 @@
             <button class="clean" @click="reload">取消</button>
 
         </div>
+
         <div class="divBox">
             <div class="grid-btn" style="border-bottom: 1px solid #eee;margin-bottom: 20px">
                 <span class="title">
@@ -316,20 +317,53 @@
                     </div>
                 </div>
                 <div class="item">
+                    <label>分类名称</label>
+                    <div class="inp">
+                        <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
+                            <el-option
+                                    key="0"
+                                    label="整型"
+                                    value="0">
+                            </el-option>
+                            <el-option
+                                    key="1"
+                                    label="实型"
+                                    value="1">
+                            </el-option>
+                            <el-option
+                                    key="2"
+                                    label="布尔型"
+                                    value="2">
+                            </el-option>
+                            <el-option
+                                    key="3"
+                                    label="字符串"
+                                    value="3">
+                            </el-option>
+                            <el-option
+                                    key="4"
+                                    label="日期"
+                                    value="4">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
                     </div>
                 </div>
+
+
+            </div>
+            <div class="line">
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
                     </div>
                 </div>
-
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>短名</label>
                     <div class="inp">
@@ -339,9 +373,39 @@
                 <div class="item">
                     <label>数据类型</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                        <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
+                            <el-option
+                                    key="0"
+                                    label="整型"
+                                    value="0">
+                            </el-option>
+                            <el-option
+                                    key="1"
+                                    label="实型"
+                                    value="1">
+                            </el-option>
+                            <el-option
+                                    key="2"
+                                    label="布尔型"
+                                    value="2">
+                            </el-option>
+                            <el-option
+                                    key="3"
+                                    label="字符串"
+                                    value="3">
+                            </el-option>
+                            <el-option
+                                    key="4"
+                                    label="日期"
+                                    value="4">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
+
+
+            </div>
+            <div class="line">
                 <div class="item">
                     <label>控件类型</label>
                     <div class="inp">
@@ -355,11 +419,41 @@
                         </el-select>
                     </div>
                 </div>
+                <div class="item">
+                    <label>校验类型</label>
+                    <div class="inp">
+                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
+                            <el-option
+                                    key="0"
+                                    label="不校验"
+                                    value="0">
+                            </el-option>
+                            <el-option
+                                    key="1"
+                                    label="校验"
+                                    value="1">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>数据长度</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                    </div>
+                </div>
+
+                <!--<div class="item">-->
+                <!--<label>关键字</label>-->
+                <!--<div class="inp">-->
+                <!--<input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>-->
+                <!--</div>-->
+                <!--</div>-->
 
             </div>
             <div class="line">
                 <div class="item">
-                    <label>校验类型</label>
+                    <label>是否禁用</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
                             <el-option
@@ -372,23 +466,12 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>数据长度</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
-                    </div>
-                </div>
-                <div class="item">
                     <label>值域</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
                     </div>
                 </div>
-                <!--<div class="item">-->
-                <!--<label>关键字</label>-->
-                <!--<div class="inp">-->
-                <!--<input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>-->
-                <!--</div>-->
-                <!--</div>-->
+                <div class="item"></div>
 
             </div>
             <div class="line">
@@ -421,24 +504,7 @@
                 </div>
 
             </div>
-            <div class="line">
-                <div class="item">
-                    <label>是否禁用</label>
-                    <div class="inp">
-                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    v-for="item in comList"
-                                    :key="item.organisationId"
-                                    :label="item.organisationName"
-                                    :value="item">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="item"></div>
-                <div class="item"></div>
 
-            </div>
         </div>
     </div>
 

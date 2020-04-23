@@ -34,6 +34,26 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
+    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+            <div class="right">
+                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
+            </div>
+
+        </div>
+        <div class="switchIn">
+            <span>
+                <label>编号／名称：</label>
+                <input class="el-input__inner" type="text" placeholder="分类编号／分类名称" v-model="q.name" >
+            </span>
+        </div>
+        <button class="clean" @click="clean">重置</button>
+        <button class="look" @click="query">查询</button>
+    </div>
     <div class="divBox">
         <div class="grid-btn">
             <span class="title">
@@ -54,16 +74,78 @@
                     <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
                 </#if>
             </div>
-
-
         </div>
-        <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
-            <thead>
-            <tr>
-                <th data-field="selectItem" data-checkbox="true"></th>
-            </tr>
-            </thead>
-        </table>
+        <el-table
+                :data="tableList"
+                border
+                stripe
+                @selection-change="toggleSelection"
+                style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="40">
+            </el-table-column>
+            <el-table-column
+                    prop="resourceTitle"
+                    label="分类编号"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="organisationName"
+                    label="分类名称"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="resourceSign"
+                    label="排序码"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    label="是否禁用"
+                    width="90">
+                <template slot-scope="scope">
+                    <el-tag
+                            v-if="scope.row.reviewState == 2"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        否
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 3"
+                            size="small"
+                            type="danger"
+                            effect="dark">
+                        是
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="center"
+                    header-align="center"
+                    width="100">
+                <template slot-scope="scope">
+                    <i class="el-icon-edit" @click="update(scope.row.meteId)" v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3"></i>
+                </template>
+            </el-table-column>
+        </el-table>
+        <br>
+        <el-pagination
+                background
+                pager-count="1"
+                :current-page="page"
+                layout="prev, pager, next, jumper,total,->,slot"
+                @current-change="layerPage"
+                :total="totalPage">
+        </el-pagination>
+        <!--<table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th data-field="selectItem" data-checkbox="true"></th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+        <!--</table>-->
     </div>
 
     <div style="display: none" id="addUp" class="panel panel-default">
