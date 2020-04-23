@@ -31,6 +31,10 @@ public class XjMeteSetVersionEntity implements Serializable {
 	 */
 	private String versionChangeDetails;
 	/**
+	 * 元数据集id
+	 */
+	private Long meteSetId;
+	/**
 	 * 创建用户id
 	 */
 	private Integer createUserId;
@@ -114,5 +118,13 @@ public class XjMeteSetVersionEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+	public Long getMeteSetId() {
+		return meteSetId;
+	}
+
+	public void setMeteSetId(Long meteSetId) {
+		this.meteSetId = meteSetId;
 	}
 }
