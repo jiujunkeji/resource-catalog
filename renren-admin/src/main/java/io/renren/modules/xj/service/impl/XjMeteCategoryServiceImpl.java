@@ -41,6 +41,8 @@ public class XjMeteCategoryServiceImpl extends ServiceImpl<XjMeteCategoryDao, Xj
         } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaCategoryNumber)) {
             page = this.selectPage(new Query<XjMeteCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("name", name));
             return new PageUtils(page);
+        }else if(params==null){
+            return  queryPage(params);
         }
         return new PageUtils(page);
     }
