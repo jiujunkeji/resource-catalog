@@ -301,26 +301,26 @@ var vm = new Vue({
             $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
                 r.forEach(function(item,i){
                     vm.menuList.push({
-                        name:item.,
-                        id:null,
+                        name:item.name,
+                        id:item.meteCategoryId,
                         list:[]
                     })
                 })
-                var _list = [{
-                    name:'全部',
-                    id:null,
-                    list:[]
-                }]
-                _list[0].list = vm.menuList;
-                vm.menuList = _list;
-                console.log(vm.menuList);
+                // var _list = [{
+                //     name:'全部',
+                //     id:null,
+                //     list:[]
+                // }]
+                // _list[0].list = vm.menuList;
+                // vm.menuList = _list;
+                // console.log(vm.menuList);
             });
         },
         // 获取表格列表
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/list',
+                url: baseURL + 'resource/resourcemetedata/queryList',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {

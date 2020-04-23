@@ -256,44 +256,17 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>分类名称</label>
-                    <div class="inp">
-                        <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    key="0"
-                                    label="整型"
-                                    value="0">
-                            </el-option>
-                            <el-option
-                                    key="1"
-                                    label="实型"
-                                    value="1">
-                            </el-option>
-                            <el-option
-                                    key="2"
-                                    label="布尔型"
-                                    value="2">
-                            </el-option>
-                            <el-option
-                                    key="3"
-                                    label="字符串"
-                                    value="3">
-                            </el-option>
-                            <el-option
-                                    key="4"
-                                    label="日期"
-                                    value="4">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
                     </div>
                 </div>
-
+                <div class="item">
+                    <label>英文名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                    </div>
+                </div>
 
             </div>
             <div class="line">
