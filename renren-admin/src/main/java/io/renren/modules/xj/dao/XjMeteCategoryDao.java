@@ -1,10 +1,12 @@
 package io.renren.modules.xj.dao;
 
+import io.renren.common.utils.PageUtils;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 元数据分类表
@@ -17,7 +19,7 @@ public interface XjMeteCategoryDao extends BaseMapper<XjMeteCategoryEntity> {
     /**
      * 元数据分类搜索(可根据分类编号或者分类名称)
      */
-    public List<XjMeteCategoryEntity> searchFindByMeteCategoryNumberOrName(String str);
+    PageUtils searchFindByMeteCategoryNumberOrName(Map<String, Object> params);
 
     /**
      * 元数据分类启用
