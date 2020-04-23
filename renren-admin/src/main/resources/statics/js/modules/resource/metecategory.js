@@ -221,8 +221,8 @@ var vm = new Vue({
                     console.log(r);
                     // vm.tableList = r;
                     if(r.code === 0){
-                        vm.tableList = r.meteCategoryEntities.list;
-                        vm.totalPage = r.meteCategoryEntities.totalCount;
+                        vm.tableList = r.page.list;
+                        vm.totalPage = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }
