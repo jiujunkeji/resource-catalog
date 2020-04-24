@@ -190,21 +190,21 @@
                         <template slot-scope="scope">
 
                             <el-tag
-                                    v-if="scope.row.reviewState == 1"
+                                    v-if="scope.row.safeTypeCode == 1"
                                     size="small"
                                     type="warning"
                                     effect="dark">
                                 有条件共享
                             </el-tag>
                             <el-tag
-                                    v-if="scope.row.reviewState == 2"
+                                    v-if="scope.row.safeTypeCode == 2"
                                     size="small"
                                     type="success"
                                     effect="dark">
                                 无条件共享
                             </el-tag>
                             <el-tag
-                                    v-if="scope.row.reviewState == 3"
+                                    v-if="scope.row.safeTypeCode == 3"
                                     size="small"
                                     type="danger"
                                     effect="dark">
@@ -213,12 +213,12 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="organisationName"
+                            prop="safe"
                             label="安全级别"
                             width="90">
                     </el-table-column>
                     <el-table-column
-                            prop="parentName"
+                            prop="encrypt"
                             label="加密模式"
                             width="130">
                     </el-table-column>
@@ -243,7 +243,7 @@
                             width="130">
                     </el-table-column>
                     <el-table-column
-                            prop="metedataIdentifier"
+                            prop="remark"
                             label="备注"
                             width="150">
                     </el-table-column>

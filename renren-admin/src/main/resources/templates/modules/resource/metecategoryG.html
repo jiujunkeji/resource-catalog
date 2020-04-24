@@ -38,7 +38,7 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
-                height: calc(100% - 50px);
+                /*height: calc(100% - 50px);*/
             }
             .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
                 background: #fff;
@@ -131,6 +131,30 @@
             <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
             <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
             <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
+            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn">
+                    <span>
+                        <label>分类编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.name" >
+                    </span>
+                            <span>
+                        <label>分类名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.metaCategoryNumber" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean">重置</button>
+                <button class="look" @click="query">查询</button>
+            </div>
             <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">
@@ -156,28 +180,28 @@
                             width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="resourceTitle"
+                            prop="meteNumber"
                             label="编号"
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="organisationName"
+                            prop="cnName"
                             label="中文名称"
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="resourceSign"
+                            prop="euName"
                             label="英文名称"
                             width="130">
                     </el-table-column>
                     <el-table-column
-                            prop="updateTime"
-                            label="短名"
+                            prop="euShortName"
+                            label="英文短名"
                             width="110">
                     </el-table-column>
                     <el-table-column
-                            prop="createTime"
-                            label="创建时间"
+                            prop="updateTime"
+                            label="更新时间"
                             width="110">
                     </el-table-column>
                     <el-table-column
@@ -185,14 +209,14 @@
                             width="90">
                         <template slot-scope="scope">
                             <el-tag
-                                    v-if="scope.row.reviewState == 2"
+                                    v-if="scope.row.isDisabled == 0"
                                     size="small"
                                     type="success"
                                     effect="dark">
                                 否
                             </el-tag>
                             <el-tag
-                                    v-if="scope.row.reviewState == 3"
+                                    v-if="scope.row.isDisabled == 1"
                                     size="small"
                                     type="danger"
                                     effect="dark">
@@ -252,7 +276,7 @@
                 <div class="item">
                     <label>编号</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.meteNumber" placeholder="编号" @click="menuTree" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
@@ -260,29 +284,10 @@
                     <div class="inp">
                         <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
                             <el-option
-                                    key="0"
-                                    label="整型"
-                                    value="0">
-                            </el-option>
-                            <el-option
-                                    key="1"
-                                    label="实型"
-                                    value="1">
-                            </el-option>
-                            <el-option
-                                    key="2"
-                                    label="布尔型"
-                                    value="2">
-                            </el-option>
-                            <el-option
-                                    key="3"
-                                    label="字符串"
-                                    value="3">
-                            </el-option>
-                            <el-option
-                                    key="4"
-                                    label="日期"
-                                    value="4">
+                                    v-for="item in fenlSelect"
+                                    :key="meteCategoryId"
+                                    :label="name"
+                                    :value="meteCategoryId">
                             </el-option>
                         </el-select>
                     </div>
@@ -290,7 +295,7 @@
                 <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="中文名称"/>
                     </div>
                 </div>
 
@@ -300,13 +305,13 @@
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="英文名称"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>短名</label>
+                    <label>英文短名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="英文短名" @click="menuTree1" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
@@ -463,16 +468,16 @@
                 <div class="item">
                     <label>是否禁用</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
+                        <el-select v-model="resourceMeteData.isDisabled" placeholder="请选择" @change="setCom">
                             <el-option
                                     key="0"
                                     label="否"
-                                    value="0">
+                                    :value="0">
                             </el-option>
                             <el-option
                                     key="1"
                                     label="是"
-                                    value="1">
+                                    :value="1">
                             </el-option>
                         </el-select>
                     </div>
@@ -480,7 +485,7 @@
                 <div class="item">
                     <label>值域</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.range" placeholder="值域" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item"></div>
@@ -493,8 +498,8 @@
                         <el-input
                                 type="textarea"
                                 :rows="2"
-                                placeholder="信息资源摘要"
-                                v-model="resourceMeteData.resourceAbstract">
+                                placeholder="值域说明"
+                                v-model="resourceMeteData.rangeDescription">
                         </el-input>
                         <!--<input type="textarea" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>-->
                     </div>
@@ -503,12 +508,12 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label style="vertical-align: top">定义</label>
+                    <label style="vertical-align: top">备注</label>
                     <div class="inp">
                         <el-input
                                 type="textarea"
                                 :rows="2"
-                                placeholder="信息资源摘要"
+                                placeholder="备注"
                                 v-model="resourceMeteData.resourceAbstract">
                         </el-input>
                         <!--<input type="textarea" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>-->

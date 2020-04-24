@@ -39,7 +39,8 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            name:''
+            name:'',
+            metaCategoryNumber:''
         },
         showList: true,
         title: null,
@@ -79,6 +80,7 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
+        fenlSelect:[]
     },
     watch: {
         filterText:function(val) {
@@ -88,6 +90,9 @@ var vm = new Vue({
     methods: {
         query: function () {
             vm.reload();
+        },
+        clean:function () {
+            vm.q.name = null
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -299,19 +304,21 @@ var vm = new Vue({
         // 树结构目录获取
         getMenuList: function (event) {
             $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
+                conso
                 r.forEach(function(item,i){
-                    vm.menuList.push({
+                    vm.fenlSelect.push({
                         name:item.name,
                         id:item.meteCategoryId,
                         list:[]
                     })
                 })
+
                 var _list = [{
                     name:'元数据分类',
                     id:null,
                     list:[]
                 }]
-                _list[0].list = vm.menuList;
+                _list[0].list = vm.fenlSelect;
                 vm.menuList = _list;
                 // console.log(vm.menuList);
             });
@@ -320,13 +327,12 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/queryList',
+                url: baseURL + 'xj/xjmetadata/queryList',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    catalogId:this.catalogId,
-                    type:this.tab
+                    params:this.q
                 },
                 success: function(r){
                     console.log(r);

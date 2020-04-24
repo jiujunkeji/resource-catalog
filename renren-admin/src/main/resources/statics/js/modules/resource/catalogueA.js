@@ -458,7 +458,7 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + '/xj/xjcatalog/page',
+                url: baseURL + 'xj/xjsafe/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
