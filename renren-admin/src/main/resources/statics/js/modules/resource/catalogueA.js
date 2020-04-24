@@ -41,7 +41,10 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            name:''
+            name:'',
+            safeTypeCode:'',
+            safe:'',
+            encryptCode:''
         },
         showList: true,
         title: null,
@@ -84,6 +87,10 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
+        safeLevelList:[],
+        encryptMethodList:[],
+        safeTypeList:[]
+
     },
     watch: {
         filterText:function(val) {
@@ -463,7 +470,11 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name
+                    name:this.q.name,
+                    safeTypeCode:this.q.safeTypeCode,
+                    safeCode:this.q.safeCode,
+                    encryptCode:this.q.encryptCode,
+                    catalogId:this.catalogId
                 },
                 success: function(r){
                     console.log(r);
@@ -497,7 +508,7 @@ var vm = new Vue({
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
-                vm.q.name = data.name;
+                // vm.q.name = data.name;
                 vm.getTableList();
             }
 
@@ -798,12 +809,36 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList1 = selection;
         },
+        // 数据字典
+        dictClick:function (type) {
+            $.ajax({
+                type: "get",
+                url: baseURL + "sys/dict/selectDict",
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    type:type
+                },
+                success: function(r){
+                    console.log(r);
+                    if(type == 'safe_level'){
+                        vm.safeLevelList = r;
+                    }else if(type == 'encrypt_method'){
+                        vm.encryptMethodList =r;
+                    }else if(type == 'safe_type'){
+                        vm.safeTypeList =r;
+                    }
+                }
+            });
+        },
 
     },
     created:function () {
         this.getMenuList();
         this.getTableList();
-
+        this.dictClick('safe_level');
+        this.dictClick('encrypt_method');
+        this.dictClick('safe_type');
         // this.h = height
     }
 });
