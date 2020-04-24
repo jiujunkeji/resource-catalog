@@ -127,7 +127,7 @@ public class XjCatalogController extends AbstractController{
         xjCatalog.setMetedataIdentifier(metedataIdentifier);
         xjCatalogService.updateById(xjCatalog);
         //设置目录的默认安全级别
-        safeService.setDefaultSafe(xjCatalog.getCatalogId());
+        safeService.setDefaultSafe(xjCatalog.getCatalogId(),getUser());
         return R.ok();
     }
 

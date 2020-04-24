@@ -16,6 +16,7 @@
 
 package io.renren.modules.sys.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
@@ -25,7 +26,9 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,8 +101,16 @@ public class SysDictController {
     //@RequiresPermissions("sys:dict:delete")
     public R delete(@RequestBody Long[] ids){
         sysDictService.deleteBatchIds(Arrays.asList(ids));
-
         return R.ok();
     }
-
+    /**
+     * 根据type查询字典列表
+     */
+    @RequestMapping("/selectDict")
+    public List<SysDictEntity> selectDict(@RequestParam String type){
+        System.out.println("type:" + type);
+        List<SysDictEntity> list = new ArrayList<>();
+        list = sysDictService.selectList(new EntityWrapper<SysDictEntity>().eq("type",type));
+        return list;
+    }
 }

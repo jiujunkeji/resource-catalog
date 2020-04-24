@@ -1,10 +1,12 @@
 package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.entity.XjCatalogEntity;
 import io.renren.modules.xj.service.XjCatalogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,7 +33,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("xj/xjsafe")
-public class XjSafeController {
+public class XjSafeController extends AbstractController{
     @Autowired
     private XjSafeService xjSafeService;
     @Autowired
@@ -59,7 +61,7 @@ public class XjSafeController {
         if(xjSafe != null){
             return R.ok().put("xjSafe", xjSafe);
         }else{
-            return R.ok().put("xjSafe",xjSafeService.setDefaultSafe(catalogId));
+            return R.ok().put("xjSafe",xjSafeService.setDefaultSafe(catalogId,getUser()));
         }
     }
 
@@ -86,6 +88,10 @@ public class XjSafeController {
         if(count > 0){
             return R.error("该条目录已有安全级别");
         }
+        //设置创建人
+        xjSafe.setCreateUserId(getUserId());
+        xjSafe.setCreateUser(getUser().getName());
+        xjSafe.setCreateTime(new Date());
         xjSafeService.insert(xjSafe);
         return R.ok();
     }
@@ -108,8 +114,11 @@ public class XjSafeController {
         }else{
             return R.error("请先设置上级目录安全等级");
         }
-        xjSafeService.updateAllColumnById(xjSafe);//全部更新
-        
+        //设置创建人
+        xjSafe.setUpdateUserId(getUserId());
+        xjSafe.setUpdateUser(getUser().getName());
+        xjSafe.setUpdateTime(new Date());
+        xjSafeService.updateById(xjSafe);
         return R.ok();
     }
 
