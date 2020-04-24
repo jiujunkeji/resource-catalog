@@ -237,49 +237,65 @@ var vm = new Vue({
         },
         //启用
         openC:function () {
-            layer.confirm('确定要启动选中的分类？', function(index31){
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + 'xj/xjmetecategory/updateEnabledState',
-                    contentType: "application/json",
-                    // dataType: 'json',
-                    data: JSON.stringify(vm.checkIdList),
-                    success: function(r){
-                        console.log(r);
-                        if(r.code == 0){
-                            layer.close(index31);
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            vm.getTableList();
-                        }else {
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }
-
-                    }
+		    if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
                 });
-            })
+            }else {
+                layer.confirm('确定要启动选中的分类？', function(index31){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetecategory/updateEnabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index31);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+
+                        }
+                    });
+                })
+            }
+
 
         },
         // 禁用
         closeC:function () {
-            layer.confirm('确定要禁用选中的分类？', function(index32){
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + 'xj/xjmetecategory/updateDisabledState',
-                    contentType: "application/json",
-                    // dataType: 'json',
-                    data: JSON.stringify(vm.checkIdList),
-                    success: function(r){
-                        console.log(r);
-                        if(r.code == 0){
-                            layer.close(index32);
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            vm.getTableList();
-                        }else {
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }
-                    }
+		    if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
                 });
-            })
+            }else {
+                layer.confirm('确定要禁用选中的分类？', function(index32){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetecategory/updateDisabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index32);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+                })
+            }
+
         }
 	},
 	created:function () {

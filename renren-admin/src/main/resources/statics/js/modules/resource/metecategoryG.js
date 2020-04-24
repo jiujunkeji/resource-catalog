@@ -40,19 +40,12 @@ var vm = new Vue({
     data:{
         q: {
             name:'',
-            metaCategoryNumber:''
+            metaCategoryNumber:'',
+            meteCategoryId:''
         },
         showList: true,
         title: null,
-        resourceMeteData: {
-            meteType:null,
-            categoryId:null,
-            categoryName:'',
-            catagoryCode:'',
-            catalogId:'',
-            catalogName:'',
-            fieldList:[]
-        },
+        resourceMeteData: {},
         imageUrl:'',
         fileData:null,
         name:null,
@@ -80,7 +73,9 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
-        fenlSelect:[]
+        fenlSelect:[],
+        controlTypeList:[],
+        dataTypeList:[]
     },
     watch: {
         filterText:function(val) {
@@ -175,18 +170,12 @@ var vm = new Vue({
 
             vm.showList = false;
             vm.title = "新增元数据";
-            vm.resourceMeteData = {
-                meteType:null,
-                categoryId:null,
-                categoryName:'',
-                catagoryCode:'',
-                catalogId:'',
-                catalogName:'',
-                fieldList:[]
-            };
-            vm.getMenu();
-            vm.getMenu1();
-            vm.getComList();
+            if(vm.catalogId){
+                vm.resourceMeteData.meteCategoryId = vm.catalogId;
+            }
+            // vm.getMenu();
+            // vm.getMenu1();
+            // vm.getComList();
         },
         update: function (id) {
             var meteId = id;
@@ -198,12 +187,12 @@ var vm = new Vue({
             vm.title = "修改元数据";
 
             vm.getInfo(meteId);
-            vm.getMenu();
-            vm.getMenu1();
-            vm.getComList();
+            // vm.getMenu();
+            // vm.getMenu1();
+            // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.meteId == null ? "resource/resourcemetedata/save" : "resource/resourcemetedata/update";
+            var url = vm.resourceMeteData.meteId == null ? "xj/xjmetadata/save" : "xj/xjmetadata/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -243,9 +232,9 @@ var vm = new Vue({
             });
         },
         getInfo: function(meteId){
-            $.get(baseURL + "resource/resourcemetedata/info/"+meteId, function(r){
+            $.get(baseURL + "xj/xjmetadata/info/"+meteId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.resourceMeteData;
+                vm.resourceMeteData = r.xjMetaData;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
@@ -304,7 +293,7 @@ var vm = new Vue({
         // 树结构目录获取
         getMenuList: function (event) {
             $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
-                conso
+
                 r.forEach(function(item,i){
                     vm.fenlSelect.push({
                         name:item.name,
@@ -320,7 +309,7 @@ var vm = new Vue({
                 }]
                 _list[0].list = vm.fenlSelect;
                 vm.menuList = _list;
-                // console.log(vm.menuList);
+                console.log(vm.menuList);
             });
         },
         // 获取表格列表
@@ -365,6 +354,7 @@ var vm = new Vue({
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
+                vm.q.meteCategoryId = data.id;
                 vm.getTableList();
             }
 
@@ -665,11 +655,113 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList1 = selection;
         },
+        // 数据字典
+        dictClick:function (type) {
+            $.ajax({
+                type: "get",
+                url: baseURL + "sys/dict/selectDict",
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    type:type
+                },
+                success: function(r){
+                    console.log(r);
+                    if(type == 'control_type'){
+                        vm.controlTypeList = r;
+                    }else if(type == 'data_type'){
+                        vm.dataTypeList =r;
+                    }
+                }
+            });
+        },
+        // 历史版本
+        histC:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + "sys/dict/selectDict",
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    type:type
+                },
+                success: function(r){
+                    console.log(r);
+                    if(type == 'control_type'){
+                        vm.controlTypeList = r;
+                    }else if(type == 'data_type'){
+                        vm.dataTypeList =r;
+                    }
+                }
+            });
+        },
+        // 禁用
+        closeC:function () {
+            if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                layer.confirm('确定要禁用选中的元数据？', function(index32){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetadata/updateDisabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index32);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+                })
+            }
 
+        },
+        // 启用
+        openC:function () {
+            if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                layer.confirm('确定要启动选中的元数据？', function(index31){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetadata/updateEnabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index31);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+
+                        }
+                    });
+                })
+            }
+
+        }
     },
     created:function () {
         this.getMenuList();
         this.getTableList();
+        this.dictClick('control_type');
+        this.dictClick('data_type');
 
         // this.h = height
     }
