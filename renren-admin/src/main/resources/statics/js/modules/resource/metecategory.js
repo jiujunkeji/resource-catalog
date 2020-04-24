@@ -215,10 +215,8 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:{
-                        name:this.q.name,
-                        metaCategoryNumber:this.q.metaCategoryNumber,
-                    }
+                    name:this.q.name,
+                    metaCategoryNumber:this.q.metaCategoryNumber,
                 },
                 success: function(r){
                     console.log(r);

@@ -322,11 +322,9 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:{
-                        meteNumber:this.q.meteNumber,
-                        meteCategoryId:this.q.meteCategoryId,
-                        cnName:this.q.cnName
-                    }
+                    meteNumber:this.q.meteNumber,
+                    meteCategoryId:this.q.meteCategoryId,
+                    cnName:this.q.cnName
                 },
                 success: function(r){
                     console.log(r);

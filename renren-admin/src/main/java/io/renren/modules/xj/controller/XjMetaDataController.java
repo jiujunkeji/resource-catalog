@@ -83,8 +83,8 @@ public class XjMetaDataController extends AbstractController {
      */
     @RequestMapping("/queryList")
     //@RequiresPermissions("resource:metecategory:list")
-    public R queryList(@RequestParam Map<String, Object> params){
-        PageUtils page=xjMetaDataService.searchFindByMeteDataNumberOrName(params);
+    public R queryList(@RequestParam String meteCategoryId,@RequestParam String meteNumber,@RequestParam String cnName){
+        PageUtils page=xjMetaDataService.searchFindByMeteDataNumberOrName(meteCategoryId,meteNumber,cnName);
         return R.ok().put("page",page);
     }
 
