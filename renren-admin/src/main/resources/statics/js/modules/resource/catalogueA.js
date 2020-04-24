@@ -199,7 +199,7 @@ var vm = new Vue({
                 parentName:''
             };
             vm.getMenu();
-            vm.getMenu1();
+            // vm.getMenu1();
             vm.getComList();
 
         },
@@ -212,11 +212,12 @@ var vm = new Vue({
             vm.title = "修改目录安全设置";
             vm.getInfo(catalogId);
             vm.getMenu();
-            vm.getMenu1();
-            vm.getComList();
+            // vm.getMenu1();
+            // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
+            console.log(vm.resourceMeteData.catalogId == '');
+            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjsafe/save" : "xj/xjsafe/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -231,7 +232,7 @@ var vm = new Vue({
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         console.log('失败')
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -243,7 +244,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "xj/xjcatalog/delete",
+                    url: baseURL + "xj/xjsafe/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -259,10 +260,10 @@ var vm = new Vue({
             });
         },
         getInfo: function(catalogId){
-            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
+            $.get(baseURL + "xj/xjsafe/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.xjCatalog;
-                vm.resourceMeteData.parentId = 0;
+                vm.resourceMeteData = r.xjSafe;
+                // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },

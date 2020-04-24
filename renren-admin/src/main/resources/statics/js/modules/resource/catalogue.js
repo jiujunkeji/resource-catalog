@@ -255,7 +255,7 @@ var vm = new Vue({
             $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
                 console.log(r);
                 vm.resourceMeteData = r.xjCatalog;
-                vm.resourceMeteData.parentId = 0;
+                // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
