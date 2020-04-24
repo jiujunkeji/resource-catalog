@@ -287,9 +287,9 @@
                             fixed="right"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.catalogId)" title="编辑"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.safeId)" title="编辑"></i>
                             <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                            <i class="el-icon-delete" @click="del(scope.row.catalogId)" title="删除"></i>
+                            <i class="el-icon-delete" @click="del(scope.row.safeId)" title="删除"></i>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -332,7 +332,7 @@
                 <div class="item">
                     <label>安全类型</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.safeTypeCode" placeholder="请选择">
+                        <el-select v-model="resourceMeteData.safeTypeCode" placeholder="请选择" @change="safeTypeChan">
                             <el-option
                                     v-for="item in safeTypeList"
                                     :key="item.code"
@@ -345,7 +345,7 @@
                 <div class="item">
                     <label>安全级别</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.safeCode" placeholder="1～5级别由高到低">
+                        <el-select v-model="resourceMeteData.safeCode" placeholder="1～5级别由高到低" @change="safeLevelChan">
                             <el-option
                                     v-for="item in safeLevelList"
                                     :key="item.code"
@@ -362,7 +362,7 @@
                 <div class="item">
                     <label>加密模式</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.encryptCode" placeholder="请选择">
+                        <el-select v-model="resourceMeteData.encryptCode" placeholder="请选择" @change="encryptChan">
                             <el-option
                                     v-for="item in encryptMethodList"
                                     :key="item.code"
