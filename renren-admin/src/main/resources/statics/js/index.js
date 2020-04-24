@@ -49,7 +49,7 @@ var menuItem = Vue.extend({
 //iframe自适应
 $(window).on('resize', function() {
 	var $content = $('.content');
-	$content.height($(this).height() - 72);
+	$content.height($(this).height() - 36);
 	$content.find('iframe').each(function() {
 		$(this).height($content.height());
 	});
@@ -193,6 +193,7 @@ function routerList(router, menuList){
 			    //导航菜单展开
 			    $(".treeview-menu li").removeClass("active");
 			    $("a[href='"+url+"']").parents("li").addClass("active");
+                console.log(111);
 			    
 			    vm.navTitle = $("a[href='"+url+"']").text();
                 vm.pushItemMenu = menu;
@@ -279,7 +280,14 @@ function toOpen(item) {
         };
         vm.tab = vm.topMenuList.length ;
         console.log(vm.topMenuList.length);
-        console.log(vm.tab)
+        console.log($('.content-header').width())
+        console.log($('ul.topMenulist').width())
+        if($('ul.topMenulist').width()>$('.content-header').width()){
+            $('ul.topMenulist').css('left',$('.content-header').width()-$('ul.topMenulist').width()+'px')
+        }else {
+            $('ul.topMenulist').css('left','0px')
+        }
+
     }else {
         vm.topMenuList.forEach(function (t,i) {
             if(t.menuId == item.menuId){
