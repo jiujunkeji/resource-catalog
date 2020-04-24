@@ -232,7 +232,7 @@ var vm = new Vue({
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         console.log('失败')
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败<br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -846,7 +846,7 @@ var vm = new Vue({
         safeLevelChan:function (opt) {
             vm.safeLevelList.forEach(function (item) {
                 if(item.code == opt){
-                    vm.resourceMeteData.safeLevel = item.value;
+                    vm.resourceMeteData.safe = item.value;
                     return
                 }
             })
