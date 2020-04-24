@@ -41,8 +41,8 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
                         .eq(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
                         .eq(StringUtils.isNotBlank(name),"catalog_name", name)
                         .eq(StringUtils.isNotBlank(safeTypeCode),"safe_type_code", safeTypeCode)
-                        .eq(StringUtils.isNotBlank(catalogId),"safe_code", safeCode)
-                        .eq(StringUtils.isNotBlank(catalogId),"encrypt_code", encryptCode)
+                        .eq(StringUtils.isNotBlank(safeCode),"safe_code", safeCode)
+                        .eq(StringUtils.isNotBlank(encryptCode),"encrypt_code", encryptCode)
         );
 
         return new PageUtils(page);
