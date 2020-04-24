@@ -30,14 +30,19 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
     private SysDictService dictService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        String name = (String) params.get("");
-        String safeLevelCode = (String) params.get("");
-        String safeCode = (String) params.get("");
+        String name = (String) params.get("name");
+        String safeTypeCode = (String) params.get("safeTypeCode");
+        String safeCode = (String) params.get("safeCode");
+        String encryptCode = (String) params.get("encryptCode");
         String catalogId = (String) params.get("catalogId");
         Page<XjSafeEntity> page = this.selectPage(
                 new Query<XjSafeEntity>(params).getPage(),
                 new EntityWrapper<XjSafeEntity>()
                         .eq(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
+                        .eq(StringUtils.isNotBlank(name),"catalog_name", name)
+                        .eq(StringUtils.isNotBlank(safeTypeCode),"safe_type_code", safeTypeCode)
+                        .eq(StringUtils.isNotBlank(catalogId),"safe_code", safeCode)
+                        .eq(StringUtils.isNotBlank(catalogId),"encrypt_code", encryptCode)
         );
 
         return new PageUtils(page);
