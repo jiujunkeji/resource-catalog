@@ -43,7 +43,7 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
                 page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
                 page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id", Long.valueOf(meteCategoryId)));
@@ -57,7 +57,7 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
                 page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName));
                 return new PageUtils(page);
             } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
                 return queryPage(params);

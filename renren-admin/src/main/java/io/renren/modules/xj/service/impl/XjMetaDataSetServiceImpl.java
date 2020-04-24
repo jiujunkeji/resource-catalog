@@ -40,7 +40,7 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("cn_name", cnName).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
                 return new PageUtils(page);
             }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(cnName)){
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
@@ -54,7 +54,7 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("cn_name", cnName));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName));
                 return new PageUtils(page);
             }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(cnName)){
                return queryPage(params);
