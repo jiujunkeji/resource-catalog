@@ -40,8 +40,9 @@ var vm = new Vue({
     data:{
         q: {
             name:'',
-            metaCategoryNumber:'',
-            meteCategoryId:''
+            meteNumber:'',
+            meteCategoryId:'',
+            cnName:''
         },
         showList: true,
         title: null,
@@ -321,7 +322,11 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    params:this.q
+                    params:{
+                        meteNumber:this.q.meteNumber,
+                        meteCategoryId:this.q.meteCategoryId,
+                        cnName:this.q.cnName
+                    }
                 },
                 success: function(r){
                     console.log(r);

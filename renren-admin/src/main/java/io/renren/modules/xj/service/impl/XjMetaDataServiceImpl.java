@@ -33,31 +33,29 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
     }
 
     @Override
-    public PageUtils searchFindByMeteDataNumberOrName(Map<String, Object> params) {
-        String metaNumber = (String) params.get("meteNumber");
-        String name = (String) params.get("cnName");
-        String meteCategoryId=((String) params.get("meteCategoryId"));
+    public PageUtils searchFindByMeteDataNumberOrName(String meteCategoryId,String meteNumber,String cnName)
+    {
         Page<XjMetaDataEntity> page =null;
         if(StringUtils.isNotBlank(meteCategoryId)){
-            if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+            if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(null).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
-            } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(null).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+            }else if(StringUtils.isBlank(meteNumber)&&StringUtils.isBlank(cnName)){
+                page = this.selectPage(new Query<XjMetaDataEntity>(null).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id",Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             }
         }else {
-            if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber));
+            if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(null).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
                 return new PageUtils(page);
-            } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name));
+            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(null).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
-                return queryPage(params);
+            }else if(StringUtils.isBlank(meteNumber)&&StringUtils.isBlank(cnName)){
+                return queryPage(null);
             }
         }
 

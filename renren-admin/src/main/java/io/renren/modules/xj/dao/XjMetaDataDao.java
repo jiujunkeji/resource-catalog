@@ -20,7 +20,7 @@ public interface XjMetaDataDao extends BaseMapper<XjMetaDataEntity> {
     /**
      * 元数据搜索(可根据编号或者中文名称)
      */
-    PageUtils searchFindByMeteDataNumberOrName(Map<String, Object> params);
+    PageUtils searchFindByMeteDataNumberOrName(String meteCategoryId,String meteNumber,String cnName);
 
     /**
      * 元数据启用

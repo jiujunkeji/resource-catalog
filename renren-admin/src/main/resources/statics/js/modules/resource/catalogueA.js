@@ -832,7 +832,34 @@ var vm = new Vue({
                 }
             });
         },
-
+        // 加密修改
+        encryptChan:function (opt) {
+            console.log(opt);
+            vm.encryptMethodList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.encrypt = item.value;
+                    return
+                }
+            })
+        },
+        // 安全等级修改
+        safeLevelChan:function (opt) {
+            vm.safeLevelList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.safeLevel = item.value;
+                    return
+                }
+            })
+        },
+        // 安全类型修改
+        safeTypeChan:function (opt) {
+            vm.safeTypeList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.safeType = item.value;
+                    return
+                }
+            })
+        }
     },
     created:function () {
         this.getMenuList();
