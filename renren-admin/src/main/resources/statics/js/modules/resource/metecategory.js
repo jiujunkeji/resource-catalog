@@ -124,7 +124,7 @@ var vm = new Vue({
 			}
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
                 area: ['562px', '460px'],
@@ -189,8 +189,9 @@ var vm = new Vue({
 		},
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "xj/xjmetecategory/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.meteCategory;
-                console.log('修改')
+                vm.meteCategory = r.xjMeteCategory;
+                console.log('修改');
+                console.log(r);
                 console.log(vm.meteCategory)
             });
 		},

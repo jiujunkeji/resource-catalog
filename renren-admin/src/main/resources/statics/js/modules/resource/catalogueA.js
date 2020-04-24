@@ -11,10 +11,12 @@ var setting = {
             enable: true,
             idKey: "catalogId",
             pIdKey: "parentId",
-            rootPId: -1
+            rootPId: -1,
+
         },
         key: {
-            url:"nourl"
+            url:"nourl",
+            name:'catalogName'
         }
     }
 };
@@ -50,7 +52,10 @@ var vm = new Vue({
             catagoryCode:'',
             catalogId:'',
             catalogName:'',
-            fieldList:[]
+            fieldList:[],
+            parentName:'',
+            parentId:0,
+            isUsed:1
         },
         imageUrl:'',
         fileData:null,
@@ -89,9 +94,12 @@ var vm = new Vue({
         query: function () {
             vm.reload();
         },
+        clean:function () {
+            vm.q.name = null
+        },
         getMenu: function(menuId){
             //加载菜单树
-            $.get(baseURL + "resource/resourcecatalog/list", function(r){
+            $.get(baseURL + "/xj/xjcatalog/list", function(r){
                 console.log(r);
                 // r.push({
                 //     parentId:-1,
@@ -121,9 +129,10 @@ var vm = new Vue({
                     console.log(node);
                     //选择上级菜单
                     vm.resourceMeteData.catalogId = node[0].catalogId;
-                    vm.resourceMeteData.catalogName = node[0].name;
+                    vm.resourceMeteData.catalogName = node[0].catalogName;
                     // vm.resourceMeteData.catagoryCode = node[0].code;
                     layer.close(index);
+                    console.log(vm.resourceMeteData);
                 }
             });
         },
@@ -168,8 +177,9 @@ var vm = new Vue({
         },
         add: function(){
 
+
             vm.showList = false;
-            vm.title = "新增元数据集";
+            vm.title = "新增目录安全设置";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -177,39 +187,43 @@ var vm = new Vue({
                 catagoryCode:'',
                 catalogId:'',
                 catalogName:'',
-                fieldList:[]
+                fieldList:[],
+                parentId:0,
+                parentName:''
             };
             vm.getMenu();
             vm.getMenu1();
             vm.getComList();
+
         },
         update: function (id) {
-            var meteId = id;
-            if(meteId == null){
+            var catalogId = id;
+            if(catalogId == null){
                 return ;
             }
-            //
             vm.showList = false;
-            vm.title = "修改元数据集";
-
-            vm.getInfo(meteId);
+            vm.title = "修改目录安全设置";
+            vm.getInfo(catalogId);
             vm.getMenu();
             vm.getMenu1();
             vm.getComList();
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.meteId == null ? "resource/resourcemetedata/save" : "resource/resourcemetedata/update";
+            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.resourceMeteData),
                 success: function(r){
+                    console.log(r);
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
+                        console.log('成功')
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
+                        console.log('失败')
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -222,7 +236,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "resource/resourcemetedata/delete",
+                    url: baseURL + "xj/xjcatalog/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -237,16 +251,18 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function(meteId){
-            $.get(baseURL + "resource/resourcemetedata/info/"+meteId, function(r){
+        getInfo: function(catalogId){
+            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.resourceMeteData;
+                vm.resourceMeteData = r.xjCatalog;
+                vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
         reload: function (event) {
             vm.showList = true;
             vm.getTableList();
+            vm.getMenuList();
         },
         validator: function () {
             if(isBlank(vm.resourceCatalog.name)){
@@ -298,17 +314,21 @@ var vm = new Vue({
         },
         // 树结构目录获取
         getMenuList: function (event) {
-            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+            $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
+                console.log(r.length);
+                console.log(vm.menuList);
+                vm.menuList = [];
                 var _len=0;
-                for(var i = 1;i<100;i++){
+                for(var i = 1;i<10;i++){
                     if(i == 1){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(1111);
                         r.forEach(function (item) {
                             if(item.parentId == 0){
                                 vm.menuList.push({
-                                    name:item.name,
+                                    name:item.catalogName,
                                     id:item.catalogId,
                                     list:[]
                                 })
@@ -317,13 +337,14 @@ var vm = new Vue({
                         })
                     }else if(i == 2){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(222);
                         vm.menuList.forEach(function (item) {
                             r.forEach(function (n) {
                                 if(n.parentId == item.id){
                                     item.list.push({
-                                        name:n.name,
+                                        name:n.catalogName,
                                         id:n.catalogId,
                                         list:[]
                                     })
@@ -333,14 +354,14 @@ var vm = new Vue({
                         })
                     }else if(i == 3){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
                                 r.forEach(function (n) {
                                     if(n.parentId == i.id){
                                         i.list.push({
-                                            name:n.name,
+                                            name:n.catalogName,
                                             id:n.catalogId,
                                             list:[]
                                         })
@@ -352,7 +373,7 @@ var vm = new Vue({
                         })
                     }else if(i == 4){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -360,7 +381,7 @@ var vm = new Vue({
                                     r.forEach(function (n) {
                                         if(n.parentId == j.id){
                                             j.list.push({
-                                                name:n.name,
+                                                name:n.catalogName,
                                                 id:n.catalogId,
                                                 list:[]
                                             })
@@ -373,7 +394,7 @@ var vm = new Vue({
                         })
                     }else if(i == 5){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -382,7 +403,7 @@ var vm = new Vue({
                                         r.forEach(function (n) {
                                             if(n.parentId == m.id){
                                                 m.list.push({
-                                                    name:n.name,
+                                                    name:n.catalogName,
                                                     id:n.catalogId,
                                                     list:[]
                                                 })
@@ -396,7 +417,7 @@ var vm = new Vue({
                         })
                     }else if(i == 6){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -406,7 +427,7 @@ var vm = new Vue({
                                             r.forEach(function (n) {
                                                 if(n.parentId == x.id){
                                                     x.list.push({
-                                                        name:n.name,
+                                                        name:n.catalogName,
                                                         id:n.catalogId,
                                                         list:[]
                                                     })
@@ -422,31 +443,31 @@ var vm = new Vue({
                     }
 
                 }
-
+                console.log(vm.menuList);
                 var _list = [{
-                    name:'全部',
+                    name:'资源目录',
                     id:null,
                     list:[]
                 }]
                 _list[0].list = vm.menuList;
                 vm.menuList = _list;
-                console.log(vm.menuList);
+                // console.log(_list);
             });
         },
         // 获取表格列表
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/list',
+                url: baseURL + '/xj/xjcatalog/page',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    catalogId:this.catalogId,
-                    type:this.tab
+                    name:this.q.name
                 },
                 success: function(r){
                     console.log(r);
+                    // vm.tableList = r
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
@@ -476,6 +497,7 @@ var vm = new Vue({
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
+                vm.q.name = data.name;
                 vm.getTableList();
             }
 
@@ -560,7 +582,7 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['600px', '520px'],
+                area: ['500px', '320px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
@@ -660,13 +682,13 @@ var vm = new Vue({
             vm.getFileInfo(id);
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['600px', '520px'],
+                area: ['500px', '310px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['新增','取消'],
+                btn: ['修改','取消'],
                 btn1:function (index) {
                     vm.saveOrUpdate1();
                     layer.close(index);
