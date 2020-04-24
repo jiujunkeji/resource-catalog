@@ -117,8 +117,8 @@ var vm = new Vue({
                 parentName:''
 			};
 		},
-		update: function (event) {
-			var meteCategoryId = getMeteCategoryId();
+		update: function (id) {
+			var meteCategoryId = id;
 			if(meteCategoryId == null){
 				return ;
 			}
@@ -248,7 +248,7 @@ var vm = new Vue({
                         if(r.code == 0){
                             layer.close(index31);
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-
+                            vm.getTableList();
                         }else {
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
@@ -270,9 +270,9 @@ var vm = new Vue({
                     success: function(r){
                         console.log(r);
                         if(r.code == 0){
-                            layer.close(index31);
+                            layer.close(index32);
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-
+                            vm.getTableList();
                         }else {
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }

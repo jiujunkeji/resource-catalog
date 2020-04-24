@@ -55,6 +55,7 @@ var vm = new Vue({
             fieldList:[],
             parentName:'',
             parentId:0,
+            isUsed:1
         },
         imageUrl:'',
         fileData:null,
@@ -316,6 +317,7 @@ var vm = new Vue({
             $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
                 console.log(r.length);
                 console.log(vm.menuList);
+                vm.menuList = [];
                 var _len=0;
                 for(var i = 1;i<10;i++){
                     if(i == 1){
@@ -342,7 +344,7 @@ var vm = new Vue({
                             r.forEach(function (n) {
                                 if(n.parentId == item.id){
                                     item.list.push({
-                                        name:n.name,
+                                        name:n.catalogName,
                                         id:n.catalogId,
                                         list:[]
                                     })
@@ -359,7 +361,7 @@ var vm = new Vue({
                                 r.forEach(function (n) {
                                     if(n.parentId == i.id){
                                         i.list.push({
-                                            name:n.name,
+                                            name:n.catalogName,
                                             id:n.catalogId,
                                             list:[]
                                         })
@@ -379,7 +381,7 @@ var vm = new Vue({
                                     r.forEach(function (n) {
                                         if(n.parentId == j.id){
                                             j.list.push({
-                                                name:n.name,
+                                                name:n.catalogName,
                                                 id:n.catalogId,
                                                 list:[]
                                             })
@@ -401,7 +403,7 @@ var vm = new Vue({
                                         r.forEach(function (n) {
                                             if(n.parentId == m.id){
                                                 m.list.push({
-                                                    name:n.name,
+                                                    name:n.catalogName,
                                                     id:n.catalogId,
                                                     list:[]
                                                 })
@@ -425,7 +427,7 @@ var vm = new Vue({
                                             r.forEach(function (n) {
                                                 if(n.parentId == x.id){
                                                     x.list.push({
-                                                        name:n.name,
+                                                        name:n.catalogName,
                                                         id:n.catalogId,
                                                         list:[]
                                                     })
@@ -449,7 +451,7 @@ var vm = new Vue({
                 }]
                 _list[0].list = vm.menuList;
                 vm.menuList = _list;
-                console.log(_list);
+                // console.log(_list);
             });
         },
         // 获取表格列表
@@ -461,17 +463,17 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    type:this.tab
+                    name:this.q.name
                 },
                 success: function(r){
                     console.log(r);
                     // vm.tableList = r
-                    // if(r.code === 0){
-                    //     vm.tableList = r.page.list;
-                    //     vm.totalPage = r.page.totalCount;
-                    // }else{
-                    //     alert(r.msg);
-                    // }
+                    if(r.code === 0){
+                        vm.tableList = r.page.list;
+                        vm.totalPage = r.page.totalCount;
+                    }else{
+                        alert(r.msg);
+                    }
                 }
             });
         },
@@ -495,6 +497,7 @@ var vm = new Vue({
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
+                vm.q.name = data.name;
                 vm.getTableList();
             }
 

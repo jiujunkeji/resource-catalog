@@ -131,9 +131,10 @@
         <div class="listCon">
 
             <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
-            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待审核</button>
-            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">待发布</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">发布</button>
+            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">待审核</button>
+            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">通过</button>
+            <button :class="tab == 4 ? 'el-button active' : 'el-button'" @click="tabClick(4)">发布</button>
+            <button :class="tab == 3 ? 'el-button active' : 'el-button'" @click="tabClick(3)">失败</button>
 
             <div class="divBox" style="margin-bottom: 0;">
                 <div class="grid-btn">
@@ -142,6 +143,8 @@
                         数据列表
                     </span>
                     <div class="right">
+                        <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
+
                         <!--<el-button size="medium" type="primary" @click="agree" v-if="tab == 0">通过</el-button>&nbsp;&nbsp;-->
                         <!--<el-button size="medium" type="primary" @click="add" v-if="tab == 0">退回</el-button>-->
                         <!--<el-button size="medium" type="primary" @click="add" v-if="tab == 1">发布</el-button>-->
@@ -154,71 +157,19 @@
                         stripe
                         @selection-change="toggleSelection"
                         style="width: 100%">
-                    <!--<el-table-column-->
-                            <!--fixed-->
-                            <!--type="selection"-->
-                            <!--width="40">-->
-                    <!--</el-table-column>-->
                     <el-table-column
-                            prop="meteType"
-                            label="元数据类型"
-                            width="120">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.meteType == 0">资源类型</span>
-                            <span v-if="scope.row.meteType == 1">服务类型</span>
-                        </template>
+                            fixed
+                            type="selection"
+                            width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="resourceCategory"
-                            label="信息资源类型"
-                            width="130">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.resourceCategory == 0">主题分类</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="categoryName"
-                            label="资源分类"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="catagoryCode"
-                            label="资源分类编码"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="resourceTitle"
-                            label="信息资源名称"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="organisationName"
-                            label="资源提供单位"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="keyword"
-                            label="关键字"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="resourceSign"
-                            label="信息资源标识"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="metedataIdentifier"
-                            label="元数据标识"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="updateTime"
-                            label="更新时间"
-                            width="130">
+                            prop="catalogName"
+                            label="目录名称"
+                            width="90">
                     </el-table-column>
                     <el-table-column
                             label="审核状态"
-                            width="130">
+                            width="90">
                         <template slot-scope="scope">
                             <el-tag
                                     v-if="scope.row.reviewState == 0"
@@ -252,6 +203,7 @@
                     </el-table-column>
                     <el-table-column
                             label="发布状态"
+                            v-if="tab == 2 || tab == 4"
                             width="130">
                         <template slot-scope="scope">
                             <el-tag
@@ -269,12 +221,43 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                            prop="organisationName"
+                            label="资源提供单位"
+                            width="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="parentName"
+                            label="上级目录"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryName"
+                            label="类目名称"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryCode"
+                            label="类目编码"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="resourceSign"
+                            label="信息资源标识"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="metedataIdentifier"
+                            label="元数据标识"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
                             fixed="right"
                             label="操作"
                             align="center"
                             header-align="center"
                             width="120">
                         <template slot-scope="scope">
+                            <!--<el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">提交</el-button>-->
                             <el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">通过</el-button>
                             <span v-if="tab == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
                             <el-button v-if="tab == 0" type="text" @click="refuse(scope.row.meteId)">拒绝</el-button>
