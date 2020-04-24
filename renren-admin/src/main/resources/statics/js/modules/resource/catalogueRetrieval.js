@@ -208,8 +208,8 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/list2',
-                // contentType: "application/json",
+                url: baseURL + 'xj/xjcatalog/page',
+                // contentType: "application/json",resource/resourcemetedata/list2
                 dataType: 'json',
                 data: {
                     page:this.page,

@@ -239,7 +239,6 @@
             <button class="clean" @click="reload">取消</button>
 
         </div>
-
         <div class="divBox">
             <div class="grid-btn" style="border-bottom: 1px solid #eee;margin-bottom: 20px">
                 <span class="title">
@@ -271,7 +270,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>英文名称</label>
+                    <label>短名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
                     </div>
@@ -491,6 +490,184 @@
             </div>
 
         </div>
+        <div class="divBox">
+            <div class="grid-btn" style="">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    元数据元素或实体列表
+                </span>
+                <div class="right">
+                    <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
+                    <!--<el-button size="medium" type="primary" @click="setUp">批量设置</el-button>&nbsp;&nbsp;-->
+                    <!--<el-button size="medium" type="primary" @click="inUp">导入</el-button>&nbsp;&nbsp;-->
+                    <!--<el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;-->
+                    <!--<div style="display: inline-block">-->
+                        <!--<el-upload-->
+                                <!--class="avatar-uploader"-->
+                                <!--action='${request.contextPath}/resource/resourcefield/importField'-->
+                                <!--:show-file-list="false"-->
+                                <!--:on-success="handleAvatarSuccess"-->
+                                <!--:before-upload="beforeAvatarUpload">-->
+                            <!--<el-button size="medium" type="primary">导入</el-button>-->
+                            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                        <!--</el-upload>-->
+                    <!--</div>-->
+                    <!--<el-button size="medium" type="primary" @click="downUp">下载模版</el-button>&nbsp;&nbsp;-->
+
+                </div>
+            </div>
+            <el-table
+                    :data="resourceMeteData.fieldList"
+                    border
+                    stripe
+                    @selection-change="toggleSelection1"
+                    style="width: 100%">
+                <el-table-column
+                        type="selection"
+                        width="40">
+                </el-table-column>
+                <el-table-column
+                        prop="cnName"
+                        label="编号"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="cnName"
+                        label="中文名称"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="euName"
+                        label="英文名称"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="euName"
+                        label="英文短名"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop=""
+                        label="数据类型"
+                        width="">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.dataType == 0">整型</span>
+                        <span v-if="scope.row.dataType == 1">实型</span>
+                        <span v-if="scope.row.dataType == 2">布尔型</span>
+                        <span v-if="scope.row.dataType == 3">字符串</span>
+                        <span v-if="scope.row.dataType == 4">日期</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="dataLength"
+                        label="数据长度"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        label="操作"
+                        width="80">
+                    <template slot-scope="scope">
+                        <i class="el-icon-edit" @click="editUp(scope.row.fieldId)"></i>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <br>
+            <el-pagination
+                    background
+                    pager-count="1"
+                    :current-page="page1"
+                    layout="prev, pager, next, jumper"
+                    @current-change="layerPage1"
+                    :total="totalPage1">
+            </el-pagination>
+        </div>
+    </div>
+    <div id="addUp" class="panel panel-default" style="display: none">
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">中文名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="fileData.cnName" placeholder="中文名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">英文名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="fileData.euName" placeholder="英文名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据类型</div>
+                <div class="col-sm-10">
+                    <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
+                        <el-option
+                                key="0"
+                                label="整型"
+                                value="0">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="实型"
+                                value="1">
+                        </el-option>
+                        <el-option
+                                key="2"
+                                label="布尔型"
+                                value="2">
+                        </el-option>
+                        <el-option
+                                key="3"
+                                label="字符串"
+                                value="3">
+                        </el-option>
+                        <el-option
+                                key="4"
+                                label="日期"
+                                value="4">
+                        </el-option>
+                    </el-select>
+                    <!--<input type="text" class="form-control" v-model="fileData.dataType" placeholder="数据类型"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据长度</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="fileData.dataLength" placeholder="数据长度"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">判断必选</div>
+                <div class="col-sm-10">
+                    <el-select v-model="fileData.judgeMandatory" placeholder="请选择">
+                        <el-option
+                                key="0"
+                                label="必选"
+                                value="0">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="非必选"
+                                value="1">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+            <!--<div class="col-sm-2 control-label">关键字</div>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" class="form-control" v-model="fileData.keyword" placeholder="关键字"/>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+            <!--<div class="col-sm-2 control-label">更新时间</div>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" class="form-control" v-model="fileData.updateTime" placeholder="更新时间"/>-->
+            <!--</div>-->
+            <!--</div>-->
+
+        </form>
     </div>
 
 

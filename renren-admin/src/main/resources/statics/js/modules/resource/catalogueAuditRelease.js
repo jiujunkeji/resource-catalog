@@ -67,7 +67,8 @@ var vm = new Vue({
         page:1,
         pageSize:10,
         tab:0,
-        catalogId:null
+        catalogId:null,
+        checkIdList:[]
     },
     watch: {
         filterText:function(val) {
@@ -230,16 +231,30 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            var obj = {
+                page:this.page,
+                reviewState:null,
+                pushState:null
+            }
+            if(this.tab == 3){
+                obj = {
+                    page:this.page,
+                    reviewState:null,
+                    pushState:1
+                }
+            }else {
+                obj = {
+                    page:this.page,
+                    reviewState:this.tab,
+                    pushState:null
+                }
+            }
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/list1',
+                url: baseURL + 'xj/xjcatalog/page',
                 // contentType: "application/json",
                 dataType: 'json',
-                data: {
-                    page:this.page,
-                    catalogId:this.catalogId,
-                    type:this.tab
-                },
+                data: obj,
                 success: function(r){
                     if(r.code === 0){
                         vm.tableList = r.page.list;
@@ -276,6 +291,39 @@ var vm = new Vue({
         toggleSelection:function(selection) {
             console.log(selection);
             vm.checkIdList = selection;
+        },
+        // 提交
+        subMit:function () {
+            var list = []
+            vm.checkIdList.forEach(function (item) {
+                list.push(item.catalogId)
+            })
+            console.log(list);
+            if(list.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                $.ajax({
+                    type: "post",
+                    url: baseURL + 'resource/resourcemetedata/submit',
+                    contentType: "application/json",
+                    // dataType: 'json',
+                    data: JSON.stringify(list),
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.tab = 1;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            }
+
         },
         // 通过方法
         agree:function (id) {

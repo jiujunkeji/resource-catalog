@@ -13,6 +13,7 @@ import io.renren.modules.resource.utils.POIUtils;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.xj.entity.XjMetaDataSetEntity;
+import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
 import io.renren.modules.xj.service.XjMetaDataSetService;
 import io.renren.modules.xj.service.XjMeteCategoryService;
@@ -129,7 +130,6 @@ public class XjMetaDataController {
     //@RequiresPermissions("xj:xjmetadata:info")
     public R info(@PathVariable("meteId") Long meteId){
         XjMetaDataEntity xjMetaData = xjMetaDataService.selectById(meteId);
-
         return R.ok().put("xjMetaData", xjMetaData);
     }
 
@@ -143,20 +143,20 @@ public class XjMetaDataController {
         /**
          * 获取分类id
          */
-        if(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId()!=null){
-            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId());
+        if(xjMetaData.getMeteCategoryId()!=null){
+            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getMeteCategoryId());
         }else{
             return R.error("新增元数据前请指定分类!");
         }
         /**
          * 获取字典表的字段类型
          */
-        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","data_type"));
+        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","data_type"));
         xjMetaDataEntity.setDataType(sysDictEntity.getValue());
         /**
          * 获取字典表中的控件类型
          */
-        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","control_type"));
+        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","control_type"));
         xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
         xjMetaDataEntity.setCnName(xjMetaData.getCnName());
         xjMetaDataEntity.setEuName(xjMetaData.getEuName());
@@ -187,12 +187,12 @@ public class XjMetaDataController {
         /**
          * 获取分类id
          */
-        if(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId()!=null){
-            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId());
+        if(xjMetaData.getMeteCategoryId()!=null){
+            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getMeteCategoryId());
         }
-        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","data_type"));
+        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","data_type"));
         xjMetaDataEntity.setDataType(sysDictEntity.getValue());
-        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","control_type"));
+        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","control_type"));
         xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
         xjMetaDataEntity.setUpdateTime(new Date());
         xjMetaDataEntity.setCnName(xjMetaData.getCnName());

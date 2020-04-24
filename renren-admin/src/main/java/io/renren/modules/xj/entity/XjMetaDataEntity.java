@@ -99,11 +99,10 @@ public class XjMetaDataEntity implements Serializable {
 	 */
 	private Date updateTime;
 
-	@TableField(exist = false)
-	private XjMeteCategoryEntity xjMeteCategoryEntity;
+
 
 	@TableField(exist = false)
-	private SysDictEntity sysDictEntity;
+	private Integer code;
 
 
 	/**
@@ -329,21 +328,11 @@ public class XjMetaDataEntity implements Serializable {
 	}
 
 
-
-
-	public XjMeteCategoryEntity getXjMeteCategoryEntity() {
-		return xjMeteCategoryEntity;
+	public Integer getCode() {
+		return code;
 	}
 
-	public void setXjMeteCategoryEntity(XjMeteCategoryEntity xjMeteCategoryEntity) {
-		this.xjMeteCategoryEntity = xjMeteCategoryEntity;
-	}
-
-	public SysDictEntity getSysDictEntity() {
-		return sysDictEntity;
-	}
-
-	public void setSysDictEntity(SysDictEntity sysDictEntity) {
-		this.sysDictEntity = sysDictEntity;
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 }

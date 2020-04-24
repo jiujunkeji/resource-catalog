@@ -36,16 +36,31 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
     public PageUtils searchFindByMeteDataNumberOrName(Map<String, Object> params) {
         String metaNumber = (String) params.get("meteNumber");
         String name = (String) params.get("cnName");
+        String meteCategoryId=((String) params.get("meteCategoryId"));
         Page<XjMetaDataEntity> page =null;
-        if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
-            page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber));
-            return new PageUtils(page);
-        } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
-            page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name));
-            return new PageUtils(page);
-        }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
-            return queryPage(params);
+        if(StringUtils.isNotBlank(meteCategoryId)){
+            if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+                return new PageUtils(page);
+            } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+                return new PageUtils(page);
+            }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+                return new PageUtils(page);
+            }
+        }else {
+            if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber));
+                return new PageUtils(page);
+            } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name));
+                return new PageUtils(page);
+            }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
+                return queryPage(params);
+            }
         }
+
         return new PageUtils(page);
     }
 

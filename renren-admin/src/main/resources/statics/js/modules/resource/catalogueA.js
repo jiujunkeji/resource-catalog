@@ -128,8 +128,8 @@ var vm = new Vue({
                     var node = ztree.getSelectedNodes();
                     console.log(node);
                     //选择上级菜单
-                    vm.resourceMeteData.parentId = node[0].catalogId;
-                    vm.resourceMeteData.parentName = node[0].catalogName;
+                    vm.resourceMeteData.catalogId = node[0].catalogId;
+                    vm.resourceMeteData.catalogName = node[0].catalogName;
                     // vm.resourceMeteData.catagoryCode = node[0].code;
                     layer.close(index);
                     console.log(vm.resourceMeteData);
@@ -177,8 +177,9 @@ var vm = new Vue({
         },
         add: function(){
 
+
             vm.showList = false;
-            vm.title = "新增目录";
+            vm.title = "新增目录安全设置";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -193,16 +194,15 @@ var vm = new Vue({
             vm.getMenu();
             vm.getMenu1();
             vm.getComList();
+
         },
         update: function (id) {
             var catalogId = id;
             if(catalogId == null){
                 return ;
             }
-            //
             vm.showList = false;
-            vm.title = "修改目录";
-
+            vm.title = "修改目录安全设置";
             vm.getInfo(catalogId);
             vm.getMenu();
             vm.getMenu1();
@@ -458,7 +458,7 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + '/xj/xjcatalog/page',
+                url: baseURL + 'xj/xjsafe/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
@@ -582,7 +582,7 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['600px', '520px'],
+                area: ['500px', '320px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
@@ -682,13 +682,13 @@ var vm = new Vue({
             vm.getFileInfo(id);
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['600px', '520px'],
+                area: ['500px', '310px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['新增','取消'],
+                btn: ['修改','取消'],
                 btn1:function (index) {
                     vm.saveOrUpdate1();
                     layer.close(index);
