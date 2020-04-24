@@ -150,8 +150,13 @@ public class XjCatalogController extends AbstractController{
     //@RequiresPermissions("xj:xjcatalog:delete")
     public R delete(@RequestBody Long[] catalogIds){
         List<Long> catalogIdList = Arrays.asList(catalogIds);
-        xjCatalogService.deleteBatchIds(catalogIdList);
+//        xjCatalogService.deleteBatchIds(catalogIdList);
         for(Long catalogId : catalogIdList){
+            int count = xjCatalogService.selectCount(new EntityWrapper<XjCatalogEntity>().eq("parent_id",catalogId).eq("is_deleted",0));
+            if(count > 0){
+                return R.error("请先删除下级目录");
+            }
+            xjCatalogService.deleteById(catalogId);
             safeService.delete(new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalogId));
             // TODO: 2020-04-24 删除关联的数据连接信息 
         }
