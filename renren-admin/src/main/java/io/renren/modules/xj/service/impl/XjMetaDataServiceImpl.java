@@ -50,7 +50,15 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
                 return new PageUtils(page);
             }
         }else {
-            return queryPage(params);
+            if (StringUtils.isNotBlank(metaNumber) && StringUtils.isBlank(name)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", metaNumber));
+                return new PageUtils(page);
+            } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaNumber)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", name));
+                return new PageUtils(page);
+            }else if(StringUtils.isBlank(metaNumber)&&StringUtils.isBlank(name)){
+                return queryPage(params);
+            }
         }
 
         return new PageUtils(page);
