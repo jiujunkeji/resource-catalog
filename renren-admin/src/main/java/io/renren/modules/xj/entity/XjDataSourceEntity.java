@@ -35,27 +35,40 @@ public class XjDataSourceEntity implements Serializable {
 	 */
 	private String dsDepartment;
 	/**
-	 * 
+	 * 连接类型
 	 */
 	private String dsLinetype;
 	/**
-	 * 
+	 * 主机名
 	 */
 	private String dsIpname;
 	/**
-	 * 
+	 * 主机ip
 	 */
 	private String dsIp;
 	/**
-	 * 
+	 * 端口号
+	 */
+	private Integer port;
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	/**
+	 * 数据库名
 	 */
 	private String dsDatabasename;
 	/**
-	 * 
+	 * 用户名
 	 */
 	private String dsUsername;
 	/**
-	 * 
+	 * 密码
 	 */
 	private String dsPassword;
 
