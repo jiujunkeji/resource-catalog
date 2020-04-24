@@ -130,6 +130,7 @@
         </div>
         <div class="listCon">
 
+            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
             <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待审核</button>
             <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">待发布</button>
             <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">发布</button>
