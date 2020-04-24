@@ -40,8 +40,9 @@ var vm = new Vue({
     data:{
         q: {
             name:'',
-            metaCategoryNumber:'',
-            meteCategoryId:''
+            meteNumber:'',
+            meteCategoryId:'',
+            cnName:''
         },
         showList: true,
         title: null,
