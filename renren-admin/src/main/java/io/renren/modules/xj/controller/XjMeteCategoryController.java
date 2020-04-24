@@ -68,7 +68,7 @@ public class XjMeteCategoryController {
         if(xjMeteCategoryEntityList!=null && xjMeteCategoryEntityList.size()>0){
             for(XjMeteCategoryEntity xjMeteCategoryEntity:xjMeteCategoryEntityList){
                 xjMeteCategoryEntity.setIsDisabled(0);
-                xjMeteCategoryService.update(xjMeteCategoryEntity,null);
+                xjMeteCategoryService.updateById(xjMeteCategoryEntity);
             }
         }
         return R.ok();
@@ -83,7 +83,7 @@ public class XjMeteCategoryController {
         if(xjMeteCategoryEntityList!=null && xjMeteCategoryEntityList.size()>0){
             for(XjMeteCategoryEntity xjMeteCategoryEntity:xjMeteCategoryEntityList){
                 xjMeteCategoryEntity.setIsDisabled(1);
-                xjMeteCategoryService.update(xjMeteCategoryEntity,null);
+                xjMeteCategoryService.updateById(xjMeteCategoryEntity);
             }
         }
         return R.ok();
