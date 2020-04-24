@@ -17,7 +17,7 @@
 package io.renren.common.aspect;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
+
 
 
 import io.renren.common.annotation.SysLog;

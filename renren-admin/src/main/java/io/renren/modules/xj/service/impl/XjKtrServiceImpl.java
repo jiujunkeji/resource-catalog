@@ -2,7 +2,6 @@ package io.renren.modules.xj.service.impl;
 
 import io.renren.modules.xj.entity.XjDataSourceEntity;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.component.plugins.PluginRegistry;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;

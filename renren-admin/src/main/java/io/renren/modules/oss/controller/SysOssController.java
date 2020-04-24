@@ -16,7 +16,7 @@
 
 package io.renren.modules.oss.controller;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.ConfigConstant;
 import io.renren.common.utils.Constant;
@@ -104,7 +104,7 @@ public class SysOssController {
 			ValidatorUtils.validateEntity(config, QcloudGroup.class);
 		}
 
-        sysConfigService.updateValueByKey(KEY, new Gson().toJson(config));
+//        sysConfigService.updateValueByKey(KEY, new Gson().toJson(config));
 
 		return R.ok();
 	}

@@ -19,7 +19,7 @@ package io.renren.modules.sys.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
@@ -100,7 +100,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 	public <T> T getConfigObject(String key, Class<T> clazz) {
 		String value = getValue(key);
 		if(StringUtils.isNotBlank(value)){
-			return new Gson().fromJson(value, clazz);
+//			return new Gson().fromJson(value, clazz);
 		}
 
 		try {
