@@ -149,10 +149,13 @@ public class XjCatalogController extends AbstractController{
     @RequestMapping("/delete")
     //@RequiresPermissions("xj:xjcatalog:delete")
     public R delete(@RequestBody Long[] catalogIds){
-        xjCatalogService.deleteBatchIds(Arrays.asList(catalogIds));
-        Map map = new HashMap();
-        map.put("catalogId",catalogIds);
-        safeService.deleteByMap(map);
+        List<Long> catalogIdList = Arrays.asList(catalogIds);
+        xjCatalogService.deleteBatchIds(catalogIdList);
+        for(Long catalogId : catalogIdList){
+            safeService.delete(new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalogId));
+            // TODO: 2020-04-24 删除关联的数据连接信息 
+        }
+
         return R.ok();
     }
 
