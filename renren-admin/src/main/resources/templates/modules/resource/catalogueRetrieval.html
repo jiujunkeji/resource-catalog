@@ -161,67 +161,13 @@
                     <!--width="40">-->
                     <!--</el-table-column>-->
                     <el-table-column
-                            prop="meteType"
-                            label="元数据类型"
-                            width="120">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.meteType == 0">资源类型</span>
-                            <span v-if="scope.row.meteType == 1">服务类型</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="resourceCategory"
-                            label="信息资源类型"
-                            width="130">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.resourceCategory == 0">主题分类</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="categoryName"
-                            label="资源分类"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="catagoryCode"
-                            label="资源分类编码"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="resourceTitle"
-                            label="信息资源名称"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="organisationName"
-                            label="资源提供单位"
-                            show-overflow-tooltip="true"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="keyword"
-                            label="关键字"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="resourceSign"
-                            label="信息资源标识"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="metedataIdentifier"
-                            label="元数据标识"
-                            show-overflow-tooltip="true"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="updateTime"
-                            label="更新时间"
-                            width="180">
+                            prop="catalogName"
+                            label="目录名称"
+                            width="90">
                     </el-table-column>
                     <el-table-column
                             label="审核状态"
-                            width="130">
+                            width="90">
                         <template slot-scope="scope">
                             <el-tag
                                     v-if="scope.row.reviewState == 0"
@@ -255,6 +201,7 @@
                     </el-table-column>
                     <el-table-column
                             label="发布状态"
+                            v-if="tab == 2 || tab == 4"
                             width="130">
                         <template slot-scope="scope">
                             <el-tag
@@ -270,6 +217,36 @@
                                 已发布
                             </el-tag>
                         </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="organisationName"
+                            label="资源提供单位"
+                            width="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="parentName"
+                            label="上级目录"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryName"
+                            label="类目名称"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryCode"
+                            label="类目编码"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="resourceSign"
+                            label="信息资源标识"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="metedataIdentifier"
+                            label="元数据标识"
+                            width="130">
                     </el-table-column>
                     <!--<el-table-column-->
                             <!--fixed="right"-->

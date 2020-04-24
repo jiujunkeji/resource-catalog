@@ -169,7 +169,7 @@ var vm = new Vue({
         add: function(){
 
             vm.showList = false;
-            vm.title = "新增元数据";
+            vm.title = "新增元数据集";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -190,7 +190,7 @@ var vm = new Vue({
             }
             //
             vm.showList = false;
-            vm.title = "修改元数据";
+            vm.title = "修改元数据集";
 
             vm.getInfo(meteId);
             vm.getMenu();
