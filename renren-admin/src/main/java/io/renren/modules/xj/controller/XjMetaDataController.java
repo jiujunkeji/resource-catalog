@@ -148,28 +148,8 @@ public class XjMetaDataController {
         }else{
             return R.error("新增元数据前请指定分类!");
         }
-        /**
-         * 获取字典表的字段类型
-         */
-        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","data_type"));
-        xjMetaDataEntity.setDataType(sysDictEntity.getValue());
-        /**
-         * 获取字典表中的控件类型
-         */
-        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","control_type"));
-        xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
-        xjMetaDataEntity.setCnName(xjMetaData.getCnName());
-        xjMetaDataEntity.setEuName(xjMetaData.getEuName());
-        xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
-        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
-        xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
-        xjMetaDataEntity.setRange(xjMetaData.getRange());
-        xjMetaDataEntity.setRangeDescription(xjMetaData.getRangeDescription());
-        xjMetaDataEntity.setIsDisabled(xjMetaData.getIsDisabled());
-        xjMetaDataEntity.setCreateUserId(xjMetaData.getCreateUserId());
-        xjMetaDataEntity.setDataLength(xjMetaData.getDataLength());
-        xjMetaDataEntity.setCheckType(xjMetaData.getCheckType());
-        xjMetaDataEntity.setJudgeMandatory(xjMetaData.getJudgeMandatory());
+        xjMetaDataEntity.setDataType(xjMetaData.getDataType());
+        xjMetaDataEntity.setControlType(xjMetaData.getControlType());
         xjMetaDataEntity.setCreateDate(new Date());
         xjMetaDataEntity.setUpdateTime(new Date());
         xjMetaDataService.insert(xjMetaDataEntity);
@@ -190,13 +170,11 @@ public class XjMetaDataController {
         if(xjMetaData.getMeteCategoryId()!=null){
             xjMetaDataEntity.setMeteCategoryId(xjMetaData.getMeteCategoryId());
         }
-        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","data_type"));
-        xjMetaDataEntity.setDataType(sysDictEntity.getValue());
-        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getCode()).and().eq("type","control_type"));
-        xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
         xjMetaDataEntity.setUpdateTime(new Date());
         xjMetaDataEntity.setCnName(xjMetaData.getCnName());
         xjMetaDataEntity.setEuName(xjMetaData.getEuName());
+        xjMetaDataEntity.setDataType(xjMetaData.getDataType());
+        xjMetaDataEntity.setControlType(xjMetaData.getControlType());
         xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
         xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
         xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
