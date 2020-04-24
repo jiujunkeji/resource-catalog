@@ -139,20 +139,9 @@ public class XjMetaDataController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetadata:save")
     public R save(@RequestBody XjMetaDataEntity xjMetaData) {
-        XjMetaDataEntity xjMetaDataEntity=new XjMetaDataEntity();
-        /**
-         * 获取分类id
-         */
-        if(xjMetaData.getMeteCategoryId()!=null){
-            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getMeteCategoryId());
-        }else{
-            return R.error("新增元数据前请指定分类!");
-        }
-        xjMetaDataEntity.setDataType(xjMetaData.getDataType());
-        xjMetaDataEntity.setControlType(xjMetaData.getControlType());
-        xjMetaDataEntity.setCreateDate(new Date());
-        xjMetaDataEntity.setUpdateTime(new Date());
-        xjMetaDataService.insert(xjMetaDataEntity);
+        xjMetaData.setCreateDate(new Date());
+        xjMetaData.setUpdateTime(new Date());
+        xjMetaDataService.insert(xjMetaData);
         return R.ok();
     }
 
@@ -185,6 +174,7 @@ public class XjMetaDataController {
         xjMetaDataEntity.setDataLength(xjMetaData.getDataLength());
         xjMetaDataEntity.setCheckType(xjMetaData.getCheckType());
         xjMetaDataEntity.setJudgeMandatory(xjMetaData.getJudgeMandatory());
+        xjMetaDataEntity.setCreateUserId(xjMetaData.getCreateUserId());
         xjMetaDataService.updateById(xjMetaDataEntity);//全部更新
         
         return R.ok();
