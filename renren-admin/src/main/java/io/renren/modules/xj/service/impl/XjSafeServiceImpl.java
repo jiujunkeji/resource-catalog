@@ -39,7 +39,7 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
                 new Query<XjSafeEntity>(params).getPage(),
                 new EntityWrapper<XjSafeEntity>()
                         .eq(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
-                        .eq(StringUtils.isNotBlank(name),"catalog_name", name)
+                        .like(StringUtils.isNotBlank(name),"catalog_name", name)
                         .eq(StringUtils.isNotBlank(safeTypeCode),"safe_type_code", safeTypeCode)
                         .eq(StringUtils.isNotBlank(safeCode),"safe_code", safeCode)
                         .eq(StringUtils.isNotBlank(encryptCode),"encrypt_code", encryptCode)
