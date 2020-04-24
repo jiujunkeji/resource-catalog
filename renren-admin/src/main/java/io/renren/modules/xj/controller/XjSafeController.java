@@ -104,16 +104,19 @@ public class XjSafeController extends AbstractController{
     public R update(@RequestBody XjSafeEntity xjSafe){
         //判断安全级别是否小于上级
         XjCatalogEntity catalog = catalogService.selectById(xjSafe.getCatalogId());
-        XjSafeEntity parentSafe = xjSafeService.selectOne(
-                new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalog.getParentId())
-        );
-        if(parentSafe != null && parentSafe.getSafe() != null){
-            if(xjSafe.getSafeCode() > parentSafe.getSafeCode()){
-                return R.error("安全级别不能低于上级目录");
+        if(catalog.getParentId() != null && catalog.getParentId() != 0L){
+            XjSafeEntity parentSafe = xjSafeService.selectOne(
+                    new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalog.getParentId())
+            );
+            if(parentSafe != null && parentSafe.getSafe() != null){
+                if(xjSafe.getSafeCode() > parentSafe.getSafeCode()){
+                    return R.error("安全级别不能低于上级目录");
+                }
+            }else{
+                return R.error("请先设置上级目录安全等级");
             }
-        }else{
-            return R.error("请先设置上级目录安全等级");
         }
+
         //设置创建人
         xjSafe.setUpdateUserId(getUserId());
         xjSafe.setUpdateUser(getUser().getName());

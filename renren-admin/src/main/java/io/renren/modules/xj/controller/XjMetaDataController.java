@@ -10,8 +10,10 @@ import java.util.*;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.resource.utils.POIUtils;
+import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
+import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.xj.entity.XjMetaDataSetEntity;
 import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
@@ -55,11 +57,11 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("xj/xjmetadata")
-public class XjMetaDataController {
+public class XjMetaDataController extends AbstractController {
     @Autowired
     private XjMetaDataService xjMetaDataService;
     @Autowired
-    private SysDictService sysDictService;
+    private SysUserService sysUserService;
 
     @Autowired
     private XjMeteCategoryService xjMeteCategoryService;
@@ -139,20 +141,10 @@ public class XjMetaDataController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetadata:save")
     public R save(@RequestBody XjMetaDataEntity xjMetaData) {
-        XjMetaDataEntity xjMetaDataEntity=new XjMetaDataEntity();
-        /**
-         * 获取分类id
-         */
-        if(xjMetaData.getMeteCategoryId()!=null){
-            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getMeteCategoryId());
-        }else{
-            return R.error("新增元数据前请指定分类!");
-        }
-        xjMetaDataEntity.setDataType(xjMetaData.getDataType());
-        xjMetaDataEntity.setControlType(xjMetaData.getControlType());
-        xjMetaDataEntity.setCreateDate(new Date());
-        xjMetaDataEntity.setUpdateTime(new Date());
-        xjMetaDataService.insert(xjMetaDataEntity);
+        xjMetaData.setCreateDate(new Date());
+        xjMetaData.setUpdateTime(new Date());
+        xjMetaData.setCreateUserId(getUser().getUserId());
+        xjMetaDataService.insert(xjMetaData);
         return R.ok();
     }
 
@@ -162,6 +154,7 @@ public class XjMetaDataController {
     @RequestMapping("/update")
     //@RequiresPermissions("xj:xjmetadata:update")
     public R update(@RequestBody XjMetaDataEntity xjMetaData){
+
         XjMetaDataEntity xjMetaDataEntity=xjMetaDataService.selectOne(new EntityWrapper<XjMetaDataEntity>().eq("mete_id",xjMetaData.getMeteId()));
         ValidatorUtils.validateEntity(xjMetaDataEntity);
         /**
@@ -185,6 +178,7 @@ public class XjMetaDataController {
         xjMetaDataEntity.setDataLength(xjMetaData.getDataLength());
         xjMetaDataEntity.setCheckType(xjMetaData.getCheckType());
         xjMetaDataEntity.setJudgeMandatory(xjMetaData.getJudgeMandatory());
+        xjMetaDataEntity.setCreateUserId(getUser().getUserId());
         xjMetaDataService.updateById(xjMetaDataEntity);//全部更新
         
         return R.ok();
