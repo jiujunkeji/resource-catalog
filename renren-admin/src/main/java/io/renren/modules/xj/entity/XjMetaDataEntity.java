@@ -89,7 +89,7 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 创建用户id
 	 */
-	private Integer createUserId;
+	private Long createUserId;
 	/**
 	 * 创建日期
 	 */
@@ -290,18 +290,15 @@ public class XjMetaDataEntity implements Serializable {
 	public Long getMeteCategoryId() {
 		return meteCategoryId;
 	}
-	/**
-	 * 设置：创建用户id
-	 */
-	public void setCreateUserId(Integer createUserId) {
-		this.createUserId = createUserId;
-	}
-	/**
-	 * 获取：创建用户id
-	 */
-	public Integer getCreateUserId() {
+
+	public Long getCreateUserId() {
 		return createUserId;
 	}
+
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
+	}
+
 	/**
 	 * 设置：创建日期
 	 */
