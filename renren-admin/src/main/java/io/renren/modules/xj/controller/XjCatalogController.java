@@ -150,7 +150,9 @@ public class XjCatalogController extends AbstractController{
     //@RequiresPermissions("xj:xjcatalog:delete")
     public R delete(@RequestBody Long[] catalogIds){
         xjCatalogService.deleteBatchIds(Arrays.asList(catalogIds));
-
+        Map map = new HashMap();
+        map.put("catalogId",catalogIds);
+        safeService.deleteByMap(map);
         return R.ok();
     }
 
