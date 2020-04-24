@@ -54,7 +54,30 @@ public class XjSafeEntity implements Serializable {
 	 * 加密方式
 	 */
 	private String encrypt;
-
+	/**
+	 * createUserId
+	 */
+	private Long createUserId;
+	/**
+	 * createUser
+	 */
+	private String createUser;
+	/**
+	 * createTime
+	 */
+	private Date createTime;
+	/**
+	 * updateUserId
+	 */
+	private Long updateUserId;
+	/**
+	 * updateUser
+	 */
+	private String updateUser;
+	/**
+	 * updateTime
+	 */
+	private Date updateTime;
 	/**
 	 * 备注
 	 */
@@ -171,5 +194,53 @@ public class XjSafeEntity implements Serializable {
 
 	public void setSafeType(String safeType) {
 		this.safeType = safeType;
+	}
+
+	public Long getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Long getUpdateUserId() {
+		return updateUserId;
+	}
+
+	public void setUpdateUserId(Long updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+
+	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 }

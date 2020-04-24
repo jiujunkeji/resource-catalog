@@ -2,6 +2,7 @@ package io.renren.modules.xj.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.xj.entity.XjSafeEntity;
 
 import java.util.Map;
@@ -17,6 +18,6 @@ public interface XjSafeService extends IService<XjSafeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    XjSafeEntity setDefaultSafe(Long catalogId);
+    XjSafeEntity setDefaultSafe(Long catalogId, SysUserEntity user);
 }
 

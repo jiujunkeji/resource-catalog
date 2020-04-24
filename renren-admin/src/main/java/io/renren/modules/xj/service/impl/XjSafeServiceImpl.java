@@ -1,12 +1,15 @@
 package io.renren.modules.xj.service.impl;
 
 import io.renren.modules.sys.entity.SysDictEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.xj.entity.XjCatalogEntity;
 import io.renren.modules.xj.service.XjCatalogService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -27,18 +30,26 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
     private SysDictService dictService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String name = (String) params.get("name");
+        String safeTypeCode = (String) params.get("safeTypeCode");
+        String safeCode = (String) params.get("safeCode");
+        String encryptCode = (String) params.get("encryptCode");
         String catalogId = (String) params.get("catalogId");
         Page<XjSafeEntity> page = this.selectPage(
                 new Query<XjSafeEntity>(params).getPage(),
                 new EntityWrapper<XjSafeEntity>()
                         .eq(StringUtils.isNotBlank(catalogId),"catalog_id", catalogId)
+                        .eq(StringUtils.isNotBlank(name),"catalog_name", name)
+                        .eq(StringUtils.isNotBlank(safeTypeCode),"safe_type_code", safeTypeCode)
+                        .eq(StringUtils.isNotBlank(catalogId),"safe_code", safeCode)
+                        .eq(StringUtils.isNotBlank(catalogId),"encrypt_code", encryptCode)
         );
 
         return new PageUtils(page);
     }
 
     @Override
-    public XjSafeEntity setDefaultSafe(Long catalogId) {
+    public XjSafeEntity setDefaultSafe(Long catalogId, SysUserEntity user) {
         XjCatalogEntity xjCatalog = catalogService.selectById(catalogId);
 
         XjSafeEntity safeEntity = new XjSafeEntity();
@@ -71,6 +82,10 @@ public class XjSafeServiceImpl extends ServiceImpl<XjSafeDao, XjSafeEntity> impl
             safeEntity.setEncryptCode(1);
             safeEntity.setEncrypt("AES");
         }
+        //设置创建人
+        safeEntity.setCreateUserId(user.getUserId());
+        safeEntity.setCreateUser(user.getName());
+        safeEntity.setCreateTime(new Date());
         this.insert(safeEntity);
         return null;
     }
