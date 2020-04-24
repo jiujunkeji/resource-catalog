@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjMetaDataEntity;
+import io.renren.modules.xj.entity.XjMetaDataSetEntity;
 import io.renren.modules.xj.entity.XjMeteCategoryEntity;
+import io.renren.modules.xj.service.XjMetaDataSetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +36,8 @@ import io.renren.common.utils.R;
 public class XjMeteSetCategoryController {
     @Autowired
     private XjMeteSetCategoryService xjMeteSetCategoryService;
+    @Autowired
+    private XjMetaDataSetService xjMetaDataSetService;
 
     /**
      * 列表
@@ -126,7 +131,10 @@ public class XjMeteSetCategoryController {
     //@RequiresPermissions("xj:xjmetesetcategory:delete")
     public R delete(@RequestBody Long[] meteCategorySetIds){
         xjMeteSetCategoryService.deleteBatchIds(Arrays.asList(meteCategorySetIds));
-
+        List<XjMetaDataSetEntity> datasetList=xjMetaDataSetService.selectBatchIds(Arrays.asList(meteCategorySetIds));
+        if(datasetList.size()>0 && datasetList!=null){
+            return R.error("该分类下有关联的元数据集，请勿删除！，否则后果自负！");
+        }
         return R.ok();
     }
 

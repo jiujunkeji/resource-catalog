@@ -1,10 +1,12 @@
 package io.renren.modules.xj.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 元数据集表
@@ -54,7 +56,7 @@ public class XjMetaDataSetEntity implements Serializable {
 	/**
 	 * 创建用户id
 	 */
-	private Integer createUserId;
+	private Long createUserId;
 	/**
 	 * 创建日期
 	 */
@@ -63,6 +65,13 @@ public class XjMetaDataSetEntity implements Serializable {
 	 * 更新日期
 	 */
 	private Date updateTime;
+	/**
+	 * 元数据列表
+	 */
+	@TableField(exist = false)
+	private List<XjMetaDataEntity> meteDataList;
+	@TableField(exist = false)
+	private XjMeteSetCategoryEntity xjMeteSetCategoryEntity;
 
 	/**
 	 * 设置：主键
@@ -164,13 +173,13 @@ public class XjMetaDataSetEntity implements Serializable {
 	/**
 	 * 设置：创建用户id
 	 */
-	public void setCreateUserId(Integer createUserId) {
+	public void setCreateUserId(Long createUserId) {
 		this.createUserId = createUserId;
 	}
 	/**
 	 * 获取：创建用户id
 	 */
-	public Integer getCreateUserId() {
+	public Long getCreateUserId() {
 		return createUserId;
 	}
 	/**
@@ -196,5 +205,21 @@ public class XjMetaDataSetEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+	public List<XjMetaDataEntity> getMeteDataList() {
+		return meteDataList;
+	}
+
+	public void setMeteDataList(List<XjMetaDataEntity> meteDataList) {
+		this.meteDataList = meteDataList;
+	}
+
+	public XjMeteSetCategoryEntity getXjMeteSetCategoryEntity() {
+		return xjMeteSetCategoryEntity;
+	}
+
+	public void setXjMeteSetCategoryEntity(XjMeteSetCategoryEntity xjMeteSetCategoryEntity) {
+		this.xjMeteSetCategoryEntity = xjMeteSetCategoryEntity;
 	}
 }

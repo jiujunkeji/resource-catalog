@@ -42,12 +42,14 @@ public class XjMeteSetCategoryServiceImpl extends ServiceImpl<XjMeteSetCategoryD
             page = this.selectPage(new Query<XjMeteSetCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteSetCategoryEntity>().eq("meta_category_set_number", metaCategorySetNumber));
             return new PageUtils(page);
         } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaCategorySetNumber)) {
-            page = this.selectPage(new Query<XjMeteSetCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteSetCategoryEntity>().eq("name", name));
+            page = this.selectPage(new Query<XjMeteSetCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteSetCategoryEntity>().like("name", name));
             return new PageUtils(page);
         }else if(StringUtils.isBlank(metaCategorySetNumber) && StringUtils.isBlank(name)){
             return queryPage(params);
+        }else{
+            page = this.selectPage(new Query<XjMeteSetCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteSetCategoryEntity>().eq("meta_category_set_number", metaCategorySetNumber));
+            return new PageUtils(page);
         }
-        return new PageUtils(page);
     }
 
     @Override

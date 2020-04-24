@@ -7,6 +7,8 @@ import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjMetaDataEntity;
+import io.renren.modules.xj.service.XjMetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +34,8 @@ import io.renren.common.utils.R;
 public class XjMeteCategoryController {
     @Autowired
     private XjMeteCategoryService xjMeteCategoryService;
+    @Autowired
+    private XjMetaDataService xjMetaDataService;
 
     /**
      * 列表
@@ -150,8 +154,12 @@ public class XjMeteCategoryController {
     @RequestMapping("/delete")
     //@RequiresPermissions("xj:xjmetecategory:delete")
     public R delete(@RequestBody Long[] meteCategoryIds){
-        xjMeteCategoryService.deleteBatchIds(Arrays.asList(meteCategoryIds));
 
+        xjMeteCategoryService.deleteBatchIds(Arrays.asList(meteCategoryIds));
+        List<XjMetaDataEntity> dataList=xjMetaDataService.selectBatchIds(Arrays.asList(meteCategoryIds));
+        if(dataList.size()>0 && dataList!=null){
+            return R.error("该分类下有关联的元数据，请勿删除！，否则后果自负！");
+        }
         return R.ok();
     }
 

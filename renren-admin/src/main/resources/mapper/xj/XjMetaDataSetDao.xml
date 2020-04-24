@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="io.renren.modules.xj.dao.XjMetaDataSetDao">
-
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="io.renren.modules.xj.entity.XjMetaDataSetEntity" id="xjMetaDataSetMap">
         <result property="meteSetId" column="mete_set_id"/>
@@ -17,6 +16,5 @@
         <result property="createDate" column="create_date"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
-
 
 </mapper>

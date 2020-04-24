@@ -33,36 +33,40 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
     }
 
     @Override
-    public PageUtils searchFindByMeteDataNumberOrName(Map<String,Object> params)
-    {
-        String meteCategoryId=(String)params.get("meteCategoryId");
-        String meteNumber=(String)params.get("meteNumber");
-        String cnName=(String)params.get("cnName");
-        Page<XjMetaDataEntity> page =null;
-        if(StringUtils.isNotBlank(meteCategoryId)){
+    public PageUtils searchFindByMeteDataNumberOrName(Map<String,Object> params) {
+        String meteCategoryId = (String) params.get("meteCategoryId");
+        String meteNumber = (String) params.get("meteNumber");
+        String cnName = (String) params.get("cnName");
+        Page<XjMetaDataEntity> page = null;
+        if (StringUtils.isNotBlank(meteCategoryId)) {
             if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName).and().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(meteNumber)&&StringUtils.isBlank(cnName)){
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id",Long.valueOf(meteCategoryId)));
+            } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id", Long.valueOf(meteCategoryId)));
+                return new PageUtils(page);
+            } else {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             }
-        }else {
+        } else {
             if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
                 page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("cn_name", cnName));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(meteNumber)&&StringUtils.isBlank(cnName)){
+            } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
                 return queryPage(params);
+            } else {
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
+                return new PageUtils(page);
             }
         }
 
-        return new PageUtils(page);
     }
 
     @Override
