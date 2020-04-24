@@ -1,7 +1,9 @@
 package io.renren.modules.xj.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import io.renren.modules.sys.entity.SysDictEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -41,11 +43,13 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 数据类型
 	 */
-	private Integer dataType;
+	private String dataType;
 	/**
 	 * 控件类型
 	 */
 	private String controlType;
+
+
 	/**
 	 * 校验类型（0-不验证，1-验证）
 	 */
@@ -94,6 +98,13 @@ public class XjMetaDataEntity implements Serializable {
 	 * 更新日期
 	 */
 	private Date updateTime;
+
+	@TableField(exist = false)
+	private XjMeteCategoryEntity xjMeteCategoryEntity;
+
+	@TableField(exist = false)
+	private SysDictEntity sysDictEntity;
+
 
 	/**
 	 * 设置：编号
@@ -155,30 +166,23 @@ public class XjMetaDataEntity implements Serializable {
 	public String getEuShortName() {
 		return euShortName;
 	}
-	/**
-	 * 设置：数据类型
-	 */
-	public void setDataType(Integer dataType) {
-		this.dataType = dataType;
-	}
-	/**
-	 * 获取：数据类型
-	 */
-	public Integer getDataType() {
+
+	public String getDataType() {
 		return dataType;
 	}
-	/**
-	 * 设置：控件类型
-	 */
-	public void setControlType(String controlType) {
-		this.controlType = controlType;
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
 	}
-	/**
-	 * 获取：控件类型
-	 */
+
 	public String getControlType() {
 		return controlType;
 	}
+
+	public void setControlType(String controlType) {
+		this.controlType = controlType;
+	}
+
 	/**
 	 * 设置：校验类型（0-不验证，1-验证）
 	 */
@@ -322,5 +326,24 @@ public class XjMetaDataEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+
+
+
+	public XjMeteCategoryEntity getXjMeteCategoryEntity() {
+		return xjMeteCategoryEntity;
+	}
+
+	public void setXjMeteCategoryEntity(XjMeteCategoryEntity xjMeteCategoryEntity) {
+		this.xjMeteCategoryEntity = xjMeteCategoryEntity;
+	}
+
+	public SysDictEntity getSysDictEntity() {
+		return sysDictEntity;
+	}
+
+	public void setSysDictEntity(SysDictEntity sysDictEntity) {
+		this.sysDictEntity = sysDictEntity;
 	}
 }

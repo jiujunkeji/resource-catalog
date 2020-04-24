@@ -9,9 +9,15 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
-import io.renren.modules.resource.entity.ResourceFieldEntity;
 import io.renren.modules.resource.utils.POIUtils;
-import io.renren.modules.xj.entity.XjMeteCategoryEntity;
+import io.renren.modules.sys.entity.SysDictEntity;
+import io.renren.modules.sys.service.SysDictService;
+import io.renren.modules.xj.entity.XjMetaDataSetEntity;
+import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
+import io.renren.modules.xj.service.XjMetaDataSetService;
+import io.renren.modules.xj.service.XjMeteCategoryService;
+import io.renren.modules.xj.service.XjMeteSetVersionService;
+import io.renren.modules.xj.service.impl.XjMeteCategoryServiceImpl;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -22,7 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +57,12 @@ import javax.servlet.http.HttpSession;
 public class XjMetaDataController {
     @Autowired
     private XjMetaDataService xjMetaDataService;
+    @Autowired
+    private SysDictService sysDictService;
+
+    @Autowired
+    private XjMeteCategoryService xjMeteCategoryService;
+
 
     /**
      * 列表
@@ -127,11 +138,41 @@ public class XjMetaDataController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetadata:save")
-    public R save(@RequestBody XjMetaDataEntity xjMetaData){
-        xjMetaData.setCreateDate(new Date());
-        xjMetaData.setUpdateTime(new Date());
-        xjMetaDataService.insert(xjMetaData);
-
+    public R save(@RequestBody XjMetaDataEntity xjMetaData) {
+        XjMetaDataEntity xjMetaDataEntity=new XjMetaDataEntity();
+        /**
+         * 获取分类id
+         */
+        if(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId()!=null){
+            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId());
+        }else{
+            return R.error("新增元数据前请指定分类!");
+        }
+        /**
+         * 获取字典表的字段类型
+         */
+        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","data_type"));
+        xjMetaDataEntity.setDataType(sysDictEntity.getValue());
+        /**
+         * 获取字典表中的控件类型
+         */
+        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","control_type"));
+        xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
+        xjMetaDataEntity.setCnName(xjMetaData.getCnName());
+        xjMetaDataEntity.setEuName(xjMetaData.getEuName());
+        xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
+        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
+        xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
+        xjMetaDataEntity.setRange(xjMetaData.getRange());
+        xjMetaDataEntity.setRangeDescription(xjMetaData.getRangeDescription());
+        xjMetaDataEntity.setIsDisabled(xjMetaData.getIsDisabled());
+        xjMetaDataEntity.setCreateUserId(xjMetaData.getCreateUserId());
+        xjMetaDataEntity.setDataLength(xjMetaData.getDataLength());
+        xjMetaDataEntity.setCheckType(xjMetaData.getCheckType());
+        xjMetaDataEntity.setJudgeMandatory(xjMetaData.getJudgeMandatory());
+        xjMetaDataEntity.setCreateDate(new Date());
+        xjMetaDataEntity.setUpdateTime(new Date());
+        xjMetaDataService.insert(xjMetaDataEntity);
         return R.ok();
     }
 
@@ -141,8 +182,32 @@ public class XjMetaDataController {
     @RequestMapping("/update")
     //@RequiresPermissions("xj:xjmetadata:update")
     public R update(@RequestBody XjMetaDataEntity xjMetaData){
-        ValidatorUtils.validateEntity(xjMetaData);
-        xjMetaDataService.updateAllColumnById(xjMetaData);//全部更新
+        XjMetaDataEntity xjMetaDataEntity=xjMetaDataService.selectOne(new EntityWrapper<XjMetaDataEntity>().eq("mete_id",xjMetaData.getMeteId()));
+        ValidatorUtils.validateEntity(xjMetaDataEntity);
+        /**
+         * 获取分类id
+         */
+        if(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId()!=null){
+            xjMetaDataEntity.setMeteCategoryId(xjMetaData.getXjMeteCategoryEntity().getMeteCategoryId());
+        }
+        SysDictEntity sysDictEntity= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","data_type"));
+        xjMetaDataEntity.setDataType(sysDictEntity.getValue());
+        SysDictEntity sysDictEntity2= sysDictService.selectOne(new EntityWrapper<SysDictEntity>().eq("code",xjMetaData.getSysDictEntity().getCode()).and().eq("type","control_type"));
+        xjMetaDataEntity.setControlType(sysDictEntity2.getValue());
+        xjMetaDataEntity.setUpdateTime(new Date());
+        xjMetaDataEntity.setCnName(xjMetaData.getCnName());
+        xjMetaDataEntity.setEuName(xjMetaData.getEuName());
+        xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
+        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
+        xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
+        xjMetaDataEntity.setRange(xjMetaData.getRange());
+        xjMetaDataEntity.setRangeDescription(xjMetaData.getRangeDescription());
+        xjMetaDataEntity.setIsDisabled(xjMetaData.getIsDisabled());
+        xjMetaDataEntity.setCreateUserId(xjMetaData.getCreateUserId());
+        xjMetaDataEntity.setDataLength(xjMetaData.getDataLength());
+        xjMetaDataEntity.setCheckType(xjMetaData.getCheckType());
+        xjMetaDataEntity.setJudgeMandatory(xjMetaData.getJudgeMandatory());
+        xjMetaDataService.updateById(xjMetaDataEntity);//全部更新
         
         return R.ok();
     }
@@ -219,15 +284,15 @@ public class XjMetaDataController {
             if (POIUtils.getCellValue(row.getCell(3)) != null) {
                 String dtf = (POIUtils.getCellValue(row.getCell(3)));
                 if (dtf.equals("整型")){
-                    xjMetaDataEntity.setDataType(0);
+                    xjMetaDataEntity.setDataType("整型");
                 }else if (dtf.equals("实型")){
-                    xjMetaDataEntity.setDataType(1);
+                    xjMetaDataEntity.setDataType("实型");
                 }else if (dtf.equals("布尔型")){
-                    xjMetaDataEntity.setDataType(2);
-                }else if (dtf.equals("字符串")){
-                    xjMetaDataEntity.setDataType(3);
+                    xjMetaDataEntity.setDataType("布尔型");
+                }else if (dtf.equals("字符型")){
+                    xjMetaDataEntity.setDataType("字符型");
                 }else if (dtf.equals("日期")){
-                    xjMetaDataEntity.setDataType(4);
+                    xjMetaDataEntity.setDataType("日期");
                 }
             }
             if (POIUtils.getCellValue(row.getCell(4)) != null) {
@@ -308,15 +373,15 @@ public class XjMetaDataController {
                     cell.setCellValue(t.getEuName());
                 }else if(i == 3){
                     if (t.getDataType() != null){
-                        if (t.getDataType() == 0){
-                            cell.setCellValue("整形");
-                        }else if (t.getDataType() == 1){
+                        if (t.getDataType().equals("整型")){
+                            cell.setCellValue("整型");
+                        }else if (t.getDataType().equals("实型")){
                             cell.setCellValue("实型");
-                        }else if (t.getDataType() == 2){
+                        }else if (t.getDataType().equals("布尔型")){
                             cell.setCellValue("布尔型");
-                        }else if (t.getDataType() == 3){
-                            cell.setCellValue("字符串");
-                        }else if (t.getDataType() == 4){
+                        }else if (t.getDataType().equals("字符型")){
+                            cell.setCellValue("字符型");
+                        }else if (t.getDataType().equals("日期")){
                             cell.setCellValue("日期");
                         }
                     }
