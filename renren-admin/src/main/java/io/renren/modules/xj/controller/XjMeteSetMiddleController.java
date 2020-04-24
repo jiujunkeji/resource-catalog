@@ -12,33 +12,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
-import io.renren.modules.xj.service.XjMeteSetVersionService;
+import io.renren.modules.xj.entity.XjMeteSetMiddleEntity;
+import io.renren.modules.xj.service.XjMeteSetMiddleService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
 
 
 /**
- * 元数据集变更版本表
+ * 元数据与元数据集的中间表
  *
  * @author wangdehai
  * @email 594340717@qq.com
  * @date 2020-04-24 10:54:31
  */
 @RestController
-@RequestMapping("xj/xjmetesetversion")
-public class XjMeteSetVersionController {
+@RequestMapping("xj/xjmetesetmiddle")
+public class XjMeteSetMiddleController {
     @Autowired
-    private XjMeteSetVersionService xjMeteSetVersionService;
+    private XjMeteSetMiddleService xjMeteSetMiddleService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
-    //@RequiresPermissions("xj:xjmetesetversion:list")
+    //@RequiresPermissions("xj:xjmetesetmiddle:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = xjMeteSetVersionService.queryPage(params);
+        PageUtils page = xjMeteSetMiddleService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -48,20 +48,20 @@ public class XjMeteSetVersionController {
      * 信息
      */
     @RequestMapping("/info/{versionId}")
-    //@RequiresPermissions("xj:xjmetesetversion:info")
+    //@RequiresPermissions("xj:xjmetesetmiddle:info")
     public R info(@PathVariable("versionId") Long versionId){
-        XjMeteSetVersionEntity xjMeteSetVersion = xjMeteSetVersionService.selectById(versionId);
+        XjMeteSetMiddleEntity xjMeteSetMiddle = xjMeteSetMiddleService.selectById(versionId);
 
-        return R.ok().put("xjMeteSetVersion", xjMeteSetVersion);
+        return R.ok().put("xjMeteSetMiddle", xjMeteSetMiddle);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    //@RequiresPermissions("xj:xjmetesetversion:save")
-    public R save(@RequestBody XjMeteSetVersionEntity xjMeteSetVersion){
-        xjMeteSetVersionService.insert(xjMeteSetVersion);
+    //@RequiresPermissions("xj:xjmetesetmiddle:save")
+    public R save(@RequestBody XjMeteSetMiddleEntity xjMeteSetMiddle){
+        xjMeteSetMiddleService.insert(xjMeteSetMiddle);
 
         return R.ok();
     }
@@ -70,10 +70,10 @@ public class XjMeteSetVersionController {
      * 修改
      */
     @RequestMapping("/update")
-    //@RequiresPermissions("xj:xjmetesetversion:update")
-    public R update(@RequestBody XjMeteSetVersionEntity xjMeteSetVersion){
-        ValidatorUtils.validateEntity(xjMeteSetVersion);
-        xjMeteSetVersionService.updateAllColumnById(xjMeteSetVersion);//全部更新
+    //@RequiresPermissions("xj:xjmetesetmiddle:update")
+    public R update(@RequestBody XjMeteSetMiddleEntity xjMeteSetMiddle){
+        ValidatorUtils.validateEntity(xjMeteSetMiddle);
+        xjMeteSetMiddleService.updateAllColumnById(xjMeteSetMiddle);//全部更新
         
         return R.ok();
     }
@@ -82,9 +82,9 @@ public class XjMeteSetVersionController {
      * 删除
      */
     @RequestMapping("/delete")
-    //@RequiresPermissions("xj:xjmetesetversion:delete")
+    //@RequiresPermissions("xj:xjmetesetmiddle:delete")
     public R delete(@RequestBody Long[] versionIds){
-        xjMeteSetVersionService.deleteBatchIds(Arrays.asList(versionIds));
+        xjMeteSetMiddleService.deleteBatchIds(Arrays.asList(versionIds));
 
         return R.ok();
     }

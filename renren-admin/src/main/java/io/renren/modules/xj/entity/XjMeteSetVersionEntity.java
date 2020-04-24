@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author wangdehai
  * @email 594340717@qq.com
- * @date 2020-04-23 17:29:47
+ * @date 2020-04-24 10:54:31
  */
 @TableName("xj_mete_set_version")
 public class XjMeteSetVersionEntity implements Serializable {
@@ -53,7 +53,7 @@ public class XjMeteSetVersionEntity implements Serializable {
 	/**
 	 * 创建用户id
 	 */
-	private Integer createUserId;
+	private Long createUserId;
 	/**
 	 * 创建日期
 	 */
@@ -162,13 +162,13 @@ public class XjMeteSetVersionEntity implements Serializable {
 	/**
 	 * 设置：创建用户id
 	 */
-	public void setCreateUserId(Integer createUserId) {
+	public void setCreateUserId(Long createUserId) {
 		this.createUserId = createUserId;
 	}
 	/**
 	 * 获取：创建用户id
 	 */
-	public Integer getCreateUserId() {
+	public Long getCreateUserId() {
 		return createUserId;
 	}
 	/**
