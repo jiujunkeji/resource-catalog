@@ -457,7 +457,7 @@ var vm = new Vue({
         delUp:function () {
             var list = []
             vm.checkIdList1.forEach(function (item) {
-                list.push(item.fieldId)
+                list.push(item.meteId)
             })
             console.log(list);
             if(list.length == 0){
@@ -697,6 +697,10 @@ var vm = new Vue({
         },
         // 禁用
         closeC:function () {
+            var list = []
+            vm.checkIdList.forEach(function (item) {
+                list.push(item.meteId)
+            })
             if(vm.checkIdList.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -709,7 +713,7 @@ var vm = new Vue({
                         url: baseURL + 'xj/xjmetadata/updateDisabledState',
                         contentType: "application/json",
                         // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
+                        data: JSON.stringify(list),
                         success: function(r){
                             console.log(r);
                             if(r.code == 0){
@@ -727,6 +731,10 @@ var vm = new Vue({
         },
         // 启用
         openC:function () {
+            var list = []
+            vm.checkIdList.forEach(function (item) {
+                list.push(item.meteId)
+            })
             if(vm.checkIdList.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -739,7 +747,7 @@ var vm = new Vue({
                         url: baseURL + 'xj/xjmetadata/updateEnabledState',
                         contentType: "application/json",
                         // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
+                        data: JSON.stringify(list),
                         success: function(r){
                             console.log(r);
                             if(r.code == 0){

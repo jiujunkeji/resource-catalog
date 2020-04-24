@@ -41,7 +41,10 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            name:''
+            name:'',
+            safeTypeCode:'',
+            safe:'',
+            encryptCode:''
         },
         showList: true,
         title: null,
@@ -84,6 +87,10 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
+        safeLevelList:[],
+        encryptMethodList:[],
+        safeTypeList:[]
+
     },
     watch: {
         filterText:function(val) {
@@ -192,7 +199,7 @@ var vm = new Vue({
                 parentName:''
             };
             vm.getMenu();
-            vm.getMenu1();
+            // vm.getMenu1();
             vm.getComList();
 
         },
@@ -205,11 +212,12 @@ var vm = new Vue({
             vm.title = "修改目录安全设置";
             vm.getInfo(catalogId);
             vm.getMenu();
-            vm.getMenu1();
-            vm.getComList();
+            // vm.getMenu1();
+            // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
+            console.log(vm.resourceMeteData.catalogId == '');
+            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjsafe/save" : "xj/xjsafe/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -224,7 +232,7 @@ var vm = new Vue({
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         console.log('失败')
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -236,7 +244,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "xj/xjcatalog/delete",
+                    url: baseURL + "xj/xjsafe/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -252,10 +260,10 @@ var vm = new Vue({
             });
         },
         getInfo: function(catalogId){
-            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
+            $.get(baseURL + "xj/xjsafe/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.xjCatalog;
-                vm.resourceMeteData.parentId = 0;
+                vm.resourceMeteData = r.xjSafe;
+                // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
@@ -463,7 +471,11 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name
+                    name:this.q.name,
+                    safeTypeCode:this.q.safeTypeCode,
+                    safeCode:this.q.safeCode,
+                    encryptCode:this.q.encryptCode,
+                    catalogId:this.catalogId
                 },
                 success: function(r){
                     console.log(r);
@@ -497,7 +509,7 @@ var vm = new Vue({
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
                 vm.catalogId = data.id;
-                vm.q.name = data.name;
+                // vm.q.name = data.name;
                 vm.getTableList();
             }
 
@@ -798,12 +810,36 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList1 = selection;
         },
+        // 数据字典
+        dictClick:function (type) {
+            $.ajax({
+                type: "get",
+                url: baseURL + "sys/dict/selectDict",
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    type:type
+                },
+                success: function(r){
+                    console.log(r);
+                    if(type == 'safe_level'){
+                        vm.safeLevelList = r;
+                    }else if(type == 'encrypt_method'){
+                        vm.encryptMethodList =r;
+                    }else if(type == 'safe_type'){
+                        vm.safeTypeList =r;
+                    }
+                }
+            });
+        },
 
     },
     created:function () {
         this.getMenuList();
         this.getTableList();
-
+        this.dictClick('safe_level');
+        this.dictClick('encrypt_method');
+        this.dictClick('safe_type');
         // this.h = height
     }
 });
