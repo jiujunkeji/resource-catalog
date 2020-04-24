@@ -19,7 +19,7 @@ public interface XjMeteCategoryDao extends BaseMapper<XjMeteCategoryEntity> {
     /**
      * 元数据分类搜索(可根据分类编号或者分类名称)
      */
-    PageUtils searchFindByMeteCategoryNumberOrName(Map<String, Object> params);
+    PageUtils searchFindByMeteCategoryNumberOrName(String metaCategoryNumber,String name);
 
     /**
      * 元数据分类启用

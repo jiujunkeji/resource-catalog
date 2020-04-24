@@ -33,18 +33,16 @@ public class XjMeteCategoryServiceImpl extends ServiceImpl<XjMeteCategoryDao, Xj
     }
 
     @Override
-    public PageUtils searchFindByMeteCategoryNumberOrName(Map<String, Object> params) {
-        String metaCategoryNumber = (String) params.get("metaCategoryNumber");
-        String name = (String) params.get("name");
+    public PageUtils searchFindByMeteCategoryNumberOrName(String metaCategoryNumber,String name) {
         Page<XjMeteCategoryEntity> page =null;
         if (StringUtils.isNotBlank(metaCategoryNumber) && StringUtils.isBlank(name)) {
-            page = this.selectPage(new Query<XjMeteCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("meta_category_number", metaCategoryNumber));
+            page = this.selectPage(new Query<XjMeteCategoryEntity>(null).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("meta_category_number", metaCategoryNumber));
             return new PageUtils(page);
         } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(metaCategoryNumber)) {
-            page = this.selectPage(new Query<XjMeteCategoryEntity>(params).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("name", name));
+            page = this.selectPage(new Query<XjMeteCategoryEntity>(null).getPage(), new EntityWrapper<XjMeteCategoryEntity>().eq("name", name));
             return new PageUtils(page);
         }else if(StringUtils.isBlank(name) && StringUtils.isBlank(metaCategoryNumber)){
-            return  queryPage(params);
+            return  queryPage(null);
         }
         return new PageUtils(page);
     }
