@@ -76,10 +76,9 @@ public class XjMetaDataSetController extends AbstractController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("xj:xjmetadataset:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = xjMetaDataSetService.queryPage(params);
-
-        return R.ok().put("page", page);
+    public List<XjMetaDataSetEntity> list(@RequestParam Map<String, Object> params){
+        List<XjMetaDataSetEntity> list = xjMetaDataSetService.selectList(null);
+        return list;
     }
 
     /**
@@ -113,6 +112,40 @@ public class XjMetaDataSetController extends AbstractController {
         return R.ok().put("xjMetaDataSet", xjMetaDataSet);
     }
 
+
+
+    /**
+     * 元数据集的历史版本查询
+     */
+    @RequestMapping("/historyInfo/{meteSetId}")
+    //@RequiresPermissions("xj:xjmetadataset:info")
+    public R historyInfo(@PathVariable("meteSetId") Long meteSetId){
+        //先对历史版本进行判断
+        List<XjMeteSetMiddleVersionEntity> hList= xjMeteSetMiddleVersionService.selectList(new EntityWrapper<XjMeteSetMiddleVersionEntity>().eq("mete_set_id",meteSetId));
+        if(hList.size()>0&&hList!=null) {
+           return R.ok().put("hList",hList);
+        }else {
+            List<XjMeteSetMiddleEntity> curList = xjMeteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id", meteSetId));
+            if (curList != null && curList.size() > 0) {
+                return R.ok().put("hList", curList);
+            }
+        }
+        return R.ok();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 保存
      */
@@ -122,11 +155,17 @@ public class XjMetaDataSetController extends AbstractController {
         /**
          * 保存元数据集的想换信息
          */
+        XjMetaDataSetEntity xjMetaDataSetEntity=new XjMetaDataSetEntity();
+        xjMetaDataSetEntity.setMeteCategorySetId(xjMetaDataSet.getMeteCategorySetId());
+        xjMetaDataSetEntity.setCnName(xjMetaDataSet.getCnName());
+        xjMetaDataSetEntity.setEuName(xjMetaDataSet.getEuName());
+        xjMetaDataSetEntity.setEuShortName(xjMetaDataSet.getEuShortName());
+        xjMetaDataSetEntity.setReviewState(xjMetaDataSet.getReviewState());
         xjMetaDataSet.setCurrentVersion("v1.0");
         xjMetaDataSet.setCreateDate(new Date());
         xjMetaDataSet.setUpdateTime(new Date());
         xjMetaDataSet.setCreateUserId(getUser().getUserId());
-        xjMetaDataSetService.insert(xjMetaDataSet);
+        xjMetaDataSetService.insert(xjMetaDataSetEntity);
         /**
          * 之后遍历元数据集下的元数据的信息，然后将元数据集与元数据的信息保存到中间表
          */
