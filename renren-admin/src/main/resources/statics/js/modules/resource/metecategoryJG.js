@@ -550,8 +550,15 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-
-                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
+                        console.log('jin')
+                        vm.checkIdList2.forEach(function (item,i) {
+                            vm.resourceMeteData.meteDataList.push(item);
+                        })
+                    }else {
+                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    }
+                    // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);
                 },
@@ -564,15 +571,16 @@ var vm = new Vue({
         delUp:function () {
             var arr =[];
             vm.checkIdList1.forEach(function (item,i) {
-                vm.resourceMeteData.xjMeteSetCategoryEntity.forEach(function (m,n) {
+                vm.resourceMeteData.meteDataList.forEach(function (m,n) {
                     if(m.meteId == item.meteId){
                         arr.push(n);
                         return
                     }
                 })
             })
+            console.log(arr);
             arr.forEach(function (item) {
-                vm.resourceMeteData.xjMeteSetCategoryEntity.splice(item,1)
+                vm.resourceMeteData.meteDataList.splice(item,1)
             })
 
         },

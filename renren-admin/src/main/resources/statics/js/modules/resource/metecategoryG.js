@@ -772,7 +772,7 @@ var vm = new Vue({
         // 获取历史版本
         getHist:function (id) {
             var _this = this;
-            $.get(baseURL + "xj/xjmetadataset/historyInfo/"+id, function(r){
+            $.get(baseURL + "xj/xjmetadata/historyInfo/"+id, function(r){
                 console.log(r);
                 if(r.hList.length == 0){
                     _this.$message({
