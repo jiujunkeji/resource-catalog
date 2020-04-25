@@ -5,6 +5,8 @@ import java.util.*;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.resource.entity.MeteCategoryEntity;
+import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
@@ -47,6 +49,8 @@ public class XjCatalogController extends AbstractController{
     private XjSafeService safeService;
     @Autowired
     private XjCatalogAuditService auditService;
+    @Autowired
+    private MeteCategoryService meteCategoryService;
     /**
      * 目录列表
      */
@@ -122,6 +126,9 @@ public class XjCatalogController extends AbstractController{
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjcatalog:save")
     public R save(@RequestBody XjCatalogEntity xjCatalog){
+        MeteCategoryEntity category = meteCategoryService.selectById(xjCatalog.getCategoryId());
+        xjCatalog.setCategoryCode(category.getCode());
+        xjCatalog.setCategoryName(category.getName());
         xjCatalog.setCreateUserId(getUserId());
         xjCatalog.setCreateUserName(getUser().getName());
         xjCatalog.setCreateTime(new Date());
@@ -141,6 +148,9 @@ public class XjCatalogController extends AbstractController{
     @RequestMapping("/update")
     //@RequiresPermissions("xj:xjcatalog:update")
     public R update(@RequestBody XjCatalogEntity xjCatalog){
+        MeteCategoryEntity category = meteCategoryService.selectById(xjCatalog.getCategoryId());
+        xjCatalog.setCategoryCode(category.getCode());
+        xjCatalog.setCategoryName(category.getName());
         xjCatalog.setUpdateTime(new Date());
         xjCatalogService.updateById(xjCatalog);
         return R.ok();

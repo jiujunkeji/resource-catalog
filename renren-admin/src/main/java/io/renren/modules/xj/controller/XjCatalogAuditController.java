@@ -1,8 +1,11 @@
 package io.renren.modules.xj.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,16 @@ public class XjCatalogAuditController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 列表
+     */
+    @RequestMapping("/getList")
+    //@RequiresPermissions("xj:xjcatalogaudit:list")
+    public List<XjCatalogAuditEntity> getList(@RequestParam Long catalogId){
+        List<XjCatalogAuditEntity> list = new ArrayList();
+        list = xjCatalogAuditService.selectList(new EntityWrapper<XjCatalogAuditEntity>().eq("catalog_id",catalogId));
+        return list;
+    }
 
     /**
      * 信息
