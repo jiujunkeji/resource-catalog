@@ -16,12 +16,8 @@ import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.sys.service.SysUserService;
-import io.renren.modules.xj.entity.XjMetaDataSetEntity;
-import io.renren.modules.xj.entity.XjMeteCategoryEntity;
-import io.renren.modules.xj.entity.XjMeteSetVersionEntity;
-import io.renren.modules.xj.service.XjMetaDataSetService;
-import io.renren.modules.xj.service.XjMeteCategoryService;
-import io.renren.modules.xj.service.XjMeteSetVersionService;
+import io.renren.modules.xj.entity.*;
+import io.renren.modules.xj.service.*;
 import io.renren.modules.xj.service.impl.XjMeteCategoryServiceImpl;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
@@ -40,8 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.renren.modules.xj.entity.XjMetaDataEntity;
-import io.renren.modules.xj.service.XjMetaDataService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +61,16 @@ public class XjMetaDataController extends AbstractController {
 
     @Autowired
     private XjMeteCategoryService xjMeteCategoryService;
+
+    /**
+     * 中间表
+     */
+    @Autowired
+    private XjMeteSetMiddleService xjMeteSetMiddleService;
+    /**
+     * 中间表的版本表
+     */
+    private XjMeteSetMiddleVersionService xjMeteSetMiddleVersionService;
 
 
     /**
@@ -136,6 +140,28 @@ public class XjMetaDataController extends AbstractController {
         XjMetaDataEntity xjMetaData = xjMetaDataService.selectById(meteId);
         return R.ok().put("xjMetaData", xjMetaData);
     }
+
+    /**
+     * 元数据集的历史版本查询
+     */
+    @RequestMapping("/historyInfo/{meteId}")
+    //@RequiresPermissions("xj:xjmetadataset:info")
+    public R historyInfo(@PathVariable("meteId") Long meteId){
+        //先对历史版本进行判断
+        //不为空返回历史版本记录信息
+        List<XjMeteSetMiddleVersionEntity> hList= xjMeteSetMiddleVersionService.selectList(new EntityWrapper<XjMeteSetMiddleVersionEntity>().eq("mete_id",meteId));
+        if(hList.size()>0&&hList!=null) {
+            return R.ok().put("hList",hList);
+        }else {
+            //为空返回当前版本记录信息
+            List<XjMeteSetMiddleEntity> curList = xjMeteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_id", meteId));
+            if (curList != null && curList.size() > 0) {
+                return R.ok().put("hList", curList);
+            }
+        }
+        return R.ok();
+    }
+
 
     /**
      * 保存
