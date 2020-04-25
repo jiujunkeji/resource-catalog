@@ -44,10 +44,15 @@ public class XjMeteSetCategoryController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("xj:xjmetesetcategory:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = xjMeteSetCategoryService.queryPage(params);
-
-        return R.ok().put("page", page);
+    public List<XjMeteSetCategoryEntity> list(@RequestParam Map<String, Object> params){
+        List<XjMeteSetCategoryEntity> list = xjMeteSetCategoryService.selectList(null);
+        for(XjMeteSetCategoryEntity meteSetCategoryEntity : list){
+            XjMeteSetCategoryEntity parentEntity = xjMeteSetCategoryService.selectById(meteSetCategoryEntity.getParentId());
+            if(parentEntity != null){
+                meteSetCategoryEntity.setParentName(parentEntity.getName());
+            }
+        }
+        return list;
     }
 
     /**
