@@ -23,7 +23,8 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         q: {
-            name:''
+            name:'',
+            metaCategorySetNumber:''
         },
 		showList: true,
 		title: null,
@@ -60,7 +61,10 @@ var vm = new Vue({
         // 表格选中方法
         toggleSelection:function(selection) {
             console.log(selection);
-            vm.checkIdList = selection;
+            vm.checkIdList = [];
+            selection.forEach(function(item,i){
+                vm.checkIdList.push(item.meteCategorySetId)
+            })
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -127,11 +131,7 @@ var vm = new Vue({
 			};
             vm.getMenu();
 		},
-		update: function (event) {
-			var meteCategoryId = getMeteCategoryId();
-			if(meteCategoryId == null){
-				return ;
-			}
+		update: function (id) {
             layer.open({
                 type: 1,
                 title: '新增',
@@ -153,14 +153,14 @@ var vm = new Vue({
 			vm.showList = false;
             vm.title = "修改";
             
-            vm.getInfo(meteCategoryId);
+            vm.getInfo(id);
             vm.getMenu();
 		},
 		saveOrUpdate: function (event) {
             if(vm.validator()){
                 return ;
             }
-			var url = vm.meteCategory.meteCategoryId == null ? "resource/metecategory/save" : "resource/metecategory/update";
+			var url = vm.meteCategory.meteCategorySetId == null ? "xj/xjmetesetcategory/save" : "xj/xjmetesetcategory/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -177,35 +177,39 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var meteCategoryIds = getMeteCategoryId();
-			console.log(meteCategoryIds);
-			if(meteCategoryIds == null){
-				return ;
-			}
+			// var meteCategoryIds = getMeteCategoryId();
+            if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else{
+                layer.confirm('确定要删除选中的记录？', function(index1){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "xj/xjmetesetcategory/delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            if(r.code == 0){
+                                vm.reload();
+                                layer.close(index1);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
-            layer.confirm('确定要删除选中的记录？', function(index1){
-				$.ajax({
-					type: "POST",
-				    url: baseURL + "resource/metecategory/delete",
-                    contentType: "application/json",
-				    data: JSON.stringify(meteCategoryIds),
-				    success: function(r){
-						if(r.code == 0){
-                            vm.reload();
-                            layer.close(index1);
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+                });
+            }
 
 
-						}else{
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-						}
-					}
-				});
-			});
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "resource/metecategory/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.meteCategory;
+			$.get(baseURL + "xj/xjmetesetcategory/info/"+meteCategoryId, function(r){
+                vm.meteCategory = r.xjMeteSetCategory;
                 console.log('修改')
                 console.log(vm.meteCategory)
             });
@@ -225,21 +229,22 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetecategory/queryList',
+                url: baseURL + 'xj/xjmetesetcategory/queryList',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-
+                    name:this.q.name,
+                    metaCategorySetNumber:this.q.metaCategorySetNumber,
                 },
                 success: function(r){
                     console.log(r);
-                    // if(r.code === 0){
-                    //     vm.tableList = r.page.list;
-                    //     vm.totalPage = r.page.totalCount;
-                    // }else{
-                    //     alert(r.msg);
-                    // }
+                    if(r.code === 0){
+                        vm.tableList = r.page.list;
+                        vm.totalPage = r.page.totalCount;
+                    }else{
+                        alert(r.msg);
+                    }
                 }
             });
         },
@@ -249,7 +254,68 @@ var vm = new Vue({
             vm.page = currentPage;
             vm.getTableList();
         },
-        //
+        //启用
+        openC:function () {
+            if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                layer.confirm('确定要启动选中的分类？', function(index31){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetesetcategory/updateEnabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index31);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+
+                        }
+                    });
+                })
+            }
+
+
+        },
+        // 禁用
+        closeC:function () {
+            if(vm.checkIdList.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                layer.confirm('确定要禁用选中的分类？', function(index32){
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetesetcategory/updateDisabledState',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify(vm.checkIdList),
+                        success: function(r){
+                            console.log(r);
+                            if(r.code == 0){
+                                layer.close(index32);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                vm.getTableList();
+                            }else {
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+                })
+            }
+
+        }
 	},
 	created:function () {
 	    this.getTableList();

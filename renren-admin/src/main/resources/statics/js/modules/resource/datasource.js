@@ -24,7 +24,7 @@ var vm = new Vue({
 	data:{
         q: {
             name:'',
-            metaCategoryNumber:null,
+            type:''
         },
 		showList: true,
 		title: null,
@@ -39,6 +39,7 @@ var vm = new Vue({
         open:true,
         openText:'展开筛选',
         h:0,
+        comList:[]
 	},
 	methods: {
 		query: function () {
@@ -63,12 +64,25 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList = [];
             selection.forEach(function(item,i){
-                vm.checkIdList.push(item.meteCategoryId)
+                vm.checkIdList.push(item.meteCategorySetId)
             })
-            console.log(vm.checkIdList);
-
         },
-
+        getMenu: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "resource/metecategory/list", function(r){
+                console.log(r);
+                // r.push({
+                //     parentId:-1,
+                //     meteCategoryId:0,
+                //     name:'一级目录'
+                // })
+                ztree = $.fn.zTree.init($("#menuTree"), setting, r);
+                var node = ztree.getNodeByParam("meteCategoryId", vm.meteCategory.parentId);
+                ztree.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
         menuTree: function(){
             layer.open({
                 type: 1,
@@ -96,7 +110,7 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '560px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
@@ -116,25 +130,21 @@ var vm = new Vue({
                 parentId:null,
                 parentName:''
 			};
+            // vm.getMenu();
 		},
 		update: function (id) {
-			var meteCategoryId = id;
-			if(meteCategoryId == null){
-				return ;
-			}
             layer.open({
                 type: 1,
-                title: '修改',
+                title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '560px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
                     vm.saveOrUpdate();
                     layer.close(index);
-
                 },
                 btn2:function () {
                     vm.reload();
@@ -144,13 +154,12 @@ var vm = new Vue({
 			vm.showList = false;
             vm.title = "修改";
             
-            vm.getInfo(meteCategoryId);
+            vm.getInfo(id);
+            // vm.getMenu();
 		},
 		saveOrUpdate: function (event) {
-            if(vm.validator()){
-                return ;
-            }
-			var url = vm.meteCategory.meteCategoryId == null ? "xj/xjmetecategory/save" : "xj/xjmetecategory/update";
+
+			var url = vm.meteCategory.meteCategorySetId == null ? "xj/xjdatasource/save" : "xj/xjdatasource/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -167,6 +176,7 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
+			// var meteCategoryIds = getMeteCategoryId();
             if(vm.checkIdList.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -176,7 +186,7 @@ var vm = new Vue({
                 layer.confirm('确定要删除选中的记录？', function(index1){
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "xj/xjmetecategory/delete",
+                        url: baseURL + "xj/xjdatasource/delete",
                         contentType: "application/json",
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
@@ -194,12 +204,12 @@ var vm = new Vue({
                 });
             }
 
+
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "xj/xjmetecategory/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.xjMeteCategory;
-                console.log('修改');
-                console.log(r);
+			$.get(baseURL + "xj/xjdatasource/info/"+meteCategoryId, function(r){
+                vm.meteCategory = r.xjMeteSetCategory;
+                console.log('修改')
                 console.log(vm.meteCategory)
             });
 		},
@@ -218,17 +228,16 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetecategory/queryList',
+                url: baseURL + 'xj/xjdatasource/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name,
-                    metaCategoryNumber:this.q.metaCategoryNumber,
+                    dsNam:this.q.name,
+                    dsType:this.q.type,
                 },
                 success: function(r){
                     console.log(r);
-                    // vm.tableList = r;
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
@@ -244,71 +253,30 @@ var vm = new Vue({
             vm.page = currentPage;
             vm.getTableList();
         },
-        //启用
-        openC:function () {
-		    if(vm.checkIdList.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
-            }else {
-                layer.confirm('确定要启动选中的分类？', function(index31){
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetecategory/updateEnabledState',
-                        contentType: "application/json",
-                        // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
-                        success: function(r){
-                            console.log(r);
-                            if(r.code == 0){
-                                layer.close(index31);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                                vm.getTableList();
-                            }else {
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
-
-                        }
-                    });
-                })
-            }
-
-
-        },
-        // 禁用
-        closeC:function () {
-		    if(vm.checkIdList.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
-            }else {
-                layer.confirm('确定要禁用选中的分类？', function(index32){
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetecategory/updateDisabledState',
-                        contentType: "application/json",
-                        // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
-                        success: function(r){
-                            console.log(r);
-                            if(r.code == 0){
-                                layer.close(index32);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                                vm.getTableList();
-                            }else {
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
-                        }
-                    });
-                })
-            }
-
+        // 获取部门
+        getBumen:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/organisationinfo/select',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:1,
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.comList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
         }
 	},
 	created:function () {
 	    this.getTableList();
+	    this.getBumen();
         // $.get(baseURL + "resource/metecategory/list", function(r){
         //     console.log(r);
         // });

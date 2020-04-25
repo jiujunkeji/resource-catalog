@@ -76,7 +76,8 @@ var vm = new Vue({
         comList:[],
         fenlSelect:[],
         controlTypeList:[],
-        dataTypeList:[]
+        dataTypeList:[],
+        id:1
     },
     watch: {
         filterText:function(val) {
@@ -647,36 +648,7 @@ var vm = new Vue({
         },
         // 导出
         outUp:function () {
-
-            if(vm.checkIdList.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
-            }else {
-                var list = []
-                vm.checkIdList.forEach(function (item) {
-                    list.push(item.meteId)
-                })
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + "xj/xjmetadata/downField",
-                    contentType: "application/json",
-                    // dataType: 'json',
-                    data: JSON.stringify(list),
-                    success: function(r){
-                        if(r.code == 0){
-                            // layer.close(index);
-                            // vm.getFileTableList();
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
-                        }else{
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }
-                    }
-                });
-                // window.location.href = baseURL + "xj/xjmetadata/downField/"+list
-            }
-
+            window.location.href = baseURL + "xj/xjmetadata/downField/"+vm.id
         },
         // 下载模版
         downUp:function () {

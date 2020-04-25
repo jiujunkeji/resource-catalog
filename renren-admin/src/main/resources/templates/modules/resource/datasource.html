@@ -31,6 +31,12 @@
                 z-index:100000000!important;
                 width: 193px;
             }
+            .el-select{
+                width: 100%;
+            }
+            .el-input__inner{
+                height: 34px;
+            }
         </style>
         </head>
 <body>
@@ -48,11 +54,11 @@
         </div>
         <div class="switchIn">
             <span>
-                <label>分类编号：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.metaCategorySetNumber" >
+                <label>数据源类型：</label>
+                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >
             </span>
             <span>
-                <label>分类名称：</label>
+                <label>数据源名称：</label>
                 <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >
             </span>
         </div>
@@ -71,15 +77,13 @@
                     <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
                 </#if>
                 <!--<#if shiro.hasPermission("resource:metecategory:update")>-->
-                    <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
-                    <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+                <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
+                <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
                 <!--</#if>-->
                 <#if shiro.hasPermission("resource:metecategory:delete")>
                     <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
                     <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
                 </#if>
-                <el-button size="medium" type="primary" @click="openC">启用</el-button>&nbsp;&nbsp;
-                <el-button size="medium" type="primary" @click="closeC">禁用</el-button>&nbsp;&nbsp;
             </div>
         </div>
         <el-table
@@ -93,18 +97,33 @@
                     width="40">
             </el-table-column>
             <el-table-column
-                    prop="metaCategorySetNumber"
-                    label="分类编号"
+                    prop="dsNam"
+                    label="数据源名称"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="name"
-                    label="分类名称"
+                    prop="dsType"
+                    label="数据源类型"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="sortSetCode"
-                    label="排序码"
+                    prop="dsDepartment"
+                    label="部门"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsLinetype"
+                    label="连接类型"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsIpname"
+                    label="主机名"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsPort"
+                    label="端口号"
                     width="130">
             </el-table-column>
             <el-table-column
@@ -159,28 +178,46 @@
         <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">分类编码</div>
+                <div class="col-sm-2 control-label">数据源名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.metaCategorySetNumber" placeholder="分类编码"/>
+                    <input type="text" class="form-control" v-model="meteCategory.dsNam" placeholder="数据源名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">分类名称</div>
+                <div class="col-sm-2 control-label">数据源类型</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.name" placeholder="分类名称"/>
+                    <el-select v-model="meteCategory.dsType" placeholder="请选择">
+                        <el-option
+                                key="0"
+                                label="国产数据库"
+                                value="国产数据库">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="数据文件"
+                                value="数据文件">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-2 control-label">排序码</div>
+                <div class="col-sm-2 control-label">部门</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.sortSetCode" placeholder="排序码"/>
+                    <el-select v-model="meteCategory.dsDepartment" placeholder="请选择">
+                        <el-option
+                                v-for="item in comList"
+                                :key="item.organisationId"
+                                :label="item.organisationName"
+                                :value="item.organisationId">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">是否禁用</div>
+                <div class="col-sm-2 control-label">连接类型</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.isDisabled" placeholder="请选择">
+                    <el-select v-model="meteCategory.dsLinetype" placeholder="请选择">
                         <el-option
                                 key="0"
                                 label="否"
@@ -194,6 +231,25 @@
                     </el-select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">主机名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsIpname" placeholder="主机名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">主机IP</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsIp" placeholder="主机IP"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">端口号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsPort" placeholder="端口号"/>
+                </div>
+            </div>
         </form>
     </div>
 
@@ -204,6 +260,6 @@
 
 </div>
 
-<script src="${request.contextPath}/statics/js/modules/resource/metecategoryJ.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/datasource.js?_${.now?long}"></script>
 </body>
 </html>

@@ -49,14 +49,14 @@ public class XjDataSourceEntity implements Serializable {
 	/**
 	 * 端口号
 	 */
-	private Integer port;
+	private Integer dsPort;
 
 	public Integer getPort() {
-		return port;
+		return dsPort;
 	}
 
 	public void setPort(Integer port) {
-		this.port = port;
+		this.dsPort = port;
 	}
 
 	/**
