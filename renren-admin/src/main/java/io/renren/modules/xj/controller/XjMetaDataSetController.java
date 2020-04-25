@@ -52,6 +52,8 @@ public class XjMetaDataSetController extends AbstractController {
     private XjMetaDataSetService xjMetaDataSetService;
     @Autowired
     private XjMetaDataService xjMetaDataService;
+    @Autowired
+    private XjMeteSetCategoryService xjMeteSetCategoryService;
     /**
      * 元数据集版本的
      */
@@ -352,7 +354,7 @@ public class XjMetaDataSetController extends AbstractController {
 
         List<XjMetaDataSetEntity> fieldList =xjMetaDataSetService.selectList(new EntityWrapper<XjMetaDataSetEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
-            String[] headers = {"编号", "中文名称", "英文名称", "状态"};
+            String[] headers = {"编号", "中文名称", "英文名称","英文短名","分类名称","当前版本","状态","创建人","创建日期","更新日期"};
             String fileName = "元数据集字段";
             exportExcel(headers, fieldList, fileName, response, request, session);
         }
@@ -400,8 +402,23 @@ public class XjMetaDataSetController extends AbstractController {
                 }else if(i == 2){
                     cell.setCellValue(t.getEuName());
                 }else if(i == 3){
+                    cell.setCellValue(t.getEuShortName());
+                }else if(i == 4){
+                    XjMeteSetCategoryEntity xjMeteSetCategoryEntity=xjMeteSetCategoryService.selectOne(new EntityWrapper<XjMeteSetCategoryEntity>().eq("mete_category_set_id",t.getMeteCategorySetId()));
+                    cell.setCellValue(xjMeteSetCategoryEntity.getName());
+                } else if(i == 5){
+                    cell.setCellValue(t.getCurrentVersion());
+                }else if(i == 6){
                     cell.setCellValue(t.getReviewState());
+                }else if(i == 7){
+                    cell.setCellValue(t.getCreateUserId());
+                }else if(i == 8){
+                    cell.setCellValue(t.getCreateDate());
+                }else if(i == 9){
+                    cell.setCellValue(t.getUpdateTime());
                 }
+
+
             }
         }
         getExportedFile(workbook, fileName, response, request, session);
