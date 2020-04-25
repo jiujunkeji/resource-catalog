@@ -37,7 +37,7 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	/**
 	 * 元数据的英文短名
 	 */
-	private String meteEuame;
+	private String meteEname;
 	/**
 	 * 元数据的数据类型
 	 */
@@ -73,7 +73,7 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	/**
 	 * 元数据集的英文名称
 	 */
-	private String meteSetEuame;
+	private String meteSetEname;
 	/**
 	 * 元数据集的编号
 	 */
@@ -154,17 +154,21 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	public String getMeteCname() {
 		return meteCname;
 	}
-	/**
-	 * 设置：元数据的英文短名
-	 */
-	public void setMeteEuame(String meteEuame) {
-		this.meteEuame = meteEuame;
+
+	public String getMeteEname() {
+		return meteEname;
 	}
-	/**
-	 * 获取：元数据的英文短名
-	 */
-	public String getMeteEuame() {
-		return meteEuame;
+
+	public void setMeteEname(String meteEname) {
+		this.meteEname = meteEname;
+	}
+
+	public String getMeteSetEname() {
+		return meteSetEname;
+	}
+
+	public void setMeteSetEname(String meteSetEname) {
+		this.meteSetEname = meteSetEname;
 	}
 
 	public Integer getMeteDataType() {
@@ -259,18 +263,7 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	public String getMeteSetCname() {
 		return meteSetCname;
 	}
-	/**
-	 * 设置：元数据集的英文名称
-	 */
-	public void setMeteSetEuame(String meteSetEuame) {
-		this.meteSetEuame = meteSetEuame;
-	}
-	/**
-	 * 获取：元数据集的英文名称
-	 */
-	public String getMeteSetEuame() {
-		return meteSetEuame;
-	}
+
 	/**
 	 * 设置：元数据集的编号
 	 */

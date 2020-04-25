@@ -142,7 +142,7 @@ public class XjMetaDataController extends AbstractController {
     }
 
     /**
-     * 元数据集的历史版本查询
+     * 元数据的历史版本查询
      */
     @RequestMapping("/historyInfo/{meteId}")
     //@RequiresPermissions("xj:xjmetadataset:info")
