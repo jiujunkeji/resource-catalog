@@ -84,7 +84,9 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
-        look:false
+        look:false,
+        yuanshujuList:[],
+        ysjjList:[]
     },
     watch: {
         filterText:function(val) {
@@ -194,6 +196,7 @@ var vm = new Vue({
             vm.getMenu();
             vm.getMenu1();
             vm.getComList();
+            vm.getysjjList();
         },
         update: function (id) {
             var catalogId = id;
@@ -208,6 +211,7 @@ var vm = new Vue({
             vm.getMenu();
             vm.getMenu1();
             vm.getComList();
+            vm.getysjjList();
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
@@ -256,6 +260,7 @@ var vm = new Vue({
             $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
                 console.log(r);
                 vm.resourceMeteData = r.xjCatalog;
+                vm.getyuanshujuList(vm.resourceMeteData.meteSetId);
                 // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
@@ -267,8 +272,15 @@ var vm = new Vue({
             vm.look = false;
         },
         // 查看
-        lookC:function () {
+        lookC:function (id) {
             vm.look = true;
+            vm.showList = false;
+            vm.title = "目录详情";
+
+            vm.getMenu();
+            vm.getMenu1();
+            vm.getComList();
+            vm.getInfo(id);
         },
         validator: function () {
             if(isBlank(vm.resourceCatalog.name)){
@@ -505,9 +517,9 @@ var vm = new Vue({
                 console.log('进来了')
                 vm.catalogId = data.id;
                 if(data.name == '资源目录'){
-                    vm.q.name = data.name;
-                }else {
                     vm.q.name = '';
+                }else {
+                    vm.q.name = data.name;
                 }
                 vm.getTableList();
             }
@@ -580,6 +592,19 @@ var vm = new Vue({
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
+                }
+            });
+        },
+        // 获取元数据集
+        getysjjList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetadataset/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                success: function(r){
+                    console.log(r);
+                    vm.ysjjList = r
                 }
             });
         },
@@ -809,7 +834,15 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList1 = selection;
         },
-
+        // 获取元数据列表
+        getyuanshujuList:function(id){
+            console.log(id)
+            $.get(baseURL + "xj/xjmetadataset/info/"+id, function(r){
+                console.log(r);
+                vm.yuanshujuList = r.xjMetaDataSet.meteDataList;
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+        }
     },
     created:function () {
         this.getMenuList();

@@ -179,10 +179,6 @@
                         @selection-change="toggleSelection"
                         style="width: 100%">
                     <el-table-column
-                            type="selection"
-                            width="40">
-                    </el-table-column>
-                    <el-table-column
                             prop="meteSetNumber"
                             label="编号"
                             width="">
@@ -347,7 +343,7 @@
                 </div>
             </div>
             <el-table
-                    :data="resourceMeteData.xjMeteSetCategoryEntity"
+                    :data="resourceMeteData.meteDataList"
                     border
                     stripe
                     @selection-change="toggleSelection1"
@@ -377,27 +373,28 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop=""
-                        label="数据类型"
-                        width="">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.dataType == 0">整型</span>
-                        <span v-if="scope.row.dataType == 1">实型</span>
-                        <span v-if="scope.row.dataType == 2">布尔型</span>
-                        <span v-if="scope.row.dataType == 3">字符串</span>
-                        <span v-if="scope.row.dataType == 4">日期</span>
-                    </template>
+                        prop="updateTime"
+                        label="更新时间"
+                        width="110">
                 </el-table-column>
                 <el-table-column
-                        prop="dataLength"
-                        label="数据长度"
-                        width="">
-                </el-table-column>
-                <el-table-column
-                        label="操作"
-                        width="80">
+                        label="是否禁用"
+                        width="90">
                     <template slot-scope="scope">
-                        <i class="el-icon-edit" @click="editUp(scope.row.fieldId)"></i>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 0"
+                                size="small"
+                                type="success"
+                                effect="dark">
+                            否
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 1"
+                                size="small"
+                                type="danger"
+                                effect="dark">
+                            是
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -515,7 +512,88 @@
     </div>
 
     <!--历史版本-->
-    <div id="hisList" class="panel panel-default" style="display: none;"></div>
+    <div id="hisList" class="panel panel-default" style="display: none;">
+        <el-table
+                :data="hisList"
+                border
+                stripe
+                @selection-change="toggleSelection"
+                style="width: 100%">
+            <el-table-column
+                    prop="versionNumber"
+                    label="版本号"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="meteSetNumber"
+                    label="编号"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="cnName"
+                    label="中文名称"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="euName"
+                    label="英文名称"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="euShortName"
+                    label="英文短名"
+                    width="110">
+            </el-table-column>
+            <el-table-column
+                    prop="createDate"
+                    label="创建时间"
+                    width="110">
+            </el-table-column>
+            <el-table-column
+                    label="状态"
+                    width="90">
+                <template slot-scope="scope">
+                    <el-tag
+                            v-if="scope.row.reviewState == 0"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        待提交
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 1"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        待审核
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 2"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        通过
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 3"
+                            size="small"
+                            type="danger"
+                            effect="dark">
+                        未通过
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="center"
+                    header-align="center"
+                    width="100">
+                <template slot-scope="scope">
+                    <i class="el-icon-refresh" @click="update(scope.row.meteSetId)" title="撤回"></i>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
 
     <!-- 选择上级菜单 -->
     <div id="menuLayer" style="display: none;padding:10px;">
