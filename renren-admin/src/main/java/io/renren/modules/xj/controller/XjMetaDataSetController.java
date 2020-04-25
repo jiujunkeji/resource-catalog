@@ -102,12 +102,14 @@ public class XjMetaDataSetController extends AbstractController {
     public R info(@PathVariable("meteSetId") Long meteSetId){
         XjMetaDataSetEntity xjMetaDataSet = xjMetaDataSetService.selectById(meteSetId);
         List<XjMeteSetMiddleEntity> aList= xjMeteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",meteSetId));
-        Set<Long> meteIds =new HashSet<>();
-        for(XjMeteSetMiddleEntity a:aList){
-            meteIds.add(a.getMeteId());
+        if(aList.size()>0&&aList!=null) {
+            Set<Long> meteIds = new HashSet<>();
+            for (XjMeteSetMiddleEntity a : aList) {
+                meteIds.add(a.getMeteId());
+            }
+            List<XjMetaDataEntity> meteDataList = xjMetaDataService.selectBatchIds(meteIds);
+            xjMetaDataSet.setMeteDataList(meteDataList);
         }
-        List<XjMetaDataEntity> meteDataList = xjMetaDataService.selectBatchIds(meteIds);
-        xjMetaDataSet.setMeteDataList(meteDataList);
         return R.ok().put("xjMetaDataSet", xjMetaDataSet);
     }
 
