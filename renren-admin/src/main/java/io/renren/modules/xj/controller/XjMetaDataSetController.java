@@ -121,16 +121,9 @@ public class XjMetaDataSetController extends AbstractController {
     //@RequiresPermissions("xj:xjmetadataset:info")
     public R historyInfo(@PathVariable("meteSetId") Long meteSetId){
         //先对历史版本进行判断
-        List<XjMeteSetVersionEntity> hList= xjMeteSetVersionService.selectList(new EntityWrapper<XjMeteSetVersionEntity>().eq("mete_set_id",meteSetId));
-        if(hList.size()>0&&hList!=null) {
-           return R.ok().put("hList",hList);
-        }else {
-            List<XjMeteSetMiddleEntity> curList = xjMeteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id", meteSetId));
-            if (curList != null && curList.size() > 0) {
-                return R.ok().put("hList", curList);
-            }
-        }
-        return R.ok();
+        List<XjMeteSetVersionEntity> hList= new ArrayList<>();
+        hList= xjMeteSetVersionService.selectList(new EntityWrapper<XjMeteSetVersionEntity>().eq("mete_set_id",meteSetId));
+        return R.ok().put("hList",hList);
     }
 
 
