@@ -31,11 +31,14 @@
                 z-index:100000000!important;
                 width: 193px;
             }
-            .el-select{
+            .el-select,.el-autocomplete{
                 width: 100%;
             }
             .el-input__inner{
                 height: 34px;
+            }
+            .el-autocomplete-suggestion{
+                z-index:100000000!important;
             }
         </style>
         </head>
@@ -186,18 +189,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">数据源类型</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.dsType" placeholder="请选择">
-                        <el-option
-                                key="0"
-                                label="国产数据库"
-                                value="国产数据库">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="数据文件"
-                                value="数据文件">
-                        </el-option>
-                    </el-select>
+                    <el-autocomplete
+                            class="inline-input"
+                            v-model="meteCategory.dsType"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入内容"
+                            @select="handleSelect"
+                    ></el-autocomplete>
                 </div>
             </div>
 
@@ -220,13 +218,18 @@
                     <el-select v-model="meteCategory.dsLinetype" placeholder="请选择">
                         <el-option
                                 key="0"
-                                label="否"
-                                :value="0">
+                                label="Native(JDBC)"
+                                value="Native(JDBC)">
                         </el-option>
                         <el-option
                                 key="1"
-                                label="是"
-                                :value="1">
+                                label="ODBC"
+                                value="ODBC">
+                        </el-option>
+                        <el-option
+                                key="2"
+                                label="JNDI"
+                                value="JNDI">
                         </el-option>
                     </el-select>
                 </div>

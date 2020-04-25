@@ -253,16 +253,21 @@
                     <el-table-column
                             fixed="right"
                             label="操作"
+                            v-if="tab != 0"
                             align="center"
                             header-align="center"
-                            width="120">
+                            width="170">
                         <template slot-scope="scope">
                             <!--<el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">提交</el-button>-->
-                            <el-button v-if="tab == 0" type="text" @click="agree(scope.row.meteId)">通过</el-button>
-                            <span v-if="tab == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                            <el-button v-if="tab == 0" type="text" @click="refuse(scope.row.meteId)">拒绝</el-button>
-                            <el-button v-if="tab == 1" type="text" @click="push(scope.row.meteId)">发布</el-button>
-                            <el-button v-if="tab == 2" type="text" @click="stopPush(scope.row.meteId)">停止发布</el-button>
+                            <i class="el-icon-edit" @click="update(scope.row.catalogId)" v-if="tab == 3" title="编辑"></i>
+                            <el-button v-if="tab == 1" type="text" @click="agree(scope.row.catalogId)">通过</el-button>
+                            <span v-if="tab == 1 || tab == 3" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <el-button v-if="tab == 1" type="text" @click="refuse(scope.row.catalogId)">拒绝</el-button>
+                            <el-button v-if="tab == 2" type="text" @click="push(scope.row.catalogId)">发布</el-button>
+                            <el-button v-if="tab == 4" type="text" @click="stopPush(scope.row.catalogId)">停止发布</el-button>
+                            <i class="el-icon-document" @click="getoptionList(scope.row.catalogId)" v-if="tab == 3" title="审核记录"></i>
+                            <span v-if="tab == 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <el-button v-if="tab == 1" type="text" @click="revoke(scope.row.catalogId)">撤回</el-button>
 
                         </template>
                     </el-table-column>
@@ -280,6 +285,47 @@
             </div>
         </div>
     </div>
+
+    <div id="refuseDiv" class="panel panel-default" style="display: none">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">审核意见</div>
+                <div class="col-sm-10">
+                    <el-input
+                            type="textarea"
+                            :rows="2"
+                            placeholder="审核意见"
+                            v-model="auditOpinion">
+                    </el-input>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="shenheList" class="panel panel-default" style="display: none">
+        <el-table
+                :data="optionList"
+                border
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="catalogName"
+                    label="审核时间"
+                    width="140">
+            </el-table-column>
+            <el-table-column
+                    prop="organisationName"
+                    label="审核人"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="parentName"
+                    label="审核意见"
+                    width="">
+            </el-table-column>
+        </el-table>
+    </div>
+
 </div>
 <script src="${request.contextPath}/statics/js/modules/resource/catalogueAuditRelease.js"></script>
 </body>

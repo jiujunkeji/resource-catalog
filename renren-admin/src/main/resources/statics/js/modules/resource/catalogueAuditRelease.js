@@ -68,7 +68,9 @@ var vm = new Vue({
         pageSize:10,
         tab:0,
         catalogId:null,
-        checkIdList:[]
+        checkIdList:[],
+        auditOpinion:'',
+        optionList:[]
     },
     watch: {
         filterText:function(val) {
@@ -91,19 +93,23 @@ var vm = new Vue({
             if (!value) return true;
             return data.name.indexOf(value) !== -1;
         },
-        // 获取树目录列表
+        // 树结构目录获取
         getMenuList: function (event) {
-            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+            $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
+                console.log(r.length);
+                console.log(vm.menuList);
+                vm.menuList = [];
                 var _len=0;
-                for(var i = 1;i<100;i++){
+                for(var i = 1;i<10;i++){
                     if(i == 1){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(1111);
                         r.forEach(function (item) {
                             if(item.parentId == 0){
                                 vm.menuList.push({
-                                    name:item.name,
+                                    name:item.catalogName,
                                     id:item.catalogId,
                                     list:[]
                                 })
@@ -112,13 +118,14 @@ var vm = new Vue({
                         })
                     }else if(i == 2){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(222);
                         vm.menuList.forEach(function (item) {
                             r.forEach(function (n) {
                                 if(n.parentId == item.id){
                                     item.list.push({
-                                        name:n.name,
+                                        name:n.catalogName,
                                         id:n.catalogId,
                                         list:[]
                                     })
@@ -128,14 +135,14 @@ var vm = new Vue({
                         })
                     }else if(i == 3){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
                                 r.forEach(function (n) {
                                     if(n.parentId == i.id){
                                         i.list.push({
-                                            name:n.name,
+                                            name:n.catalogName,
                                             id:n.catalogId,
                                             list:[]
                                         })
@@ -147,7 +154,7 @@ var vm = new Vue({
                         })
                     }else if(i == 4){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -155,7 +162,7 @@ var vm = new Vue({
                                     r.forEach(function (n) {
                                         if(n.parentId == j.id){
                                             j.list.push({
-                                                name:n.name,
+                                                name:n.catalogName,
                                                 id:n.catalogId,
                                                 list:[]
                                             })
@@ -168,7 +175,7 @@ var vm = new Vue({
                         })
                     }else if(i == 5){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -177,7 +184,7 @@ var vm = new Vue({
                                         r.forEach(function (n) {
                                             if(n.parentId == m.id){
                                                 m.list.push({
-                                                    name:n.name,
+                                                    name:n.catalogName,
                                                     id:n.catalogId,
                                                     list:[]
                                                 })
@@ -191,7 +198,7 @@ var vm = new Vue({
                         })
                     }else if(i == 6){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -201,7 +208,7 @@ var vm = new Vue({
                                             r.forEach(function (n) {
                                                 if(n.parentId == x.id){
                                                     x.list.push({
-                                                        name:n.name,
+                                                        name:n.catalogName,
                                                         id:n.catalogId,
                                                         list:[]
                                                     })
@@ -217,16 +224,15 @@ var vm = new Vue({
                     }
 
                 }
-
+                console.log(vm.menuList);
                 var _list = [{
-                    name:'全部',
+                    name:'资源目录',
                     id:null,
                     list:[]
                 }]
                 _list[0].list = vm.menuList;
-
                 vm.menuList = _list;
-                console.log(vm.menuList);
+                // console.log(_list);
             });
         },
         // 获取表格列表
@@ -307,7 +313,7 @@ var vm = new Vue({
             }else {
                 $.ajax({
                     type: "post",
-                    url: baseURL + 'resource/resourcemetedata/submit',
+                    url: baseURL + 'xj/xjcatalog/submit',
                     contentType: "application/json",
                     // dataType: 'json',
                     data: JSON.stringify(list),
@@ -325,16 +331,44 @@ var vm = new Vue({
             }
 
         },
+        // 撤回
+        revoke:function (id) {
+
+            layer.confirm('确定要撤回该条记录？', function(index){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + 'xj/xjcatalog/revoke',
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data: {
+                        catalogId:id
+                    },
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.tab = 0;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            });
+
+
+        },
         // 通过方法
         agree:function (id) {
             $.ajax({
-                type: "get",
-                url: baseURL + 'resource/resourcemetedata/agree',
-                // contentType: "application/json",
-                dataType: 'json',
+                type: "post",
+                url: baseURL + 'xj/xjcatalog/agree',
+                contentType: "application/json",
+                // dataType: 'json',
                 data: {
-                    meteId:id
+                    catalogId:id
                 },
+                // data:JSON.stringify([id]),
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
@@ -350,40 +384,60 @@ var vm = new Vue({
         },
         // 拒绝
         refuse:function (id) {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'resource/resourcemetedata/refuse',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    meteId:id
+            layer.open({
+                type: 1,
+                title: '审核意见',
+                content: $('#refuseDiv'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '260px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    $.ajax({
+                        type: "get",
+                        url: baseURL + 'xj/xjcatalog/refuse',
+                        // contentType: "application/json",
+                        dataType: 'json',
+                        data: {
+                            catalogId:id,
+                            auditOpinion:vm.auditOpinion
+                        },
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.tab = 3;
+                                vm.page = 1;
+                                vm.getTableList();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+
                 },
-                success: function(r){
-                    if(r.code === 0){
-                        // vm.tab = 1;
-                        // vm.page = 1;
-                        vm.getTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }
+                btn2:function () {
+                    // layer.close(index);
+                    vm.getTableList();
                 }
-            });
+
+            })
 
         },
         // 发布
         push:function (id) {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/push',
+                url: baseURL + 'xj/xjcatalog/push',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    meteId:id
+                    catalogId:id
                 },
                 success: function(r){
                     if(r.code === 0){
-                        vm.tab = 2;
+                        vm.tab = 4;
                         vm.page = 1;
                         vm.getTableList();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -395,22 +449,61 @@ var vm = new Vue({
         },
         // 停止发布
         stopPush:function (id) {
+            layer.confirm('确定要停止发布该条记录？', function(index){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + 'xj/xjcatalog/stopPush',
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data: {
+                        catalogId:id
+                    },
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.tab = 2;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            })
+
+        },
+        // 获取审核记录
+        getoptionList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/stopPush',
+                url: baseURL + 'xj/xjcatalog/stopPush',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    meteId:id
+                    catalogId:id
                 },
                 success: function(r){
                     if(r.code === 0){
-                        vm.tab = 1;
-                        vm.page = 1;
-                        vm.getTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.open({
+                            type: 1,
+                            title: '审核记录',
+                            content: $('#shenheList'), //这里content是一个普通的String
+                            skin: 'openClass',
+                            area: ['562px', '460px'],
+                            shadeClose: true,
+                            closeBtn:0,
+                            btn: ['关闭'],
+                            btn1:function (index) {
+
+
+                            },
+                            btn2:function () {
+                                // layer.close(index);
+                                vm.getTableList();
+                            }
+
+                        })
                     }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });

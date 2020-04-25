@@ -29,8 +29,7 @@ var vm = new Vue({
 		showList: true,
 		title: null,
 		meteCategory: {
-            parentId:null,
-            parentName:''
+
 		},
         tableList:[],
         totalPage:0,
@@ -39,7 +38,8 @@ var vm = new Vue({
         open:true,
         openText:'展开筛选',
         h:0,
-        comList:[]
+        comList:[],
+        restaurants: [],
 	},
 	methods: {
 		query: function () {
@@ -127,8 +127,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-                parentId:null,
-                parentName:''
+
 			};
             // vm.getMenu();
 		},
@@ -272,6 +271,38 @@ var vm = new Vue({
                     }
                 }
             });
+        },
+        querySearch:function(queryString, cb) {
+		    console.log(queryString);
+            var restaurants = this.restaurants;
+            var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+            console.log(results);
+        },
+        createFilter:function(queryString) {
+            return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        loadAll:function () {
+            return [
+                {'value':'GBase'},
+                {'value':'mysql'},
+                {'value':'xml'},
+                {'value':'Excel'},
+                {'value':'txt'},
+                {'value':'WebServices'},
+                {'value':'Teradata'},
+                {'value':'Hive'},
+                {'value':'GlusterFS'},
+                {'value':'HBase'},
+                {'value':'Greenplum'},
+                {'value':'Vertica'},
+            ]
+        },
+        handleSelect:function(item) {
+            console.log(item);
         }
 	},
 	created:function () {
@@ -280,6 +311,9 @@ var vm = new Vue({
         // $.get(baseURL + "resource/metecategory/list", function(r){
         //     console.log(r);
         // });
+    },
+    mounted:function() {
+        this.restaurants = this.loadAll();
     }
 });
 
