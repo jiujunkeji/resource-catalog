@@ -190,6 +190,7 @@ var vm = new Vue({
             vm.resourceMeteData.organisationName = obj.organisationName;
             vm.resourceMeteData.organisationId = obj.organisationId;
             vm.resourceMeteData.organisationAddress = obj.organisationAddr;
+
         },
         // 收缩展开搜索
         openSwitch:function () {

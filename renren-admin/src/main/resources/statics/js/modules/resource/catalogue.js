@@ -84,6 +84,7 @@ var vm = new Vue({
         catalogId:null,
         fileData:{},
         comList:[],
+        look:false
     },
     watch: {
         filterText:function(val) {
@@ -263,6 +264,11 @@ var vm = new Vue({
             vm.showList = true;
             vm.getTableList();
             vm.getMenuList();
+            vm.look = false;
+        },
+        // 查看
+        lookC:function () {
+            vm.look = true;
         },
         validator: function () {
             if(isBlank(vm.resourceCatalog.name)){

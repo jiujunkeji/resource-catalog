@@ -53,6 +53,7 @@ var vm = new Vue({
         showList: true,
         title: null,
         resourceMeteData: {
+            xjMeteSetCategoryEntity:[]
             // meteCategorySetId:null
         },
         imageUrl:'',
@@ -550,6 +551,7 @@ var vm = new Vue({
                 btn1:function (index) {
 
                     vm.resourceMeteData.xjMeteSetCategoryEntity = vm.checkIdList2;
+                    console.log(vm.resourceMeteData)
                     layer.close(index);
                 },
                 btn2:function () {
