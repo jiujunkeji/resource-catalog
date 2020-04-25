@@ -1,10 +1,12 @@
 package io.renren.modules.xj.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 元数据集分类表
@@ -54,6 +56,22 @@ public class XjMeteSetCategoryEntity implements Serializable {
 	 * 
 	 */
 	private String remark;
+
+	/**
+	 * 上级名称
+	 */
+	@TableField(exist = false)
+	private String parentName;
+
+
+	/**
+	 * ztree属性
+	 */
+	@TableField(exist = false)
+	private  Boolean open;
+
+	@TableField(exist = false)
+	private List<?> list;
 
 	/**
 	 * 设置：
@@ -162,5 +180,29 @@ public class XjMeteSetCategoryEntity implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public Boolean getOpen() {
+		return open;
+	}
+
+	public void setOpen(Boolean open) {
+		this.open = open;
+	}
+
+	public List<?> getList() {
+		return list;
+	}
+
+	public void setList(List<?> list) {
+		this.list = list;
 	}
 }

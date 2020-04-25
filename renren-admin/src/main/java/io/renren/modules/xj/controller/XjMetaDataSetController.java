@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -411,11 +413,17 @@ public class XjMetaDataSetController extends AbstractController {
                 }else if(i == 6){
                     cell.setCellValue(t.getReviewState());
                 }else if(i == 7){
-                    cell.setCellValue(t.getCreateUserId());
+                    cell.setCellValue(getUser().getUsername());
                 }else if(i == 8){
-                    cell.setCellValue(t.getCreateDate());
+                    LocalDateTime localDateTime=LocalDateTime.now();
+                    DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String ss = dateTimeFormatter.format(localDateTime).toString();
+                    cell.setCellValue(ss);
                 }else if(i == 9){
-                    cell.setCellValue(t.getUpdateTime());
+                    LocalDateTime localDateTime=LocalDateTime.now();
+                    DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String ss = dateTimeFormatter.format(localDateTime).toString();
+                    cell.setCellValue(ss);
                 }
 
 
