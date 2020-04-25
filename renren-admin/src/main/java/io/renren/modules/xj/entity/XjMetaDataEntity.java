@@ -43,11 +43,11 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 数据类型
 	 */
-	private String dataType;
+	private Integer dataType;
 	/**
 	 * 控件类型
 	 */
-	private String controlType;
+	private Integer controlType;
 
 
 	/**
@@ -166,19 +166,19 @@ public class XjMetaDataEntity implements Serializable {
 		return euShortName;
 	}
 
-	public String getDataType() {
+	public Integer getDataType() {
 		return dataType;
 	}
 
-	public void setDataType(String dataType) {
+	public void setDataType(Integer dataType) {
 		this.dataType = dataType;
 	}
 
-	public String getControlType() {
+	public Integer getControlType() {
 		return controlType;
 	}
 
-	public void setControlType(String controlType) {
+	public void setControlType(Integer controlType) {
 		this.controlType = controlType;
 	}
 

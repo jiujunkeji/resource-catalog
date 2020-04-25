@@ -1,10 +1,19 @@
-.topMenulist{
+.content-header{
     overflow: hidden;
+}
+.topMenulist{
+    position: relative;
+    left:0;
+    white-space: nowrap;
+    height: 35px;
+    /*overflow: hidden;*/
     padding: 0;
     margin: 0;
+    transition: all .2s;
+    -webkit-transition: all .2s;
 }
 .topMenulist li{
-    float: left;
+    display: inline-block;
     /*display: index;*/
     min-width: 80px;
     height: 35px;
