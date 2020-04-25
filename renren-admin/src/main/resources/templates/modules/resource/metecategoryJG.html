@@ -105,6 +105,9 @@
             div.line .item>div.inp{
                 width: calc(100% - 140px);
             }
+            #addUp{
+                display: flex;
+            }
 
         </style>
         </head>
@@ -220,7 +223,7 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-s-operation" @click="getHist(scope.row.meteId)"></i>
+                            <i class="el-icon-s-operation" @click="getHist(scope.row.meteSetId)"></i>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -229,7 +232,7 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.meteId)"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)"></i>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -265,7 +268,20 @@
                 <div class="item">
                     <label>编号</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" @click="menuTree" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>分类名称</label>
+                    <div class="inp">
+                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择" @change="aaa">
+                            <el-option
+                                    v-for="item in fenlSelect"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="item">
@@ -274,22 +290,20 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
                     </div>
                 </div>
+            </div>
+            <div class="line">
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
                     </div>
                 </div>
-
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>英文短名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名"/>
                     </div>
                 </div>
-                <div class="item"></div>
                 <div class="item"></div>
             </div>
         </div>
@@ -387,90 +401,129 @@
         </div>
     </div>
     <div id="addUp" class="panel panel-default" style="display: none">
-        <form class="form-horizontal">
+        <div class="objectList">
+            <div class="grid-btn">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    对象列表
+                </span>
+            </div>
 
-            <div class="form-group">
-                <div class="col-sm-2 control-label">中文名称</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="fileData.cnName" placeholder="中文名称"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">英文名称</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="fileData.euName" placeholder="英文名称"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">数据类型</div>
-                <div class="col-sm-10">
-                    <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
-                        <el-option
-                                key="0"
-                                label="整型"
-                                value="0">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="实型"
-                                value="1">
-                        </el-option>
-                        <el-option
-                                key="2"
-                                label="布尔型"
-                                value="2">
-                        </el-option>
-                        <el-option
-                                key="3"
-                                label="字符串"
-                                value="3">
-                        </el-option>
-                        <el-option
-                                key="4"
-                                label="日期"
-                                value="4">
-                        </el-option>
-                    </el-select>
-                    <!--<input type="text" class="form-control" v-model="fileData.dataType" placeholder="数据类型"/>-->
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">数据长度</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="fileData.dataLength" placeholder="数据长度"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">判断必选</div>
-                <div class="col-sm-10">
-                    <el-select v-model="fileData.judgeMandatory" placeholder="请选择">
-                        <el-option
-                                key="0"
-                                label="必选"
-                                value="0">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="非必选"
-                                value="1">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <!--<div class="form-group">-->
-            <!--<div class="col-sm-2 control-label">关键字</div>-->
-            <!--<div class="col-sm-10">-->
-            <!--<input type="text" class="form-control" v-model="fileData.keyword" placeholder="关键字"/>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-            <!--<div class="col-sm-2 control-label">更新时间</div>-->
-            <!--<div class="col-sm-10">-->
-            <!--<input type="text" class="form-control" v-model="fileData.updateTime" placeholder="更新时间"/>-->
-            <!--</div>-->
-            <!--</div>-->
+            <el-input
+                    placeholder="输入关键字进行过滤"
+                    v-model="filterText">
+            </el-input>
+            <el-tree class="filter-tree" :data="menuList1" :props="props"
+                     :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
+            </el-tree>
+        </div>
+        <div class="listCon">
+            <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
+            <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
+            <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
+            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
+                    </div>
 
-        </form>
+                </div>
+                <div class="switchIn">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean1">重置</button>
+                <button class="look" @click="query1">查询</button>
+            </div>
+            <div class="divBox" style="margin-bottom: 0;">
+
+                <div class="grid-btn">
+                    <span class="title">
+                        <i class="el-icon-s-operation"></i>
+                        数据列表
+                    </span>
+                    <div class="right">
+
+                    </div>
+                </div>
+                <el-table
+                        :data="tableListUp"
+                        border
+                        stripe
+                        @selection-change="toggleSelection1"
+                        style="width: 100%">
+                    <el-table-column
+                            type="selection"
+                            width="40">
+                    </el-table-column>
+                    <el-table-column
+                            prop="meteNumber"
+                            label="编号"
+                            width="90">
+                    </el-table-column>
+                    <el-table-column
+                            prop="cnName"
+                            label="中文名称"
+                            width="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="euName"
+                            label="英文名称"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="euShortName"
+                            label="英文短名"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="updateTime"
+                            label="更新时间"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            label="是否禁用"
+                            width="90">
+                        <template slot-scope="scope">
+                            <el-tag
+                                    v-if="scope.row.isDisabled == 0"
+                                    size="small"
+                                    type="success"
+                                    effect="dark">
+                                否
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.isDisabled == 1"
+                                    size="small"
+                                    type="danger"
+                                    effect="dark">
+                                是
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <br>
+                <el-pagination
+                        background
+                        pager-count="1"
+                        :current-page="page"
+                        layout="prev, pager, next, jumper,total,->,slot"
+                        @current-change="layerPage"
+                        :total="totalPage">
+                </el-pagination>
+
+            </div>
+        </div>
     </div>
 
     <!--历史版本-->

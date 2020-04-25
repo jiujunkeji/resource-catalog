@@ -242,7 +242,7 @@ var vm = new Vue({
                 reviewState:null,
                 pushState:null
             }
-            if(this.tab == 3){
+            if(this.tab == 4){
                 obj = {
                     page:this.page,
                     reviewState:null,
@@ -395,14 +395,14 @@ var vm = new Vue({
                 btn: ['确定','取消'],
                 btn1:function (index) {
                     $.ajax({
-                        type: "get",
+                        type: "post",
                         url: baseURL + 'xj/xjcatalog/refuse',
-                        // contentType: "application/json",
-                        dataType: 'json',
-                        data: {
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify({
                             catalogId:id,
                             auditOpinion:vm.auditOpinion
-                        },
+                        }),
                         success: function(r){
                             if(r.code === 0){
                                 vm.tab = 3;
