@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -349,15 +351,15 @@ public class XjMetaDataController extends AbstractController {
                     cell.setCellValue(t.getMeteNumber());
                 }else if(i == 5){
                     if (t.getDataType() != null){
-                        if (t.getDataType().equals("整型")){
+                        if (t.getDataType()==2){
                             cell.setCellValue("整型");
-                        }else if (t.getDataType().equals("实型")){
+                        }else if (t.getDataType()==5){
                             cell.setCellValue("实型");
-                        }else if (t.getDataType().equals("布尔型")){
+                        }else if (t.getDataType()==3){
                             cell.setCellValue("布尔型");
-                        }else if (t.getDataType().equals("字符型")){
+                        }else if (t.getDataType()==1){
                             cell.setCellValue("字符型");
-                        }else if (t.getDataType().equals("日期")){
+                        }else if (t.getDataType()==4){
                             cell.setCellValue("日期");
                         }
                     }
@@ -384,11 +386,17 @@ public class XjMetaDataController extends AbstractController {
                 }else if(i == 13){
                     cell.setCellValue(t.getIsDisabled());
                 }else if(i == 14){
-                    cell.setCellValue(t.getCreateUserId());
+                    cell.setCellValue(getUser().getUsername());
                 }else if(i == 15){
-                    cell.setCellValue(t.getCreateDate());
+                    LocalDateTime localDateTime=LocalDateTime.now();
+                    DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String ss = dateTimeFormatter.format(localDateTime).toString();
+                    cell.setCellValue(ss);
                 }else if(i == 16){
-                    cell.setCellValue(t.getUpdateTime());
+                    LocalDateTime localDateTime=LocalDateTime.now();
+                    DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String ss = dateTimeFormatter.format(localDateTime).toString();
+                    cell.setCellValue(ss);
                 }
             }
         }
