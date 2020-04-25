@@ -361,10 +361,10 @@ var vm = new Vue({
         // 通过方法
         agree:function (id) {
             $.ajax({
-                type: "post",
+                type: "get",
                 url: baseURL + 'xj/xjcatalog/agree',
-                contentType: "application/json",
-                // dataType: 'json',
+                // contentType: "application/json",
+                dataType: 'json',
                 data: {
                     catalogId:id
                 },

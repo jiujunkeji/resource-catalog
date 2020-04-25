@@ -141,7 +141,7 @@
                     <div class="right">
                         <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
                         <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
-                        <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
+                        <el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;
                         <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
                     </div>
                 </div>
@@ -156,47 +156,61 @@
                             width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="resourceTitle"
+                            prop="meteSetNumber"
                             label="编号"
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="organisationName"
+                            prop="cnName"
                             label="中文名称"
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="resourceSign"
+                            prop="euName"
                             label="英文名称"
                             width="130">
                     </el-table-column>
                     <el-table-column
-                            prop="updateTime"
-                            label="短名"
+                            prop="euShortName"
+                            label="英文短名"
                             width="110">
                     </el-table-column>
                     <el-table-column
-                            prop="createTime"
+                            prop="createDate"
                             label="创建时间"
                             width="110">
                     </el-table-column>
                     <el-table-column
-                            label="是否禁用"
+                            label="状态"
                             width="90">
                         <template slot-scope="scope">
+                            <el-tag
+                                    v-if="scope.row.reviewState == 0"
+                                    size="small"
+                                    type="warning"
+                                    effect="dark">
+                                待提交
+                            </el-tag>
+                            <el-tag
+                                    v-if="scope.row.reviewState == 1"
+                                    size="small"
+                                    type="warning"
+                                    effect="dark">
+                                待审核
+                            </el-tag>
                             <el-tag
                                     v-if="scope.row.reviewState == 2"
                                     size="small"
                                     type="success"
                                     effect="dark">
-                                否
+                                通过
                             </el-tag>
                             <el-tag
                                     v-if="scope.row.reviewState == 3"
                                     size="small"
                                     type="danger"
                                     effect="dark">
-                                是
+                                未通过
                             </el-tag>
                         </template>
                     </el-table-column>
@@ -206,7 +220,7 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-s-operation" @click="update(scope.row.meteId)"></i>
+                            <i class="el-icon-s-operation" @click="getHist(scope.row.meteId)"></i>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -251,244 +265,33 @@
                 <div class="item">
                     <label>编号</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" @click="menuTree" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
                     </div>
                 </div>
 
             </div>
             <div class="line">
                 <div class="item">
-                    <label>短名</label>
+                    <label>英文短名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>短名</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="资源分类" @click="menuTree1" readonly="readonly"/>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>数据类型</label>
-                    <div class="inp">
-                        <el-select v-model="fileData.dataType" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    key="0"
-                                    label="整型"
-                                    value="0">
-                            </el-option>
-                            <el-option
-                                    key="1"
-                                    label="实型"
-                                    value="1">
-                            </el-option>
-                            <el-option
-                                    key="2"
-                                    label="布尔型"
-                                    value="2">
-                            </el-option>
-                            <el-option
-                                    key="3"
-                                    label="字符串"
-                                    value="3">
-                            </el-option>
-                            <el-option
-                                    key="4"
-                                    label="日期"
-                                    value="4">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="line">
-                <div class="item">
-                    <label>控件类型</label>
-                    <div class="inp">
-                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    key="1"
-                                    label="文本框"
-                                    value="1">
-                            </el-option>
-                            <el-option
-                                    key="2"
-                                    label="数值类型"
-                                    value="2">
-                            </el-option>
-                            <el-option
-                                    key="3"
-                                    label="货币类型"
-                                    value="3">
-                            </el-option>
-                            <el-option
-                                    key="4"
-                                    label="邮箱"
-                                    value="4">
-                            </el-option>
-                            <el-option
-                                    key="5"
-                                    label="日期"
-                                    value="5">
-                            </el-option>
-                            <el-option
-                                    key="6"
-                                    label="电话"
-                                    value="6">
-                            </el-option>
-                            <el-option
-                                    key="7"
-                                    label="单选框"
-                                    value="7">
-                            </el-option>
-                            <el-option
-                                    key="8"
-                                    label="多选框"
-                                    value="8">
-                            </el-option>
-                            <el-option
-                                    key="9"
-                                    label="成员"
-                                    value="9">
-                            </el-option>
-                            <el-option
-                                    key="10"
-                                    label="附件"
-                                    value="10">
-                            </el-option>
-                            <el-option
-                                    key="11"
-                                    label="地区"
-                                    value="11">
-                            </el-option>
-                            <el-option
-                                    key="12"
-                                    label="定位"
-                                    value="12">
-                            </el-option>
-                            <el-option
-                                    key="13"
-                                    label="检查框"
-                                    value="13">
-                            </el-option>
-                            <el-option
-                                    key="14"
-                                    label="文本组合"
-                                    value="14">
-                            </el-option>
-                            <el-option
-                                    key="15"
-                                    label="富文本"
-                                    value="15">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>校验类型</label>
-                    <div class="inp">
-                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    key="0"
-                                    label="不校验"
-                                    value="0">
-                            </el-option>
-                            <el-option
-                                    key="1"
-                                    label="校验"
-                                    value="1">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>数据长度</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
-                    </div>
-                </div>
-
-                <!--<div class="item">-->
-                <!--<label>关键字</label>-->
-                <!--<div class="inp">-->
-                <!--<input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>-->
-                <!--</div>-->
-                <!--</div>-->
-
-            </div>
-            <div class="line">
-                <div class="item">
-                    <label>是否禁用</label>
-                    <div class="inp">
-                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
-                            <el-option
-                                    key="0"
-                                    label="否"
-                                    value="0">
-                            </el-option>
-                            <el-option
-                                    key="1"
-                                    label="是"
-                                    value="1">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>值域</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="资源分类编码" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名"/>
                     </div>
                 </div>
                 <div class="item"></div>
-
+                <div class="item"></div>
             </div>
-            <div class="line">
-                <div class="item">
-                    <label style="vertical-align: top">值域说明</label>
-                    <div class="inp">
-                        <el-input
-                                type="textarea"
-                                :rows="2"
-                                placeholder="信息资源摘要"
-                                v-model="resourceMeteData.resourceAbstract">
-                        </el-input>
-                        <!--<input type="textarea" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>-->
-                    </div>
-                </div>
-
-            </div>
-            <div class="line">
-                <div class="item">
-                    <label style="vertical-align: top">定义</label>
-                    <div class="inp">
-                        <el-input
-                                type="textarea"
-                                :rows="2"
-                                placeholder="信息资源摘要"
-                                v-model="resourceMeteData.resourceAbstract">
-                        </el-input>
-                        <!--<input type="textarea" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>-->
-                    </div>
-                </div>
-
-            </div>
-
         </div>
         <div class="divBox">
             <div class="grid-btn" style="">
@@ -670,6 +473,8 @@
         </form>
     </div>
 
+    <!--历史版本-->
+    <div id="hisList" class="panel panel-default" style="display: none;"></div>
 
     <!-- 选择上级菜单 -->
     <div id="menuLayer" style="display: none;padding:10px;">
@@ -680,6 +485,6 @@
         <ul id="menuTree1" class="ztree"></ul>
     </div>
 </div>
-<script src="${request.contextPath}/statics/js/modules/resource/metecategoryG.js"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/metecategoryJG.js"></script>
 </body>
 </html>
