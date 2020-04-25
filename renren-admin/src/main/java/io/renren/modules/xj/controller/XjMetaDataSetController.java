@@ -149,17 +149,11 @@ public class XjMetaDataSetController extends AbstractController {
         /**
          * 保存元数据集的想换信息
          */
-        XjMetaDataSetEntity xjMetaDataSetEntity=new XjMetaDataSetEntity();
-        xjMetaDataSetEntity.setMeteCategorySetId(xjMetaDataSet.getMeteCategorySetId());
-        xjMetaDataSetEntity.setCnName(xjMetaDataSet.getCnName());
-        xjMetaDataSetEntity.setEuName(xjMetaDataSet.getEuName());
-        xjMetaDataSetEntity.setEuShortName(xjMetaDataSet.getEuShortName());
-        xjMetaDataSetEntity.setReviewState(xjMetaDataSet.getReviewState());
         xjMetaDataSet.setCurrentVersion("v1.0");
         xjMetaDataSet.setCreateDate(new Date());
         xjMetaDataSet.setUpdateTime(new Date());
         xjMetaDataSet.setCreateUserId(getUser().getUserId());
-        xjMetaDataSetService.insert(xjMetaDataSetEntity);
+        xjMetaDataSetService.insertOrUpdate(xjMetaDataSet);
         /**
          * 之后遍历元数据集下的元数据的信息，然后将元数据集与元数据的信息保存到中间表
          */
