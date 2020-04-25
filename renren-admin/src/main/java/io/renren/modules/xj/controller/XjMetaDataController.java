@@ -256,15 +256,15 @@ public class XjMetaDataController extends AbstractController {
             if (POIUtils.getCellValue(row.getCell(3)) != null) {
                 String dtf = (POIUtils.getCellValue(row.getCell(3)));
                 if (dtf.equals("整型")){
-                    xjMetaDataEntity.setDataType("整型");
+                    xjMetaDataEntity.setDataType(2);
                 }else if (dtf.equals("实型")){
-                    xjMetaDataEntity.setDataType("实型");
+                    xjMetaDataEntity.setDataType(5);
                 }else if (dtf.equals("布尔型")){
-                    xjMetaDataEntity.setDataType("布尔型");
+                    xjMetaDataEntity.setDataType(3);
                 }else if (dtf.equals("字符型")){
-                    xjMetaDataEntity.setDataType("字符型");
+                    xjMetaDataEntity.setDataType(1);
                 }else if (dtf.equals("日期")){
-                    xjMetaDataEntity.setDataType("日期");
+                    xjMetaDataEntity.setDataType(4);
                 }
             }
             if (POIUtils.getCellValue(row.getCell(4)) != null) {
@@ -344,6 +344,10 @@ public class XjMetaDataController extends AbstractController {
                 }else if(i == 2){
                     cell.setCellValue(t.getEuName());
                 }else if(i == 3){
+                    cell.setCellValue(t.getEuShortName());
+                }else if(i == 4){
+                    cell.setCellValue(t.getMeteNumber());
+                }else if(i == 5){
                     if (t.getDataType() != null){
                         if (t.getDataType().equals("整型")){
                             cell.setCellValue("整型");
@@ -357,14 +361,31 @@ public class XjMetaDataController extends AbstractController {
                             cell.setCellValue("日期");
                         }
                     }
-                }else if (i == 4){
+                }else if (i == 6){
                     cell.setCellValue(t.getDataLength());
-                }else if(i == 5){
-                    if (t.getJudgeMandatory() == 0){
+                }else if(i == 7){
+                    if (t.getJudgeMandatory()== 0){
                         cell.setCellValue("必选");
                     }else if (t.getJudgeMandatory() == 1){
                         cell.setCellValue("非必选");
                     }
+                }
+                else if(i == 8){
+                    cell.setCellValue(t.getDefinition());
+                }else if(i == 9){
+                    cell.setCellValue(t.getRange());
+                }else if(i == 10){
+                    cell.setCellValue(t.getMeteCategoryId());
+                }else if(i == 11){
+                    cell.setCellValue(t.getCheckType());
+                }else if(i == 12){
+                    cell.setCellValue(t.getIsDisabled());
+                }else if(i == 13){
+                    cell.setCellValue(t.getCreateUserId());
+                }else if(i == 14){
+                    cell.setCellValue(t.getCreateUserId());
+                }else if(i == 15){
+                    cell.setCellValue(t.getCreateDate());
                 }
             }
         }
