@@ -592,26 +592,34 @@ var vm = new Vue({
         },
         // 获取历史版本
         getHist:function (id) {
+            var _this = this;
             $.get(baseURL + "xj/xjmetadataset/historyInfo/"+id, function(r){
                 console.log(r);
-                vm.hisList = r;
-                layer.open({
-                    type: 1,
-                    title: '新增',
-                    content: $('#hisList'), //这里content是一个普通的String
-                    skin: 'openClass',
-                    area: ['600px', '520px'],
-                    shadeClose: true,
-                    closeBtn:0,
-                    btn: ['关闭'],
-                    btn1:function (index) {
+                if(r.hList.length == 0){
+                    _this.$message({
+                        message: '暂无历史版本',
+                        type: 'warning'
+                    });
+                }else {
+                    vm.hisList = r.hList;
+                    layer.open({
+                        type: 1,
+                        title: '新增',
+                        content: $('#hisList'), //这里content是一个普通的String
+                        skin: 'openClass',
+                        area: ['1000px', '580px'],
+                        shadeClose: true,
+                        closeBtn:0,
+                        btn: ['关闭'],
+                        btn1:function (index) {
+                            layer.close(index);
+                        },
+                        btn2:function () {
+                        }
 
-                        layer.close(index);
-                    },
-                    btn2:function () {
-                    }
+                    })
+                }
 
-                })
                 // vm.tableListUp = r.resourceMeteData.list;
             });
 
