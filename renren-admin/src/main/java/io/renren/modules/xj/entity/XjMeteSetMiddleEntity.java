@@ -100,6 +100,13 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	private Date updateTime;
 
 	/**
+	 * 元数据的安全级别设置
+	 */
+	private Integer safeMode;//安全级别
+
+	private String  safe;//安全类型
+
+	/**
 	 * 设置：版本id（主键）
 	 */
 	public void setVersionId(Long versionId) {
@@ -335,5 +342,22 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+
+	public Integer getSafeMode() {
+		return safeMode;
+	}
+
+	public void setSafeMode(Integer safeMode) {
+		this.safeMode = safeMode;
+	}
+
+	public String getSafe() {
+		return safe;
+	}
+
+	public void setSafe(String safe) {
+		this.safe = safe;
 	}
 }
