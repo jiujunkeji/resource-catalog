@@ -172,7 +172,13 @@ public class XjMetaDataSetController extends AbstractController {
         //原元数据数量
         int count= xjMeteSetMiddleService.selectCount(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",xjMetaDataSet.getMeteSetId()));
         //现元数据数量
-        int b = xjMetaDataSet.getMeteDataList().size();
+        List<XjMetaDataEntity> medaList=xjMetaDataSet.getMeteDataList();
+        int b;
+        if(medaList==null){
+            b=0;
+        }else {
+            b=medaList.size();
+        }
         if(count!=b){
             //
             /**如果数量不同
