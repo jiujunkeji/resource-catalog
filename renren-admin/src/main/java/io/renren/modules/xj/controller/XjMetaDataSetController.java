@@ -16,6 +16,7 @@ import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -264,7 +265,9 @@ public class XjMetaDataSetController extends AbstractController {
                 av.setUpdateTime(a.getUpdateTime());
                 avList.add(av);
             }
-            xjMeteSetMiddleVersionService.insertBatch(avList);
+            if(CollectionUtils.isNotEmpty(avList)){
+                xjMeteSetMiddleVersionService.insertBatch(avList);
+            }
             /**保存新的中间表。
              * 1.先删除之前数据
              * 2.保存新的数据，版本号"v" + c+1 + ".0"
@@ -273,6 +276,7 @@ public class XjMetaDataSetController extends AbstractController {
             map.put("mete_set_id",xjMetaDataSet.getMeteSetId());
             xjMeteSetMiddleService.deleteByMap(map);
             List<XjMetaDataEntity> newList=xjMetaDataSet.getMeteDataList();
+            List<XjMeteSetMiddleEntity> newMidList=new ArrayList<>();
             for(XjMetaDataEntity xjMetaDataEntity:newList){
                 XjMeteSetMiddleEntity middleEntity=new XjMeteSetMiddleEntity();
                 middleEntity.setMeteId(xjMetaDataEntity.getMeteId());
@@ -285,8 +289,7 @@ public class XjMetaDataSetController extends AbstractController {
                 middleEntity.setMeteRange(xjMetaDataEntity.getRange());
                 middleEntity.setMeteRangeDescription(xjMetaDataEntity.getRangeDescription());
                 middleEntity.setMeteDefinition(xjMetaDataEntity.getDefinition());
-                middleEntity.setMeteSetId(xjMetaDataEntity.getMeteSetId());
-                middleEntity.setMeteSetId(xjMetaDataEntity.getMeteSetId());
+                middleEntity.setMeteSetId(xjMetaDataSet.getMeteSetId());
                 middleEntity.setMeteSetCname(xjMetaDataSet.getCnName());
                 middleEntity.setMeteSetEname(xjMetaDataSet.getEuName());
                 middleEntity.setMeteSetEname(xjMetaDataSet.getMeteSetNumber());
@@ -295,9 +298,11 @@ public class XjMetaDataSetController extends AbstractController {
                 middleEntity.setUpdateTime(new Date());
                 middleEntity.setCreateUserId(getUser().getUserId());
                 middleEntity.setVersionNumber("v"+(c+1)+".0");
-
+                newMidList.add(middleEntity);
             }
-
+            if(CollectionUtils.isNotEmpty(newMidList)){
+                xjMeteSetMiddleService.insertOrUpdateBatch(newMidList);
+            }
 
         }
 
