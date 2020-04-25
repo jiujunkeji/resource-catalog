@@ -44,6 +44,11 @@ public class XjMetaDataSetEntity implements Serializable {
 	 * 审核状态（0：待提交；1：待审核；2：通过；3：未通过）
 	 */
 	private Integer reviewState;
+
+	/**
+	 * 元数据集的发布状态(0-停止发布;1-发布)
+	 */
+	private Integer pushState;
 	/**
 	 * 当前版本
 	 */
@@ -145,6 +150,15 @@ public class XjMetaDataSetEntity implements Serializable {
 	public Integer getReviewState() {
 		return reviewState;
 	}
+
+	public Integer getPushState() {
+		return pushState;
+	}
+
+	public void setPushState(Integer pushState) {
+		this.pushState = pushState;
+	}
+
 	/**
 	 * 设置：当前版本
 	 */
