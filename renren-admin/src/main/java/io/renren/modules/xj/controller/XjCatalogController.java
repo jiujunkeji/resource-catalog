@@ -200,7 +200,7 @@ public class XjCatalogController extends AbstractController{
         XjCatalogAuditEntity audit = auditService.selectOne(
                 new EntityWrapper<XjCatalogAuditEntity>()
                         .eq("catalog_id",catalogId)
-                        .eq("operat_typpe","提交")
+                        .eq("operat_type","提交")
                         .orderBy("operat_time",false)
         );
         Date now = new Date(System.currentTimeMillis() - 600000);
@@ -224,7 +224,7 @@ public class XjCatalogController extends AbstractController{
      * 审核通过
      */
     @RequestMapping("/agree")
-    public R agree(@RequestBody Long catalogId){
+    public R agree(@RequestParam Long catalogId){
         XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
         catalog.setReviewState(2);
         XjCatalogAuditEntity audit = new XjCatalogAuditEntity();
