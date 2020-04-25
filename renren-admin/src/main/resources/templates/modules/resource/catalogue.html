@@ -403,7 +403,97 @@
 
             </div>
         </div>
-
+        <div class="divBox">
+            <div class="grid-btn" style="">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    关联元数据集列表
+                </span>
+                <div class="right">
+                    <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
+                </div>
+            </div>
+            <el-table
+                    :data="resourceMeteData.fieldList"
+                    border
+                    stripe
+                    @selection-change="toggleSelection1"
+                    style="width: 100%">
+                <el-table-column
+                        type="selection"
+                        width="40">
+                </el-table-column>
+                <el-table-column
+                        prop="meteSetNumber"
+                        label="编号"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="cnName"
+                        label="中文名称"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="euName"
+                        label="英文名称"
+                        width="130">
+                </el-table-column>
+                <el-table-column
+                        prop="euShortName"
+                        label="英文短名"
+                        width="110">
+                </el-table-column>
+                <el-table-column
+                        prop="createDate"
+                        label="创建时间"
+                        width="110">
+                </el-table-column>
+                <el-table-column
+                        label="状态"
+                        width="90">
+                    <template slot-scope="scope">
+                        <el-tag
+                                v-if="scope.row.reviewState == 0"
+                                size="small"
+                                type="warning"
+                                effect="dark">
+                            待提交
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.reviewState == 1"
+                                size="small"
+                                type="warning"
+                                effect="dark">
+                            待审核
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.reviewState == 2"
+                                size="small"
+                                type="success"
+                                effect="dark">
+                            通过
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.reviewState == 3"
+                                size="small"
+                                type="danger"
+                                effect="dark">
+                            未通过
+                        </el-tag>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <br>
+            <el-pagination
+                    background
+                    pager-count="1"
+                    :current-page="page1"
+                    layout="prev, pager, next, jumper"
+                    @current-change="layerPage1"
+                    :total="totalPage1">
+            </el-pagination>
+        </div>
     </div>
 
 

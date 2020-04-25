@@ -496,8 +496,13 @@ var vm = new Vue({
 
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
+                console.log('进来了')
                 vm.catalogId = data.id;
-                vm.q.name = data.name;
+                if(data.name == '资源目录'){
+                    vm.q.name = data.name;
+                }else {
+                    vm.q.name = '';
+                }
                 vm.getTableList();
             }
 

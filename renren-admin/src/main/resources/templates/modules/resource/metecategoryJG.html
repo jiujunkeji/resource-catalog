@@ -38,7 +38,7 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
-                height: calc(100% - 50px);
+                /*height: calc(100% - 50px);*/
             }
             .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
                 background: #fff;
@@ -131,9 +131,33 @@
             </el-tree>
         </div>
         <div class="listCon">
-            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
-            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
+            <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
+            <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
+            <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
+            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch" :data-open="open1">{{openText}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean">重置</button>
+                <button class="look" @click="query">查询</button>
+            </div>
             <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">
@@ -143,7 +167,7 @@
                     </span>
                     <div class="right">
                         <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
-                        <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
+                        <!--<el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;-->
                         <el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;
                         <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
                     </div>
@@ -232,7 +256,9 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)" title="修改"></i>
+                            <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <i class="el-icon-delete" @click="del(scope.row.meteSetId)" title="删除"></i>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -274,7 +300,7 @@
                 <div class="item">
                     <label>分类名称</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择" @change="aaa">
+                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择">
                             <el-option
                                     v-for="item in fenlSelect"
                                     :key="item.id"
@@ -316,26 +342,12 @@
                 <div class="right">
                     <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
                     <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
-                    <!--<el-button size="medium" type="primary" @click="setUp">批量设置</el-button>&nbsp;&nbsp;-->
-                    <!--<el-button size="medium" type="primary" @click="inUp">导入</el-button>&nbsp;&nbsp;-->
-                    <!--<el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;-->
-                    <!--<div style="display: inline-block">-->
-                        <!--<el-upload-->
-                                <!--class="avatar-uploader"-->
-                                <!--action='${request.contextPath}/resource/resourcefield/importField'-->
-                                <!--:show-file-list="false"-->
-                                <!--:on-success="handleAvatarSuccess"-->
-                                <!--:before-upload="beforeAvatarUpload">-->
-                            <!--<el-button size="medium" type="primary">导入</el-button>-->
-                            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-                        <!--</el-upload>-->
-                    <!--</div>-->
-                    <!--<el-button size="medium" type="primary" @click="downUp">下载模版</el-button>&nbsp;&nbsp;-->
+
 
                 </div>
             </div>
             <el-table
-                    :data="resourceMeteData.fieldList"
+                    :data="resourceMeteData.xjMeteSetCategoryEntity"
                     border
                     stripe
                     @selection-change="toggleSelection1"
@@ -400,8 +412,8 @@
             </el-pagination>
         </div>
     </div>
-    <div id="addUp" class="panel panel-default" style="display: none">
-        <div class="objectList">
+    <div id="addUp" class="panel panel-default" style="display: none;height: calc(100% - 20px);">
+        <div class="objectList" style="height: calc(100% - 10px);">
             <div class="grid-btn">
                 <span class="title">
                     <i class="el-icon-edit-outline"></i>
@@ -417,35 +429,11 @@
                      :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
             </el-tree>
         </div>
-        <div class="listCon">
+        <div class="listCon" style="">
             <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
             <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
             <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
-            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-                    <div class="right">
-                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
-                    </div>
-
-                </div>
-                <div class="switchIn">
-                    <span>
-                        <label>编号：</label>
-                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteNumber" >
-                    </span>
-                    <span>
-                        <label>中文名称：</label>
-                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
-                    </span>
-                </div>
-                <button class="clean" @click="clean1">重置</button>
-                <button class="look" @click="query1">查询</button>
-            </div>
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" style="margin-bottom: 0;height: calc(100% - 10px);">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -457,10 +445,10 @@
                     </div>
                 </div>
                 <el-table
-                        :data="tableListUp"
+                        :data="tableList1"
                         border
                         stripe
-                        @selection-change="toggleSelection1"
+                        @selection-change="toggleSelection2"
                         style="width: 100%">
                     <el-table-column
                             type="selection"
@@ -516,10 +504,10 @@
                 <el-pagination
                         background
                         pager-count="1"
-                        :current-page="page"
+                        :current-page="page1"
                         layout="prev, pager, next, jumper,total,->,slot"
                         @current-change="layerPage"
-                        :total="totalPage">
+                        :total="totalPage1">
                 </el-pagination>
 
             </div>

@@ -9,14 +9,17 @@ var setting = {
             enable: true,
             idKey: "catalogId",
             pIdKey: "parentId",
-            rootPId: -1
+            rootPId: -1,
+
         },
         key: {
-            url:"nourl"
+            url:"nourl",
+            name:'catalogName'
         }
     }
 };
 var ztree;
+
 var setting1 = {
     data: {
         simpleData: {
@@ -35,9 +38,7 @@ var ztree1;
 var vm = new Vue({
     el:'#rrapp',
     data:{
-        q: {
-            name:''
-        },
+        nameS:'',
         showList: true,
         title: null,
         resourceMeteData: {
@@ -70,7 +71,9 @@ var vm = new Vue({
         catalogId:null,
         checkIdList:[],
         auditOpinion:'',
-        optionList:[]
+        optionList:[],
+        resourceMeteData:{},
+        comList:[]
     },
     watch: {
         filterText:function(val) {
@@ -78,6 +81,116 @@ var vm = new Vue({
         }
     },
     methods: {
+        reload: function (event) {
+            vm.showList = true;
+            vm.getTableList();
+            vm.getMenuList();
+        },
+        getMenu: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "/xj/xjcatalog/list", function(r){
+                console.log(r);
+                // r.push({
+                //     parentId:-1,
+                //     catalogId:0,
+                //     name:'一级目录'
+                // })
+                ztree = $.fn.zTree.init($("#menuTree"), setting, r);
+                var node = ztree.getNodeByParam("catalogId", vm.resourceMeteData.catalogId);
+                ztree.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
+        menuTree: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+                    console.log(node);
+                    //选择上级菜单
+                    vm.resourceMeteData.parentId = node[0].catalogId;
+                    vm.resourceMeteData.parentName = node[0].catalogName;
+                    // vm.resourceMeteData.catagoryCode = node[0].code;
+                    layer.close(index);
+                    console.log(vm.resourceMeteData);
+                }
+            });
+        },
+        getMenu1: function(menuId){
+            //加载菜单树
+            $.get(baseURL + "resource/metecategory/list", function(r){
+                console.log(r);
+                // r.push({
+                //     parentId:-1,
+                //     meteCategoryId:0,
+                //     name:'一级目录'
+                // })
+                ztree1 = $.fn.zTree.init($("#menuTree1"), setting1, r);
+                var node = ztree1.getNodeByParam("meteCategoryId", vm.resourceMeteData.categoryId);
+                ztree1.selectNode(node);
+                console.log(node);
+                // vm.menu.parentName = node.name;
+            })
+        },
+        menuTree1: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer1"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree1.getSelectedNodes();
+                    console.log(node);
+                    //选择上级菜单
+                    vm.resourceMeteData.categoryId = node[0].meteCategoryId;
+                    vm.resourceMeteData.categoryName = node[0].name;
+                    vm.resourceMeteData.catagoryCode = node[0].code;
+                    console.log(vm.resourceMeteData.catagoryCode);
+                    layer.close(index);
+                }
+            });
+        },
+        // 获取资源提供方单位
+        getComList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/organisationinfo/select',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:1,
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.comList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 设置资源提供方信息
+        setCom:function (obj) {
+            console.log(obj);
+            vm.resourceMeteData.organisationName = obj.organisationName;
+            vm.resourceMeteData.organisationId = obj.organisationId;
+            vm.resourceMeteData.organisationAddress = obj.organisationAddr;
+        },
         // 收缩展开搜索
         openSwitch:function () {
             if(vm.open){
@@ -88,6 +201,49 @@ var vm = new Vue({
                 vm.open = true;
                 vm.openText = '展开筛选'
             }
+        },
+        getInfo: function(catalogId){
+            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
+                console.log(r);
+                vm.resourceMeteData = r.xjCatalog;
+                // vm.resourceMeteData.parentId = 0;
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+        },
+        update: function (id) {
+            var catalogId = id;
+            if(catalogId == null){
+                return ;
+            }
+            //
+            vm.showList = false;
+            vm.title = "修改目录";
+
+            vm.getInfo(catalogId);
+            vm.getMenu();
+            vm.getMenu1();
+            vm.getComList();
+        },
+        saveOrUpdate: function (event) {
+            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                data: JSON.stringify(vm.resourceMeteData),
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.page = 1;
+                        vm.reload();
+                        console.log('成功')
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else{
+                        console.log('失败')
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
         },
         filterNode:function(value, data) {
             if (!value) return true;
@@ -237,20 +393,24 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            console.log(this.q);
             var obj = {
                 page:this.page,
                 reviewState:null,
-                pushState:null
+                pushState:null,
+                name:this.nameS,
             }
             if(this.tab == 4){
                 obj = {
                     page:this.page,
+                    name:this.nameS,
                     reviewState:null,
                     pushState:1
                 }
             }else {
                 obj = {
                     page:this.page,
+                    name:this.nameS,
                     reviewState:this.tab,
                     pushState:null
                 }
@@ -280,10 +440,18 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
+
             if(data.list.length == 0 || data.id == null){
-                console.log('进来了')
+
                 vm.catalogId = data.id;
+                if(data.name == '资源目录'){
+                    console.log('进来了')
+                    vm.nameS = '';
+                }else {
+                    vm.nameS = data.name;
+                }
+                console.log(vm.nameS);
+
                 vm.getTableList();
             }
         },
@@ -473,38 +641,33 @@ var vm = new Vue({
 
         },
         // 获取审核记录
-        getoptionList:function () {
+        getoptionList:function (id) {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjcatalog/stopPush',
+                url: baseURL + 'xj/xjcatalogaudit/getList',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     catalogId:id
                 },
                 success: function(r){
-                    if(r.code === 0){
-                        layer.open({
-                            type: 1,
-                            title: '审核记录',
-                            content: $('#shenheList'), //这里content是一个普通的String
-                            skin: 'openClass',
-                            area: ['562px', '460px'],
-                            shadeClose: true,
-                            closeBtn:0,
-                            btn: ['关闭'],
-                            btn1:function (index) {
+                    console.log(r)
+                    vm.optionList = r;
+                    layer.open({
+                        type: 1,
+                        title: '审核记录',
+                        content: $('#shenheList'), //这里content是一个普通的String
+                        skin: 'openClass',
+                        area: ['562px', '460px'],
+                        shadeClose: true,
+                        closeBtn:0,
+                        btn: ['关闭'],
+                        btn1:function (index) {
 
+                            layer.close(index);
+                        }
 
-                            },
-                            btn2:function () {
-                                // layer.close(index);
-                                vm.getTableList();
-                            }
-
-                        })
-                    }else{
-                    }
+                    })
                 }
             });
         }

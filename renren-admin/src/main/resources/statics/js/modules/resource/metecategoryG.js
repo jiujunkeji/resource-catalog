@@ -218,7 +218,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "resource/resourcemetedata/delete",
+                    url: baseURL + "xj/xjmetadata/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
