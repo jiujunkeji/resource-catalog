@@ -41,7 +41,7 @@ public class XjMeteSetMiddleVersionEntity implements Serializable {
 	/**
 	 * 元数据的数据类型
 	 */
-	private String meteDataType;
+	private Integer meteDataType;
 	/**
 	 * 元数据的数据长度
 	 */
@@ -159,18 +159,15 @@ public class XjMeteSetMiddleVersionEntity implements Serializable {
 	public String getMeteEuame() {
 		return meteEuame;
 	}
-	/**
-	 * 设置：元数据的数据类型
-	 */
-	public void setMeteDataType(String meteDataType) {
-		this.meteDataType = meteDataType;
-	}
-	/**
-	 * 获取：元数据的数据类型
-	 */
-	public String getMeteDataType() {
+
+	public Integer getMeteDataType() {
 		return meteDataType;
 	}
+
+	public void setMeteDataType(Integer meteDataType) {
+		this.meteDataType = meteDataType;
+	}
+
 	/**
 	 * 设置：元数据的数据长度
 	 */

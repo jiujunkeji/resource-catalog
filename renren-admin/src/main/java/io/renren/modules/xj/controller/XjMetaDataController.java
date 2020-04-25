@@ -296,7 +296,7 @@ public class XjMetaDataController extends AbstractController {
 
         List<XjMetaDataEntity> fieldList =xjMetaDataService.selectList(new EntityWrapper<XjMetaDataEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
-            String[] headers = {"编号", "中文名称", "英文名称", "数据类型", "数据长度", "是否必选"};
+            String[] headers = {"编号", "中文名称", "英文名称", "英文短名", "元数据编号", "数据类型", "数据长度", "是否必选/非必选", "定义", "值域", "值域描述", "分类名称", "校验类型", "是否禁用", "创建人", "创建日期","更新日期"};
             String fileName = "元数据字段";
             exportExcel(headers, fieldList, fileName, response, request, session);
         }
@@ -375,17 +375,20 @@ public class XjMetaDataController extends AbstractController {
                 }else if(i == 9){
                     cell.setCellValue(t.getRange());
                 }else if(i == 10){
-                    cell.setCellValue(t.getMeteCategoryId());
+                    cell.setCellValue(t.getRangeDescription());
                 }else if(i == 11){
-                    cell.setCellValue(t.getCheckType());
+                    XjMeteCategoryEntity xjMeteCategoryEntity=xjMeteCategoryService.selectOne(new EntityWrapper<XjMeteCategoryEntity>().eq("mete_category_id",t.getMeteCategoryId()));
+                    cell.setCellValue(xjMeteCategoryEntity.getName());
                 }else if(i == 12){
-                    cell.setCellValue(t.getIsDisabled());
+                    cell.setCellValue(t.getCheckType());
                 }else if(i == 13){
-                    cell.setCellValue(t.getCreateUserId());
+                    cell.setCellValue(t.getIsDisabled());
                 }else if(i == 14){
                     cell.setCellValue(t.getCreateUserId());
                 }else if(i == 15){
                     cell.setCellValue(t.getCreateDate());
+                }else if(i == 16){
+                    cell.setCellValue(t.getUpdateTime());
                 }
             }
         }
