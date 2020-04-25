@@ -347,7 +347,7 @@
                 </div>
             </div>
             <el-table
-                    :data="resourceMeteData.xjMeteSetCategoryEntity"
+                    :data="resourceMeteData.meteDataList"
                     border
                     stripe
                     @selection-change="toggleSelection1"
@@ -377,27 +377,28 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop=""
-                        label="数据类型"
-                        width="">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.dataType == 0">整型</span>
-                        <span v-if="scope.row.dataType == 1">实型</span>
-                        <span v-if="scope.row.dataType == 2">布尔型</span>
-                        <span v-if="scope.row.dataType == 3">字符串</span>
-                        <span v-if="scope.row.dataType == 4">日期</span>
-                    </template>
+                        prop="updateTime"
+                        label="更新时间"
+                        width="110">
                 </el-table-column>
                 <el-table-column
-                        prop="dataLength"
-                        label="数据长度"
-                        width="">
-                </el-table-column>
-                <el-table-column
-                        label="操作"
-                        width="80">
+                        label="是否禁用"
+                        width="90">
                     <template slot-scope="scope">
-                        <i class="el-icon-edit" @click="editUp(scope.row.fieldId)"></i>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 0"
+                                size="small"
+                                type="success"
+                                effect="dark">
+                            否
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 1"
+                                size="small"
+                                type="danger"
+                                effect="dark">
+                            是
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
