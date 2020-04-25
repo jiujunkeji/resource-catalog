@@ -284,6 +284,8 @@ public class XjMetaDataSetController extends AbstractController {
     @RequestMapping("/delete")
     //@RequiresPermissions("xj:xjmetadataset:delete")
     public R delete(@RequestBody Long[] meteSetIds){
+        //删除元数据集
+        xjMetaDataSetService.deleteBatchIds(Arrays.asList(meteSetIds));
         //删除元数据集关联的中间表
         xjMeteSetMiddleService.deleteBatchIds(Arrays.asList(meteSetIds));
         return R.ok();
