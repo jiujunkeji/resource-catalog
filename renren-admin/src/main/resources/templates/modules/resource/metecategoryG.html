@@ -131,9 +131,9 @@
             </el-tree>
         </div>
         <div class="listCon">
-            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
-            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
+            <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
+            <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
+            <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
             <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
                 <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
                 <span class="title">
@@ -167,7 +167,7 @@
                     </span>
                     <div class="right">
                         <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
-                        <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
+                        <el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;
                         <el-button size="medium" type="primary" @click="openC">启用</el-button>&nbsp;&nbsp;
                         <el-button size="medium" type="primary" @click="closeC">禁用</el-button>&nbsp;&nbsp;
                     </div>
