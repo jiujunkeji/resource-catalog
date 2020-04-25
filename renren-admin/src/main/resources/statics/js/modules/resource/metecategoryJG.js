@@ -88,7 +88,8 @@ var vm = new Vue({
         fileData:{},
         comList:[],
         fenlSelect:[],
-        fenlSelect1:[]
+        fenlSelect1:[],
+        hisList:[]
     },
     watch: {
         filterText:function(val) {
@@ -591,24 +592,29 @@ var vm = new Vue({
         },
         // 获取历史版本
         getHist:function (id) {
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#hisList'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['600px', '520px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate1();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.getFileTableList();
-                }
+            $.get(baseURL + "xj/xjmetadataset/historyInfo/"+id, function(r){
+                console.log(r);
+                vm.hisList = r;
+                layer.open({
+                    type: 1,
+                    title: '新增',
+                    content: $('#hisList'), //这里content是一个普通的String
+                    skin: 'openClass',
+                    area: ['600px', '520px'],
+                    shadeClose: true,
+                    closeBtn:0,
+                    btn: ['关闭'],
+                    btn1:function (index) {
 
-            })
+                        layer.close(index);
+                    },
+                    btn2:function () {
+                    }
+
+                })
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+
         },
     },
     created:function () {

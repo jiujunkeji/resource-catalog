@@ -517,9 +517,9 @@ var vm = new Vue({
                 console.log('进来了')
                 vm.catalogId = data.id;
                 if(data.name == '资源目录'){
-                    vm.q.name = data.name;
-                }else {
                     vm.q.name = '';
+                }else {
+                    vm.q.name = data.name;
                 }
                 vm.getTableList();
             }
