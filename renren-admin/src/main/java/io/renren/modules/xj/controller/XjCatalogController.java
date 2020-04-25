@@ -8,8 +8,10 @@ import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysDictEntity;
 import io.renren.modules.sys.service.SysDictService;
+import io.renren.modules.xj.entity.XjCatalogAuditEntity;
 import io.renren.modules.xj.entity.XjMetaDataEntity;
 import io.renren.modules.xj.entity.XjSafeEntity;
+import io.renren.modules.xj.service.XjCatalogAuditService;
 import io.renren.modules.xj.service.XjMetaDataService;
 import io.renren.modules.xj.service.XjSafeService;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +45,8 @@ public class XjCatalogController extends AbstractController{
     private XjMetaDataService metaDataService;
     @Autowired
     private XjSafeService safeService;
+    @Autowired
+    private XjCatalogAuditService auditService;
     /**
      * 目录列表
      */
@@ -137,9 +141,8 @@ public class XjCatalogController extends AbstractController{
     @RequestMapping("/update")
     //@RequiresPermissions("xj:xjcatalog:update")
     public R update(@RequestBody XjCatalogEntity xjCatalog){
-        ValidatorUtils.validateEntity(xjCatalog);
-        xjCatalogService.updateAllColumnById(xjCatalog);//全部更新
-        
+        xjCatalog.setUpdateTime(new Date());
+        xjCatalogService.updateById(xjCatalog);
         return R.ok();
     }
 
@@ -164,4 +167,112 @@ public class XjCatalogController extends AbstractController{
         return R.ok();
     }
 
+    /**
+     * 提交
+     */
+    @RequestMapping("/submit")
+    public R submit(@RequestBody Long[] catalogIds){
+        List<XjCatalogEntity> list = xjCatalogService.selectBatchIds(Arrays.asList(catalogIds));
+        if(list != null && list.size() > 0){
+            List<XjCatalogAuditEntity> auditList = new ArrayList<>();
+            for(XjCatalogEntity catalog : list){
+                catalog.setReviewState(1);
+                XjCatalogAuditEntity audit = new XjCatalogAuditEntity();
+                audit.setCatalogId(catalog.getCatalogId());
+                audit.setOperatType("提交");
+                audit.setOperatUserId(getUserId());
+                audit.setOperatUserName(getUser().getName());
+                audit.setOperatTime(new Date());
+                auditList.add(audit);
+            }
+            xjCatalogService.updateBatchById(list);
+            auditService.insertBatch(auditList);
+        }
+        return R.ok();
+    }
+    /**
+     * 撤回
+     */
+    @RequestMapping("/revoke")
+    public R revoke(@RequestParam Long catalogId){
+        XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        //获取最后一次提交的时间
+        XjCatalogAuditEntity audit = auditService.selectOne(
+                new EntityWrapper<XjCatalogAuditEntity>()
+                        .eq("catalog_id",catalogId)
+                        .eq("operat_typpe","提交")
+                        .orderBy("operat_time",false)
+        );
+        Date now = new Date(System.currentTimeMillis() - 600000);
+        Date submitTime = audit.getOperatTime();
+        if (now.before(submitTime)) {
+            catalog.setReviewState(0);
+            xjCatalogService.updateById(catalog);
+            XjCatalogAuditEntity auditEntity = new XjCatalogAuditEntity();
+            auditEntity.setCatalogId(catalog.getCatalogId());
+            auditEntity.setOperatType("撤回");
+            auditEntity.setOperatUserId(getUserId());
+            auditEntity.setOperatUserName(getUser().getName());
+            auditEntity.setOperatTime(new Date());
+            auditService.insert(auditEntity);
+            return R.ok("操作成功");
+        } else {
+            return R.error("提交时间超过限制，不能撤回");
+        }
+    }
+    /**
+     * 审核通过
+     */
+    @RequestMapping("/agree")
+    public R agree(@RequestBody Long catalogId){
+        XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        catalog.setReviewState(2);
+        XjCatalogAuditEntity audit = new XjCatalogAuditEntity();
+        audit.setCatalogId(catalog.getCatalogId());
+        audit.setOperatType("通过");
+        audit.setOperatUserId(getUserId());
+        audit.setOperatUserName(getUser().getName());
+        audit.setOperatTime(new Date());
+        xjCatalogService.updateById(catalog);
+        auditService.insert(audit);
+        return R.ok();
+    }
+
+    /**
+     * 退回
+     */
+    @RequestMapping("/refuse")
+    public R refuse(@RequestBody XjCatalogAuditEntity audit){
+        XjCatalogEntity catalog = xjCatalogService.selectById(audit.getCatalogId());
+        catalog.setReviewState(3);
+        audit.setOperatType("退回");
+        audit.setOperatUserId(getUserId());
+        audit.setOperatUserName(getUser().getName());
+        audit.setOperatTime(new Date());
+        xjCatalogService.updateById(catalog);
+        auditService.insert(audit);
+        return R.ok();
+    }
+
+    /**
+     * 发布
+     */
+    @RequestMapping("/push")
+    public R push(@RequestParam Long catalogId){
+        XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        catalog.setPushState(1);
+        xjCatalogService.updateById(catalog);
+        return R.ok();
+    }
+
+    /**
+     * 停止发布
+     */
+    @RequestMapping("/stopPush")
+    public R stopPush(@RequestParam Long catalogId){
+        XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        catalog.setPushState(0);
+        xjCatalogService.updateById(catalog);
+        return R.ok();
+    }
 }
