@@ -291,10 +291,10 @@ public class XjMetaDataController extends AbstractController {
     /**
      导出
      */
-    @RequestMapping("/downField")
-    public void downField(@RequestBody Long[] meteIds, HttpSession session, HttpServletResponse response, HttpServletRequest request)throws Exception{
+    @RequestMapping("/downField/{meteId}")
+    public void downField(@PathVariable("meteId") Long meteId, HttpSession session, HttpServletResponse response, HttpServletRequest request)throws Exception{
 
-        List<XjMetaDataEntity> fieldList =xjMetaDataService.selectBatchIds(Arrays.asList(meteIds));
+        List<XjMetaDataEntity> fieldList =xjMetaDataService.selectList(new EntityWrapper<XjMetaDataEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
             String[] headers = {"编号", "中文名称", "英文名称", "数据类型", "数据长度", "是否必选"};
             String fileName = "元数据字段";
