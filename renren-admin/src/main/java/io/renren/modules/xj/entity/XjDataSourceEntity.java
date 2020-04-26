@@ -51,11 +51,11 @@ public class XjDataSourceEntity implements Serializable {
 	 */
 	private Integer dsPort;
 
-	public Integer getPort() {
+	public Integer getDsPort() {
 		return dsPort;
 	}
 
-	public void setPort(Integer port) {
+	public void setDsPort(Integer port) {
 		this.dsPort = port;
 	}
 

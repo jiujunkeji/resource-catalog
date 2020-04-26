@@ -3,6 +3,7 @@ package io.renren.modules.xj.entity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,7 +39,78 @@ public class XjKtrEntity implements Serializable {
 	 * sql
 	 */
 	private String ktrSql;
+	/**
+	 * 任务类型
+	 */
+	private String ktrType;
+	/**
+	 *描述
+	 */
+	private String ktrPurpose;
+	/**
+	 * 部门
+	 */
+	private String ktrMechanism;
+	/**
+	 * 备注
+	 */
+	private String ktrText;
+	/**
+	 * 创建时间
+	 */
+	private Date ktrCreatetime;
+	/**
+	 * 修改时间
+	 */
+	private Date ktrUpdatetime;
 
+	public String getKtrType() {
+		return ktrType;
+	}
+
+	public void setKtrType(String ktrType) {
+		this.ktrType = ktrType;
+	}
+
+	public String getKtrPurpose() {
+		return ktrPurpose;
+	}
+
+	public void setKtrPurpose(String ktrPurpose) {
+		this.ktrPurpose = ktrPurpose;
+	}
+
+	public String getKtrMechanism() {
+		return ktrMechanism;
+	}
+
+	public void setKtrMechanism(String ktrMechanism) {
+		this.ktrMechanism = ktrMechanism;
+	}
+
+	public String getKtrText() {
+		return ktrText;
+	}
+
+	public void setKtrText(String ktrText) {
+		this.ktrText = ktrText;
+	}
+
+	public Date getKtrCreatetime() {
+		return ktrCreatetime;
+	}
+
+	public void setKtrCreatetime(Date ktrCreatetime) {
+		this.ktrCreatetime = ktrCreatetime;
+	}
+
+	public Date getKtrUpdatetime() {
+		return ktrUpdatetime;
+	}
+
+	public void setKtrUpdatetime(Date ktrUpdatetime) {
+		this.ktrUpdatetime = ktrUpdatetime;
+	}
 
 	/**
 	 * 设置：
