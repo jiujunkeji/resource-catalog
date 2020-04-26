@@ -56,6 +56,7 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
 
     @Override
     public String kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+        
         KettleEnvironment.init();
         KettleDatabaseRepository kettleDatabaseRepository = repositoryCon(ds);
         //createAndSaveTrans(kettleDatabaseRepository);
