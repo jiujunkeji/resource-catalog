@@ -40,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 public class XjKtrController {
     @Autowired
     private XjKtrService xjKtrService;
+    @Autowired
+    private XjDataSourceService xjDataSourceService;
 
     /**
      * 列表
@@ -69,7 +71,9 @@ public class XjKtrController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjktr:save")
     public R save(@RequestBody XjKtrEntity xjKtr){
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
         xjKtr.setKtrStatus("0");
+        xjKtr.setKtrDsname(ds.getDsDatabasename());
         xjKtr.setKtrCreatetime(new Date());
         xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
@@ -105,16 +109,17 @@ public class XjKtrController {
      * 任务执行
      */
     @RequestMapping("/run")
-    public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+    public R run(@RequestBody XjKtrEntity xjKtr) throws Exception {
         xjKtr.setKtrStatus("1");
-        xjKtrService.updateAllColumnById(xjKtr);
+        xjKtrService.updateById(xjKtr);
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
         String result = xjKtrService.kettleJob(xjKtr,ds);
         if (result == "success"){
             xjKtr.setKtrStatus("2");
         }else {
             xjKtr.setKtrStatus("3");
         }
-        xjKtrService.updateAllColumnById(xjKtr);
+        xjKtrService.updateById(xjKtr);
         return R.ok();
     }
 
