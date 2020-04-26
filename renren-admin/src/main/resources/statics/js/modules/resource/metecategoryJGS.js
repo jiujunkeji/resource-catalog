@@ -667,6 +667,7 @@ var vm = new Vue({
         },
         // 获取元数据列表
         getTableList1:function () {
+            var _this = this;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetadata/queryList',
@@ -681,25 +682,20 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.tableList1 = r.page.list;
+                        vm.tableList1 = [];
                         vm.totalPage1 = r.page.totalCount;
+                        r.page.list.forEach(function (item) {
+                            if(item.isDisabled == 0){
+                                vm.tableList1.push(item)
+                            }
+                        })
 
                         if (vm.resourceMeteData.meteDataList.length != 0) {
-                            var arr = [];
-
-                            vm.resourceMeteData.meteDataList.forEach(function (item) {
-                                vm.tableList1.forEach(function (m,n) {
-                                    if(m.meteId == item.meteId){
-                                        arr.push(n)
-                                    }
-                                })
-                            })
-
-                            arr.forEach(function (t) {
-                                this.$refs.multipleTable.toggleRowSelection(t);
+                            vm.resourceMeteData.meteDataList.forEach(function (t) {
+                                _this.$refs.multipleTable.toggleRowSelection(t,true);
                             });
                         } else {
-                            this.$refs.multipleTable.clearSelection();
+                            _this.$refs.multipleTable.clearSelection();
                         }
                     }else{
                         alert(r.msg);

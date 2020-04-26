@@ -231,6 +231,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+		    var _this = this;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetesetcategory/queryList',
