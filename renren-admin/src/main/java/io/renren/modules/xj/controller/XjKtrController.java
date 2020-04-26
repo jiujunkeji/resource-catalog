@@ -113,13 +113,7 @@ public class XjKtrController {
         xk.setKtrStatus("1");
         xjKtrService.updateById(xk);
         XjDataSourceEntity ds = xjDataSourceService.selectById(xk.getKtrDsid());
-        String result = xjKtrService.kettleJob(xk,ds);
-        if (result == "success"){
-            xk.setKtrStatus("2");
-        }else {
-            xk.setKtrStatus("3");
-        }
-        xjKtrService.updateById(xk);
+        xjKtrService.kettleJob(xk,ds);
         return R.ok();
     }
 
