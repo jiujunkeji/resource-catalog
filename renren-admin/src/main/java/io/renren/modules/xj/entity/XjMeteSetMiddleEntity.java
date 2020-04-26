@@ -106,6 +106,8 @@ public class XjMeteSetMiddleEntity implements Serializable {
 
 	private String  safe;//安全类型
 
+	private String field;//源字段名称
+
 	/**
 	 * 设置：版本id（主键）
 	 */
@@ -352,5 +354,13 @@ public class XjMeteSetMiddleEntity implements Serializable {
 
 	public void setSafe(String safe) {
 		this.safe = safe;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
 	}
 }

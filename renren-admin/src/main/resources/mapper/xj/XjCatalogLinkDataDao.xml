@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.xj.dao.XjCatalogLinkDataDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.xj.entity.XjCatalogLinkDataEntity" id="xjCatalogLinkDataMap">
+        <result property="linkId" column="link_id"/>
+        <result property="catalogId" column="catalog_id"/>
+        <result property="dataSourceId" column="data_source_id"/>
+        <result property="tableName" column="table_name"/>
+    </resultMap>
+
+
+</mapper>
