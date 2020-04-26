@@ -411,12 +411,9 @@
                     stripe
                     @selection-change="toggleSelection1"
                     style="width: 100%">
+
                 <el-table-column
-                        type="selection"
-                        width="40">
-                </el-table-column>
-                <el-table-column
-                        prop="cnName"
+                        prop="meteCname"
                         label="中文名称"
                         width="">
                 </el-table-column>
@@ -426,12 +423,12 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="euName"
+                        prop="meteEname"
                         label="英文名称"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="dataLength"
+                        prop="meteDataLength"
                         label="数据长度"
                         width="">
                 </el-table-column>
@@ -575,12 +572,12 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">安全级别</div>
                 <div class="col-sm-10">
-                    <el-select v-model="fileData.safe" placeholder="1～5级别由高到低">
+                    <el-select v-model="fileData.safe" placeholder="1～5级别由高到低" @change="safeChange">
                         <el-option
                                 v-for="item in safeLevelList"
                                 :key="item.code"
                                 :label="item.value"
-                                :value="item.value">
+                                :value="item">
                         </el-option>
                     </el-select>
                 </div>

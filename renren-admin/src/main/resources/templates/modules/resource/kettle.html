@@ -40,6 +40,9 @@
             .el-autocomplete-suggestion{
                 z-index:100000000!important;
             }
+            .switchIn .el-select{
+                width: calc(100% - 116px);
+            }
         </style>
         </head>
 <body>
@@ -138,11 +141,18 @@
                             effect="dark">
                         已执行
                     </el-tag>
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 3"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        执行失败
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="ktrDsname"
-                    label="数据库名"
+                    label="数据源名"
                     width="">
             </el-table-column>
             <el-table-column
@@ -182,8 +192,8 @@
                     width="100">
                 <template slot-scope="scope">
                     <i class="el-icon-edit" @click="update(scope.row.ktrId)"></i>
-                    <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                    <el-button type="text" @click="implement(scope.row.ktrId)">执行</el-button>
+                    <span v-if="scope.row.ktrStatus != 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                    <el-button v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" type="text" @click="implement(scope.row.ktrId)">执行</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -215,9 +225,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据库名</div>
+                <div class="col-sm-2 control-label">数据源</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrDsname" placeholder="数据库名"/>
+                    <el-select v-model="meteCategory.ktrDsid" placeholder="请选择" @change="dsChange">
+                        <el-option
+                                v-for="item in dataSourceList"
+                                :key="item.dsId"
+                                :label="item.dsName"
+                                :value="item.dsId">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
             <div class="form-group">

@@ -5,10 +5,12 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
+import io.renren.modules.xj.service.XjDataSourceService;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 public class XjKtrController {
     @Autowired
     private XjKtrService xjKtrService;
+    @Autowired
+    private XjDataSourceService xjDataSourceService;
 
     /**
      * 列表
@@ -49,7 +53,6 @@ public class XjKtrController {
 
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息
@@ -68,6 +71,8 @@ public class XjKtrController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjktr:save")
     public R save(@RequestBody XjKtrEntity xjKtr){
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
+        xjKtr.setKtrStatus("0");
         xjKtr.setKtrCreatetime(new Date());
         xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
@@ -103,8 +108,18 @@ public class XjKtrController {
      * 任务执行
      */
     @RequestMapping("/run")
-    public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
-        xjKtrService.kettleJob(xjKtr,ds);
+    public R run(@RequestParam int ktrId) throws Exception {
+        XjKtrEntity xk = xjKtrService.selectById(ktrId);
+        xk.setKtrStatus("1");
+        xjKtrService.updateById(xk);
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xk.getKtrDsid());
+        String result = xjKtrService.kettleJob(xk,ds);
+        if (result == "success"){
+            xk.setKtrStatus("2");
+        }else {
+            xk.setKtrStatus("3");
+        }
+        xjKtrService.updateById(xk);
         return R.ok();
     }
 

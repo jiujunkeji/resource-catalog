@@ -40,6 +40,7 @@ var vm = new Vue({
         h:0,
         comList:[],
         restaurants: [],
+        dataSourceList:[]
 	},
 	methods: {
 		query: function () {
@@ -337,16 +338,65 @@ var vm = new Vue({
         },
         // 执行
         implement:function (id) {
+            layer.confirm('确定要执行选中的记录？', function(index1){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + "xj/xjktr/run",
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data:{
+                        ktrId:id
+                    },
+                    // data:JSON.stringify(id),
+                    success: function(r){
+                        if(r.code == 0){
+                            vm.reload();
+                            layer.close(index1);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
+
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            });
         },
         // 下载
         down:function () {
             window.location.href = baseURL + "xj/xjktr/downTemplate"
-        }
+        },
+        // 获取数据源表格列表
+        getShujuyuanList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjdatasource/list2',
+                // contentType: "application/json",
+                dataType: 'json',
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.dataSourceList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 数据源改变
+        dsChange:function (opt) {
+            console.log(opt);
+            vm.dataSourceList.forEach(function (item) {
+                if(item.dsId = opt){
+                    vm.meteCategory.ktrDsname = item.dsName
+                }
+            })
+        },
 	},
 	created:function () {
 	    this.getTableList();
 	    this.getBumen();
+	    this.getShujuyuanList()
         // $.get(baseURL + "resource/metecategory/list", function(r){
         //     console.log(r);
         // });

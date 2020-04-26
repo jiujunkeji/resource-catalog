@@ -1,6 +1,10 @@
 package io.renren.modules.xj.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -23,7 +27,23 @@ public class XjDataSourceServiceImpl extends ServiceImpl<XjDataSourceDao, XjData
                 new EntityWrapper<XjDataSourceEntity>()
         );
 
+
         return new PageUtils(page);
+    }
+
+    @Override
+    public List list2(Map<String, Object> params) {
+        return returnList(params);
+    }
+
+    public static List  returnList(Map<String, Object> params) {
+        List list = new ArrayList();
+        Iterator iter = params.entrySet().iterator();  //获得map的Iterator
+        while(iter.hasNext()) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            list.add(entry.getValue());
+        }
+        return list;
     }
 
 }
