@@ -1,10 +1,12 @@
 package io.renren.modules.xj.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -82,7 +84,11 @@ public class XjSafeEntity implements Serializable {
 	 * 备注
 	 */
 	private String remark;
-
+	/**
+	 * 元数据列表
+	 */
+	@TableField(exist = false)
+	private List<XjMeteSetMiddleEntity> meteDataList;
 	/**
 	 * 设置：id
 	 */
@@ -242,5 +248,13 @@ public class XjSafeEntity implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public List<XjMeteSetMiddleEntity> getMeteDataList() {
+		return meteDataList;
+	}
+
+	public void setMeteDataList(List<XjMeteSetMiddleEntity> meteDataList) {
+		this.meteDataList = meteDataList;
 	}
 }
