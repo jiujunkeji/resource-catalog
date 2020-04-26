@@ -34,32 +34,34 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
         String meteCategorySetId = (String) params.get("meteCategorySetId");
         String meteSetNumber = (String) params.get("meteSetNumber");
         String cnName = (String) params.get("cnName");
+        Integer reviewState= (Integer) params.get("reviewState");
         Page<XjMetaDataSetEntity> page =null;
         if(StringUtils.isNotBlank(meteCategorySetId)){
             if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteSetNumber)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(meteSetNumber)){
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             }else{
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             }
         }else{
             if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteSetNumber)) {
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(meteSetNumber)){
-               return queryPage(params);
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("review_state",reviewState));
+                return new PageUtils(page);
             }else{
-                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber));
+                page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("review_state",reviewState));
                 return new PageUtils(page);
             }
         }
