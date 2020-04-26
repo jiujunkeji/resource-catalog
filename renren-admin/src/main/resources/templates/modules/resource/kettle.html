@@ -138,12 +138,22 @@
                             effect="dark">
                         已执行
                     </el-tag>
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 3"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        执行失败
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="ktrDsname"
-                    label="数据库名"
+                    prop="ktrDsname.dsName"
+                    label="数据源名"
                     width="">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.ktrDsname">{{scope.row.ktrDsname.dsName}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="ktrTablename"
@@ -215,9 +225,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据库名</div>
+                <div class="col-sm-2 control-label">数据源</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrDsname" placeholder="数据库名"/>
+                    <el-select v-model="meteCategory.ktrDsname" placeholder="请选择">
+                        <el-option
+                                v-for="item in dataSourceList"
+                                :key="item.dsId"
+                                :label="item.dsName"
+                                :value="item">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
             <div class="form-group">

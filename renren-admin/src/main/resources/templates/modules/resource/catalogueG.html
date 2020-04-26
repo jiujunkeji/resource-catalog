@@ -109,7 +109,7 @@
                 border-color: #f1f4fb;
             }
             div.line .item label{
-                width: 77px;
+                width: 97px;
             }
 
         </style>
@@ -218,42 +218,22 @@
                     <el-table-column
                             prop="catalogName"
                             label="目录名称"
-                            width="180">
+                            width="">
                     </el-table-column>
                     <el-table-column
                             prop="safe"
-                            label="数据源"
-                            width="90">
+                            label="数据源名称"
+                            width="">
                     </el-table-column>
                     <el-table-column
                             prop="encrypt"
                             label="数据表名"
-                            width="130">
+                            width="">
                     </el-table-column>
                     <el-table-column
                             prop="createTime"
-                            label="创建时间"
-                            width="110">
-                    </el-table-column>
-                    <el-table-column
-                            prop="createUser"
-                            label="创建用户"
-                            width="110">
-                    </el-table-column>
-                    <el-table-column
-                            prop="updateTime"
-                            label="修改时间"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="updateUser"
-                            label="修改用户"
-                            width="130">
-                    </el-table-column>
-                    <el-table-column
-                            prop="remark"
-                            label="备注"
-                            width="150">
+                            label="数据表中文名"
+                            width="">
                     </el-table-column>
                     <el-table-column
                             label="操作"
@@ -298,25 +278,39 @@
             </div>
             <div class="line">
                 <div class="item">
+                    <label>目录名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="item">
                     <label>数据源</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.safeTypeCode" placeholder="请选择" @change="safeTypeChan">
+                        <el-select v-model="resourceMeteData.dataSourceId" placeholder="请选择" @change="dsChange">
                             <el-option
-                                    v-for="item in safeTypeList"
-                                    :key="item.code"
-                                    :label="item.value"
-                                    :value="item.code">
+                                    v-for="item in dataSourceList"
+                                    :key="item.dsId"
+                                    :label="item.dsName"
+                                    :value="item.dsId">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="item">
-                    <label>表名</label>
+                    <label>数据表名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="表名"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.tableName" placeholder="数据表名"/>
                     </div>
                 </div>
-
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>数据表中文名</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.tableNameCn" placeholder="数据表中文名"/>
+                    </div>
+                </div>
+                <div class="item"></div>
                 <div class="item"></div>
             </div>
         </div>
@@ -324,7 +318,7 @@
             <div class="grid-btn" style="">
                 <span class="title">
                     <i class="el-icon-edit-outline"></i>
-                    元数据安全设置
+                    元数据设置
                 </span>
                 <div class="right">
                     <!--<el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;-->

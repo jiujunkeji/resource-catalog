@@ -103,7 +103,8 @@ var vm = new Vue({
         comList:[],
         safeLevelList:[],
         encryptMethodList:[],
-        safeTypeList:[]
+        safeTypeList:[],
+        dataSourceList:[]
 
     },
     watch: {
@@ -204,7 +205,7 @@ var vm = new Vue({
         },
         add: function(){
             vm.showList = false;
-            vm.title = "新增目录安全设置";
+            vm.title = "新增目录关联数据设置";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -227,7 +228,7 @@ var vm = new Vue({
                 return ;
             }
             vm.showList = false;
-            vm.title = "修改目录安全设置";
+            vm.title = "修改目录关联数据设置";
             vm.getInfo(catalogId);
             vm.getMenu();
             // vm.getMenu1();
@@ -837,7 +838,51 @@ var vm = new Vue({
                 }
 
             })
-        }
+        },
+        // 获取数据源表格列表
+        getShujuyuanList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjdatasource/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:this.page,
+                    dsDatabasename:this.q.name,
+                    dsType:this.q.type,
+                },
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.dataSourceList = r.page.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 数据源改变
+        dsChange:function (opt) {
+            console.log(opt);
+            vm.dataSourceList.forEach(function (item) {
+                if(item.dsId = opt){
+                    vm.resourceMeteData.dsName = item.dsName
+                }
+            })
+        },
+        // 获取目录关联元数据
+        getyuanshujuList: function(catalogId){
+            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
+                console.log(r);
+                $.get(baseURL + "xj/xjmetadataset/info/"+r.xjCatalog.meteSetId, function(r){
+                    console.log(r);
+                    vm.yuanshujuList = r.xjMetaDataSet.meteDataList;
+                    // vm.tableListUp = r.resourceMeteData.list;
+                });
+                // vm.resourceMeteData.parentId = 0;
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+        },
     },
     created:function () {
         this.getMenuList();
@@ -845,6 +890,7 @@ var vm = new Vue({
         this.dictClick('safe_level');
         this.dictClick('encrypt_method');
         this.dictClick('safe_type');
+        this.getShujuyuanList();
         // this.h = height
     }
 });
