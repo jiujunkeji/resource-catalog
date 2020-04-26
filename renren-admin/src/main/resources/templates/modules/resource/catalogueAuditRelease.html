@@ -107,11 +107,14 @@
                 color: #fff;
                 border-color: #2593f3;
             }
+            div.line .item label{
+                width: 137px;
+            }
         </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div class="box">
+    <div class="box" v-show="showList">
         <div class="objectList">
             <div class="grid-btn">
                 <span class="title">
@@ -286,6 +289,136 @@
         </div>
     </div>
 
+    <div v-show="!showList" class="">
+        <div style="margin-bottom: 20px;overflow: hidden">
+            <button class="look" @click="saveOrUpdate">确定</button>
+            <button class="clean" @click="reload">取消</button>
+
+        </div>
+        <div class="divBox">
+            <div class="grid-btn" style="border-bottom: 1px solid #eee;margin-bottom: 20px">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    {{title}}
+                </span>
+
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>目录名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>上级目录</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.parentName" placeholder="上级目录" @click="menuTree" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>资源提供单位</label>
+                    <div class="inp">
+                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
+                            <el-option
+                                    v-for="item in comList"
+                                    :key="item.organisationId"
+                                    :label="item.organisationName"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>资源提供单位地址</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供单位地址"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>类目名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="类目名称" @click="menuTree1" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>类目编码</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="类目编码" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <div class="item">
+                    <label>元数据集</label>
+                    <div class="inp">
+                        <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom">
+                            <el-option
+                                    v-for="item in comList"
+                                    :key="item.organisationId"
+                                    :label="item.organisationName"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>信息资源名称</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称"/>
+                    </div>
+                </div>
+                <div class="item">
+                    <label>信息资源标识</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识"/>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="line">-->
+            <!--<div class="item">-->
+            <!--<label>是否使用</label>-->
+            <!--<div class="inp">-->
+            <!--<el-select v-model="resourceMeteData.isUsed" placeholder="请选择">-->
+            <!--<el-option-->
+            <!--key="0"-->
+            <!--label="停用"-->
+            <!--:value="0">-->
+            <!--</el-option>-->
+            <!--<el-option-->
+            <!--key="1"-->
+            <!--label="使用"-->
+            <!--:value="1">-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="item"></div>-->
+            <!--<div class="item"></div>-->
+            <!--</div>-->
+            <div class="line">
+                <div class="item">
+                    <label style="vertical-align: top">信息资源摘要</label>
+                    <div class="inp">
+                        <el-input
+                                type="textarea"
+                                :rows="2"
+                                placeholder="信息资源摘要"
+                                v-model="resourceMeteData.resourceAbstract">
+                        </el-input>
+                        <!--<input type="textarea" class="form-control" v-model="resourceMeteData.resourceAbstract" placeholder="信息资源摘要"/>-->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
     <div id="refuseDiv" class="panel panel-default" style="display: none">
         <form class="form-horizontal">
             <div class="form-group">
@@ -309,17 +442,17 @@
                 stripe
                 style="width: 100%">
             <el-table-column
-                    prop="catalogName"
+                    prop="operatTime"
                     label="审核时间"
-                    width="140">
+                    width="200">
             </el-table-column>
             <el-table-column
-                    prop="organisationName"
+                    prop="operatUserName"
                     label="审核人"
                     width="120">
             </el-table-column>
             <el-table-column
-                    prop="parentName"
+                    prop="auditOpinion"
                     label="审核意见"
                     width="">
             </el-table-column>

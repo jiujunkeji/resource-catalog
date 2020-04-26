@@ -1,5 +1,6 @@
 package io.renren.modules.xj.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,19 @@ public class XjMeteSetCategoryController {
     //@RequiresPermissions("xj:xjmetesetcategory:list")
     public List<XjMeteSetCategoryEntity> list(@RequestParam Map<String, Object> params){
         List<XjMeteSetCategoryEntity> list = xjMeteSetCategoryService.selectList(null);
+        List<XjMeteSetCategoryEntity> enabledList=new ArrayList<>();
         for(XjMeteSetCategoryEntity meteSetCategoryEntity : list){
             XjMeteSetCategoryEntity parentEntity = xjMeteSetCategoryService.selectById(meteSetCategoryEntity.getParentId());
-            if(parentEntity != null){
-                meteSetCategoryEntity.setParentName(parentEntity.getName());
+            if(meteSetCategoryEntity.getIsDisabled()==0){
+                if(parentEntity != null){
+                    meteSetCategoryEntity.setParentName(parentEntity.getName());
+                }
+                // //判断是否禁用，只返回未禁用的元数据集分类列表
+                enabledList.add(meteSetCategoryEntity);
             }
+
         }
-        return list;
+        return enabledList;
     }
 
     /**

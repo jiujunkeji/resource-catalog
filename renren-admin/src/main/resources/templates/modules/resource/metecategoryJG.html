@@ -38,7 +38,7 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
-                height: calc(100% - 50px);
+                /*height: calc(100% - 50px);*/
             }
             .el-tree .el-tree-node.is-expanded>.el-tree-node__content{
                 background: #fff;
@@ -108,6 +108,9 @@
             #addUp{
                 display: flex;
             }
+            div.switchIn .el-input__inner{
+                margin: 0;
+            }
 
         </style>
         </head>
@@ -131,9 +134,33 @@
             </el-tree>
         </div>
         <div class="listCon">
-            <button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>
-            <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
-            <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
+            <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
+            <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
+            <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
+            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch" :data-open="open1">{{openText}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean">重置</button>
+                <button class="look" @click="query">查询</button>
+            </div>
             <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">
@@ -143,7 +170,7 @@
                     </span>
                     <div class="right">
                         <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
-                        <el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;
+                        <!--<el-button size="medium" type="primary" @click="subMit" v-if="tab == 0">提交</el-button>&nbsp;&nbsp;-->
                         <el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;
                         <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
                     </div>
@@ -154,10 +181,6 @@
                         stripe
                         @selection-change="toggleSelection"
                         style="width: 100%">
-                    <el-table-column
-                            type="selection"
-                            width="40">
-                    </el-table-column>
                     <el-table-column
                             prop="meteSetNumber"
                             label="编号"
@@ -232,7 +255,10 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)"></i>
+                            <i v-if="scope.row.reviewState == 0" class="el-icon-edit" @click="update(scope.row.meteSetId)" title="修改"></i>
+                            <span v-if="scope.row.reviewState == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <i v-if="scope.row.reviewState == 0" class="el-icon-delete" @click="del(scope.row.meteSetId)" title="删除"></i>
+                            <el-button v-if="scope.row.reviewState != 0" type="text" @click="lookC(scope.row.meteSetId)">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -252,7 +278,7 @@
 
     <div v-show="!showList" class="">
         <div style="margin-bottom: 20px;overflow: hidden">
-            <button class="look" @click="saveOrUpdate">确定</button>
+            <button v-if="!look" class="look" @click="saveOrUpdate">确定</button>
             <button class="clean" @click="reload">取消</button>
 
         </div>
@@ -268,13 +294,13 @@
                 <div class="item">
                     <label>编号</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>分类名称</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择" @change="aaa">
+                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择" :disabled="look">
                             <el-option
                                     v-for="item in fenlSelect"
                                     :key="item.id"
@@ -287,7 +313,7 @@
                 <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称" :readonly="look"/>
                     </div>
                 </div>
             </div>
@@ -295,13 +321,13 @@
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>英文短名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item"></div>
@@ -314,33 +340,20 @@
                     元数据元素或实体列表
                 </span>
                 <div class="right">
-                    <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
-                    <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
-                    <!--<el-button size="medium" type="primary" @click="setUp">批量设置</el-button>&nbsp;&nbsp;-->
-                    <!--<el-button size="medium" type="primary" @click="inUp">导入</el-button>&nbsp;&nbsp;-->
-                    <!--<el-button size="medium" type="primary" @click="outUp">导出</el-button>&nbsp;&nbsp;-->
-                    <!--<div style="display: inline-block">-->
-                        <!--<el-upload-->
-                                <!--class="avatar-uploader"-->
-                                <!--action='${request.contextPath}/resource/resourcefield/importField'-->
-                                <!--:show-file-list="false"-->
-                                <!--:on-success="handleAvatarSuccess"-->
-                                <!--:before-upload="beforeAvatarUpload">-->
-                            <!--<el-button size="medium" type="primary">导入</el-button>-->
-                            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-                        <!--</el-upload>-->
-                    <!--</div>-->
-                    <!--<el-button size="medium" type="primary" @click="downUp">下载模版</el-button>&nbsp;&nbsp;-->
+                    <el-button v-if="!look" size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button v-if="!look" size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
+
 
                 </div>
             </div>
             <el-table
-                    :data="resourceMeteData.fieldList"
+                    :data="resourceMeteData.meteDataList"
                     border
                     stripe
                     @selection-change="toggleSelection1"
                     style="width: 100%">
                 <el-table-column
+                        v-if="!look"
                         type="selection"
                         width="40">
                 </el-table-column>
@@ -365,27 +378,28 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop=""
-                        label="数据类型"
-                        width="">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.dataType == 0">整型</span>
-                        <span v-if="scope.row.dataType == 1">实型</span>
-                        <span v-if="scope.row.dataType == 2">布尔型</span>
-                        <span v-if="scope.row.dataType == 3">字符串</span>
-                        <span v-if="scope.row.dataType == 4">日期</span>
-                    </template>
+                        prop="updateTime"
+                        label="更新时间"
+                        width="110">
                 </el-table-column>
                 <el-table-column
-                        prop="dataLength"
-                        label="数据长度"
-                        width="">
-                </el-table-column>
-                <el-table-column
-                        label="操作"
-                        width="80">
+                        label="是否禁用"
+                        width="90">
                     <template slot-scope="scope">
-                        <i class="el-icon-edit" @click="editUp(scope.row.fieldId)"></i>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 0"
+                                size="small"
+                                type="success"
+                                effect="dark">
+                            否
+                        </el-tag>
+                        <el-tag
+                                v-if="scope.row.isDisabled == 1"
+                                size="small"
+                                type="danger"
+                                effect="dark">
+                            是
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -400,8 +414,8 @@
             </el-pagination>
         </div>
     </div>
-    <div id="addUp" class="panel panel-default" style="display: none">
-        <div class="objectList">
+    <div id="addUp" class="panel panel-default" style="display: none;height: calc(100% - 20px);">
+        <div class="objectList" style="height: calc(100% - 10px);">
             <div class="grid-btn">
                 <span class="title">
                     <i class="el-icon-edit-outline"></i>
@@ -417,35 +431,11 @@
                      :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
             </el-tree>
         </div>
-        <div class="listCon">
+        <div class="listCon" style="">
             <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
             <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
             <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
-            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-                    <div class="right">
-                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
-                    </div>
-
-                </div>
-                <div class="switchIn">
-                    <span>
-                        <label>编号：</label>
-                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteNumber" >
-                    </span>
-                    <span>
-                        <label>中文名称：</label>
-                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
-                    </span>
-                </div>
-                <button class="clean" @click="clean1">重置</button>
-                <button class="look" @click="query1">查询</button>
-            </div>
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" style="margin-bottom: 0;height: calc(100% - 10px);">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -457,10 +447,10 @@
                     </div>
                 </div>
                 <el-table
-                        :data="tableListUp"
+                        :data="tableList1"
                         border
                         stripe
-                        @selection-change="toggleSelection1"
+                        @selection-change="toggleSelection2"
                         style="width: 100%">
                     <el-table-column
                             type="selection"
@@ -516,10 +506,10 @@
                 <el-pagination
                         background
                         pager-count="1"
-                        :current-page="page"
+                        :current-page="page1"
                         layout="prev, pager, next, jumper,total,->,slot"
                         @current-change="layerPage"
-                        :total="totalPage">
+                        :total="totalPage1">
                 </el-pagination>
 
             </div>
@@ -527,7 +517,88 @@
     </div>
 
     <!--历史版本-->
-    <div id="hisList" class="panel panel-default" style="display: none;"></div>
+    <div id="hisList" class="panel panel-default" style="display: none;">
+        <el-table
+                :data="hisList"
+                border
+                stripe
+                @selection-change="toggleSelection"
+                style="width: 100%">
+            <el-table-column
+                    prop="versionNumber"
+                    label="版本号"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="meteSetNumber"
+                    label="编号"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="cnName"
+                    label="中文名称"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="euName"
+                    label="英文名称"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="euShortName"
+                    label="英文短名"
+                    width="110">
+            </el-table-column>
+            <el-table-column
+                    prop="createDate"
+                    label="创建时间"
+                    width="110">
+            </el-table-column>
+            <el-table-column
+                    label="状态"
+                    width="90">
+                <template slot-scope="scope">
+                    <el-tag
+                            v-if="scope.row.reviewState == 0"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        待提交
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 1"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        待审核
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 2"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        通过
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.reviewState == 3"
+                            size="small"
+                            type="danger"
+                            effect="dark">
+                        未通过
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="center"
+                    header-align="center"
+                    width="100">
+                <template slot-scope="scope">
+                    <i class="el-icon-refresh" @click="update(scope.row.meteSetId)" title="撤回"></i>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
 
     <!-- 选择上级菜单 -->
     <div id="menuLayer" style="display: none;padding:10px;">

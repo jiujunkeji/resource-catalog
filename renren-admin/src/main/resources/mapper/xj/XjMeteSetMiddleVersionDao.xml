@@ -9,7 +9,7 @@
         <result property="meteSetId" column="mete_set_id"/>
         <result property="versionNumber" column="version_number"/>
         <result property="meteCname" column="mete_cname"/>
-        <result property="meteEuame" column="mete_euame"/>
+        <result property="meteEname" column="mete_ename"/>
         <result property="meteDataType" column="mete_data_type"/>
         <result property="meteDataLength" column="mete_data_length"/>
         <result property="meteRange" column="mete_range"/>
@@ -18,7 +18,7 @@
         <result property="meteNumber" column="mete_number"/>
         <result property="meteEuShortName" column="mete_eu_short_name"/>
         <result property="meteSetCname" column="mete_set_cname"/>
-        <result property="meteSetEuame" column="mete_set_euame"/>
+        <result property="meteSetEname" column="mete_set_ename"/>
         <result property="meteSetNumber" column="mete_set_number"/>
         <result property="meteSetEuShortName" column="mete_set_eu_short_name"/>
         <result property="meteId" column="mete_id"/>

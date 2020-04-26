@@ -10,6 +10,7 @@
         <result property="euName" column="eu_name"/>
         <result property="euShortName" column="eu_short_name"/>
         <result property="reviewState" column="review_state"/>
+        <result property="pushState" column="push_state"/>
         <result property="currentVersion" column="current_version"/>
         <result property="meteCategorySetId" column="mete_category_set_id"/>
         <result property="createUserId" column="create_user_id"/>

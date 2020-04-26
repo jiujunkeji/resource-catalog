@@ -56,7 +56,11 @@ var vm = new Vue({
             }
         },
         clean:function () {
-            vm.q.name = null
+            vm.q = {
+                name:'',
+                metaCategoryNumber:null,
+            }
+            this.getTableList()
         },
         // 表格选中方法
         toggleSelection:function(selection) {

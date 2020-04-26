@@ -39,8 +39,10 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            name:'',
-            meteSetNumber:''
+            cnName:'',
+            meteSetNumber:'',
+            meteCategorySetId:'',
+
         },
         q1: {
             name:'',
@@ -51,6 +53,7 @@ var vm = new Vue({
         showList: true,
         title: null,
         resourceMeteData: {
+            meteDataList:[]
             // meteCategorySetId:null
         },
         imageUrl:'',
@@ -71,7 +74,7 @@ var vm = new Vue({
         menuList:[],
         menuList1:[],
         tableList:[],
-        tableListUp:[],
+        tableList1:[],
         totalPage:0,
         totalPage1:0,
         page:1,
@@ -80,11 +83,14 @@ var vm = new Vue({
         tab:0,
         checkIdList:[],
         checkIdList1:[],
+        checkIdList2:[],
         catalogId:null,
         fileData:{},
         comList:[],
         fenlSelect:[],
-        fenlSelect1:[]
+        fenlSelect1:[],
+        hisList:[],
+        look:false
     },
     watch: {
         filterText:function(val) {
@@ -94,6 +100,14 @@ var vm = new Vue({
     methods: {
         query: function () {
             vm.reload();
+        },
+        clean:function () {
+            vm.q = {
+                cnName:'',
+                meteSetNumber:'',
+                meteCategorySetId:'',
+
+            }
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -200,7 +214,7 @@ var vm = new Vue({
 
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.meteId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
+            var url = vm.resourceMeteData.meteSetId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -224,7 +238,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "resource/resourcemetedata/delete",
+                    url: baseURL + "xj/xjmetadataset/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -242,12 +256,13 @@ var vm = new Vue({
         getInfo: function(meteId){
             $.get(baseURL + "xj/xjmetadataset/info/"+meteId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.resourceMeteData;
+                vm.resourceMeteData = r.xjMetaDataSet;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
         reload: function (event) {
             vm.showList = true;
+            vm.look = false;
             vm.getTableList();
         },
         validator: function () {
@@ -329,8 +344,9 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.catalogId,
-                    type:this.tab
+                    meteCategorySetId:this.q.meteCategorySetId,
+                    meteSetNumber:this.q.meteSetNumber,
+                    cnName:this.q.cnName
                 },
                 success: function(r){
                     console.log(r);
@@ -362,7 +378,8 @@ var vm = new Vue({
 
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
-                vm.catalogId = data.id;
+                vm.meteCategorySetId = data.id;
+                vm.q.meteCategorySetId = data.id;
                 vm.getTableList();
             }
 
@@ -437,6 +454,13 @@ var vm = new Vue({
                 }
             });
         },
+        // 查看
+        lookC:function (id) {
+            vm.look = true;
+            vm.showList = false;
+            vm.title = "查看元数据集";
+            vm.getInfo(id);
+        },
 
         // 编辑方法
         query1: function () {
@@ -507,16 +531,16 @@ var vm = new Vue({
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    page:this.page,
-                    meteNumber:this.q.meteNumber,
-                    meteCategoryId:this.q.meteCategoryId,
-                    cnName:this.q.cnName
+                    page:this.page1,
+                    meteNumber:this.q1.meteNumber,
+                    meteCategoryId:this.q1.meteCategoryId,
+                    cnName:this.q1.cnName
                 },
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.tableList = r.page.list;
-                        vm.totalPage = r.page.totalCount;
+                        vm.tableList1 = r.page.list;
+                        vm.totalPage1 = r.page.totalCount;
                     }else{
                         alert(r.msg);
                     }
@@ -524,9 +548,50 @@ var vm = new Vue({
             });
         },
         addUp:function () {
+            vm.getMenuList1();
+            vm.getTableList1();
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['1000px', '660px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
+                        console.log('jin')
+                        vm.checkIdList2.forEach(function (item,i) {
+                            vm.resourceMeteData.meteDataList.push(item);
+                        })
+                    }else {
+                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    }
+                    // vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    console.log(vm.resourceMeteData)
+                    layer.close(index);
+                },
+                btn2:function () {
 
+                }
+
+            })
         },
         delUp:function () {
+            var arr =[];
+            vm.checkIdList1.forEach(function (item,i) {
+                vm.resourceMeteData.meteDataList.forEach(function (m,n) {
+                    if(m.meteId == item.meteId){
+                        arr.push(n);
+                        return
+                    }
+                })
+            })
+            console.log(arr);
+            arr.forEach(function (item) {
+                vm.resourceMeteData.meteDataList.splice(item,1)
+            })
 
         },
         // 导出
@@ -538,30 +603,45 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList1 = selection;
         },
+        // 表格选中方法
+        toggleSelection2:function(selection) {
+            console.log(selection);
+            vm.checkIdList2 = selection;
+        },
         // 获取历史版本
         getHist:function (id) {
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#hisList'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['600px', '520px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate1();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.getFileTableList();
+            var _this = this;
+            $.get(baseURL + "xj/xjmetadataset/historyInfo/"+id, function(r){
+                console.log(r);
+                if(r.hList.length == 0){
+                    _this.$message({
+                        message: '暂无历史版本',
+                        type: 'warning'
+                    });
+                }else {
+                    vm.hisList = r.hList;
+                    layer.open({
+                        type: 1,
+                        title: '历史版本',
+                        content: $('#hisList'), //这里content是一个普通的String
+                        skin: 'openClass',
+                        area: ['1000px', '580px'],
+                        shadeClose: true,
+                        closeBtn:0,
+                        btn: ['关闭'],
+                        btn1:function (index) {
+                            layer.close(index);
+                        },
+                        btn2:function () {
+                        }
+
+                    })
                 }
 
-            })
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+
         },
-        aaa:function (opt) {
-            console.log(opt)
-        }
     },
     created:function () {
         this.getMenuList();

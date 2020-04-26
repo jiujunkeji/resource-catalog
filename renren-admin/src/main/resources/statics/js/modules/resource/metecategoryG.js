@@ -77,7 +77,8 @@ var vm = new Vue({
         fenlSelect:[],
         controlTypeList:[],
         dataTypeList:[],
-        id:1
+        id:1,
+        hisList:[]
     },
     watch: {
         filterText:function(val) {
@@ -89,7 +90,14 @@ var vm = new Vue({
             vm.reload();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q = {
+                name:'',
+                meteNumber:'',
+                meteCategoryId:'',
+                cnName:''
+            };
+            vm.getTableList();
+
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -218,7 +226,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "resource/resourcemetedata/delete",
+                    url: baseURL + "xj/xjmetadata/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -679,26 +687,6 @@ var vm = new Vue({
                 }
             });
         },
-        // 历史版本
-        histC:function () {
-            $.ajax({
-                type: "get",
-                url: baseURL + "sys/dict/selectDict",
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    type:type
-                },
-                success: function(r){
-                    console.log(r);
-                    if(type == 'control_type'){
-                        vm.controlTypeList = r;
-                    }else if(type == 'data_type'){
-                        vm.dataTypeList =r;
-                    }
-                }
-            });
-        },
         // 禁用
         closeC:function () {
             var list = []
@@ -767,7 +755,41 @@ var vm = new Vue({
                 })
             }
 
-        }
+        },
+        // 获取历史版本
+        getHist:function (id) {
+            var _this = this;
+            $.get(baseURL + "xj/xjmetadata/historyInfo/"+id, function(r){
+                console.log(r);
+                if(r.hList.length == 0){
+                    _this.$message({
+                        message: '暂无历史版本',
+                        type: 'warning'
+                    });
+                }else {
+                    vm.hisList = r.hList;
+                    layer.open({
+                        type: 1,
+                        title: '历史版本',
+                        content: $('#hisList'), //这里content是一个普通的String
+                        skin: 'openClass',
+                        area: ['1000px', '580px'],
+                        shadeClose: true,
+                        closeBtn:0,
+                        btn: ['关闭'],
+                        btn1:function (index) {
+                            layer.close(index);
+                        },
+                        btn2:function () {
+                        }
+
+                    })
+                }
+
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+
+        },
     },
     created:function () {
         this.getMenuList();

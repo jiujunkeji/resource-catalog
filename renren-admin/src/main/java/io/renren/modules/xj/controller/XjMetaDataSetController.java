@@ -16,6 +16,7 @@ import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -69,6 +70,7 @@ public class XjMetaDataSetController extends AbstractController {
     /**
      * 中间表的版本表
      */
+    @Autowired
     private XjMeteSetMiddleVersionService xjMeteSetMiddleVersionService;
 
     /**
@@ -76,10 +78,9 @@ public class XjMetaDataSetController extends AbstractController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("xj:xjmetadataset:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = xjMetaDataSetService.queryPage(params);
-
-        return R.ok().put("page", page);
+    public List<XjMetaDataSetEntity> list(@RequestParam Map<String, Object> params){
+        List<XjMetaDataSetEntity> list = xjMetaDataSetService.selectList(null);
+        return list;
     }
 
     /**
@@ -113,6 +114,33 @@ public class XjMetaDataSetController extends AbstractController {
         return R.ok().put("xjMetaDataSet", xjMetaDataSet);
     }
 
+
+
+    /**
+     * 元数据集的历史版本查询
+     */
+    @RequestMapping("/historyInfo/{meteSetId}")
+    //@RequiresPermissions("xj:xjmetadataset:info")
+    public R historyInfo(@PathVariable("meteSetId") Long meteSetId){
+        //先对历史版本进行判断
+        List<XjMeteSetVersionEntity> hList= new ArrayList<>();
+        hList= xjMeteSetVersionService.selectList(new EntityWrapper<XjMeteSetVersionEntity>().eq("mete_set_id",meteSetId));
+        return R.ok().put("hList",hList);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 保存
      */
@@ -126,7 +154,7 @@ public class XjMetaDataSetController extends AbstractController {
         xjMetaDataSet.setCreateDate(new Date());
         xjMetaDataSet.setUpdateTime(new Date());
         xjMetaDataSet.setCreateUserId(getUser().getUserId());
-        xjMetaDataSetService.insert(xjMetaDataSet);
+        xjMetaDataSetService.insertOrUpdate(xjMetaDataSet);
         /**
          * 之后遍历元数据集下的元数据的信息，然后将元数据集与元数据的信息保存到中间表
          */
@@ -138,11 +166,11 @@ public class XjMetaDataSetController extends AbstractController {
                 a.setMeteId(mete.getMeteId());
                 a.setMeteSetId(xjMetaDataSet.getMeteSetId());
                 a.setMeteSetCname(xjMetaDataSet.getCnName());
-                a.setMeteSetEuame(xjMetaDataSet.getEuName());
+                a.setMeteSetEname(xjMetaDataSet.getEuName());
                 a.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
                 a.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
                 a.setMeteCname(mete.getCnName());
-                a.setMeteEuame(mete.getEuName());
+                a.setMeteEname(mete.getEuName());
                 a.setMeteEuShortName(mete.getEuShortName());
                 a.setMeteCname(mete.getMeteNumber());
                 a.setMeteDataType(mete.getDataType());
@@ -172,7 +200,13 @@ public class XjMetaDataSetController extends AbstractController {
         //原元数据数量
         int count= xjMeteSetMiddleService.selectCount(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",xjMetaDataSet.getMeteSetId()));
         //现元数据数量
-        int b = xjMetaDataSet.getMeteDataList().size();
+        List<XjMetaDataEntity> medaList=xjMetaDataSet.getMeteDataList();
+        int b;
+        if(medaList==null){
+            b=0;
+        }else {
+            b=medaList.size();
+        }
         if(count!=b){
             //
             /**如果数量不同
@@ -197,9 +231,9 @@ public class XjMetaDataSetController extends AbstractController {
              */
             int c = xjMeteSetVersionService.selectCount(
                     new EntityWrapper<XjMeteSetVersionEntity>()
-                            .eq("met_set_id",xjMetaDataSet.getMeteSetId())
+                            .eq("mete_set_id",xjMetaDataSet.getMeteSetId())
             );
-            xjMetaDataSet.setCurrentVersion("v" + c+1 + ".0");
+            xjMetaDataSet.setCurrentVersion("v" + (c+1) + ".0");
             xjMetaDataSetService.updateById(xjMetaDataSet);
             /**
              * 1.获取旧的中间表模型
@@ -209,28 +243,31 @@ public class XjMetaDataSetController extends AbstractController {
             List<XjMeteSetMiddleVersionEntity> avList=new ArrayList<>();
             for(XjMeteSetMiddleEntity a : aList){
                 XjMeteSetMiddleVersionEntity av = new XjMeteSetMiddleVersionEntity();
+                av.setVersionId(a.getVersionId());
                 av.setMeteId(a.getMeteId());
                 av.setMeteSetId(a.getMeteSetId());
-                av.setMeteCname(a.getMeteCname());
-                av.setMeteEuame(a.getMeteEuame());
-                av.setMeteEuShortName(a.getMeteEuShortName());
-                av.setMeteNumber(a.getMeteNumber());
+                av.setMeteCname(a.getMeteCname()==null?"":a.getMeteCname());
+                av.setMeteEname(a.getMeteEname()==null?"":a.getMeteEname());
+                av.setMeteEuShortName(a.getMeteEuShortName()==null?"":a.getMeteEuShortName());
+                av.setMeteNumber(a.getMeteNumber()==null?"":a.getMeteNumber());
                 av.setMeteDataType(a.getMeteDataType());
                 av.setMeteDataLength(a.getMeteDataLength());
-                av.setMeteRange(a.getMeteRange());
-                av.setMeteRangeDescription(a.getMeteRangeDescription());
-                av.setMeteDefinition(a.getMeteDefinition());
-                av.setMeteSetCname(a.getMeteSetCname());
-                av.setMeteSetEuame(a.getMeteSetEuame());
-                av.setMeteSetEuShortName(a.getMeteSetEuShortName());
-                av.setMeteSetNumber(a.getMeteSetNumber());
-                av.setVersionNumber(a.getVersionNumber());
+                av.setMeteRange(a.getMeteRange()==null?"":a.getMeteRange());
+                av.setMeteRangeDescription(a.getMeteRangeDescription()==null?"":a.getMeteRangeDescription());
+                av.setMeteDefinition(a.getMeteDefinition()==null?"":a.getMeteDefinition());
+                av.setMeteSetCname(a.getMeteSetCname()==null?"":a.getMeteSetCname());
+                av.setMeteSetEname(a.getMeteSetEname()==null?"":a.getMeteSetEname());
+                av.setMeteSetEuShortName(a.getMeteSetEuShortName()==null?"":a.getMeteSetEuShortName());
+                av.setMeteSetNumber(a.getMeteSetNumber()==null?"":a.getMeteSetNumber());
+                av.setVersionNumber(a.getVersionNumber()==null?"":a.getVersionNumber());
                 av.setCreateUserId(a.getCreateUserId());
                 av.setCreateDate(a.getCreateDate());
                 av.setUpdateTime(a.getUpdateTime());
                 avList.add(av);
             }
-            xjMeteSetMiddleVersionService.insertBatch(avList);
+            if(CollectionUtils.isNotEmpty(avList)){
+                xjMeteSetMiddleVersionService.insertBatch(avList);
+            }
             /**保存新的中间表。
              * 1.先删除之前数据
              * 2.保存新的数据，版本号"v" + c+1 + ".0"
@@ -239,31 +276,33 @@ public class XjMetaDataSetController extends AbstractController {
             map.put("mete_set_id",xjMetaDataSet.getMeteSetId());
             xjMeteSetMiddleService.deleteByMap(map);
             List<XjMetaDataEntity> newList=xjMetaDataSet.getMeteDataList();
+            List<XjMeteSetMiddleEntity> newMidList=new ArrayList<>();
             for(XjMetaDataEntity xjMetaDataEntity:newList){
                 XjMeteSetMiddleEntity middleEntity=new XjMeteSetMiddleEntity();
                 middleEntity.setMeteId(xjMetaDataEntity.getMeteId());
                 middleEntity.setMeteNumber(xjMetaDataEntity.getMeteNumber());
                 middleEntity.setMeteCname(xjMetaDataEntity.getCnName());
-                middleEntity.setMeteEuame(xjMetaDataEntity.getEuName());
+                middleEntity.setMeteEname(xjMetaDataEntity.getEuName());
                 middleEntity.setMeteEuShortName(xjMetaDataEntity.getEuShortName());
                 middleEntity.setMeteDataType(xjMetaDataEntity.getDataType());
                 middleEntity.setMeteDataLength(xjMetaDataEntity.getDataLength());
                 middleEntity.setMeteRange(xjMetaDataEntity.getRange());
                 middleEntity.setMeteRangeDescription(xjMetaDataEntity.getRangeDescription());
                 middleEntity.setMeteDefinition(xjMetaDataEntity.getDefinition());
-                middleEntity.setMeteSetId(xjMetaDataEntity.getMeteSetId());
-                middleEntity.setMeteSetId(xjMetaDataEntity.getMeteSetId());
+                middleEntity.setMeteSetId(xjMetaDataSet.getMeteSetId());
                 middleEntity.setMeteSetCname(xjMetaDataSet.getCnName());
-                middleEntity.setMeteSetEuame(xjMetaDataSet.getEuName());
-                middleEntity.setMeteSetEuame(xjMetaDataSet.getMeteSetNumber());
+                middleEntity.setMeteSetEname(xjMetaDataSet.getEuName());
+                middleEntity.setMeteSetEname(xjMetaDataSet.getMeteSetNumber());
                 middleEntity.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
                 middleEntity.setCreateDate(new Date());
                 middleEntity.setUpdateTime(new Date());
                 middleEntity.setCreateUserId(getUser().getUserId());
-                middleEntity.setVersionNumber("v"+c+".0");
-
+                middleEntity.setVersionNumber("v"+(c+1)+".0");
+                newMidList.add(middleEntity);
             }
-
+            if(CollectionUtils.isNotEmpty(newMidList)){
+                xjMeteSetMiddleService.insertOrUpdateBatch(newMidList);
+            }
 
         }
 
@@ -278,6 +317,8 @@ public class XjMetaDataSetController extends AbstractController {
     @RequestMapping("/delete")
     //@RequiresPermissions("xj:xjmetadataset:delete")
     public R delete(@RequestBody Long[] meteSetIds){
+        //删除元数据集
+        xjMetaDataSetService.deleteBatchIds(Arrays.asList(meteSetIds));
         //删除元数据集关联的中间表
         xjMeteSetMiddleService.deleteBatchIds(Arrays.asList(meteSetIds));
         return R.ok();
