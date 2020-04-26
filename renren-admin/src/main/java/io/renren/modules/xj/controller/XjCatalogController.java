@@ -4,18 +4,11 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
-import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
-import io.renren.modules.sys.entity.SysDictEntity;
-import io.renren.modules.sys.service.SysDictService;
-import io.renren.modules.xj.entity.XjCatalogAuditEntity;
-import io.renren.modules.xj.entity.XjMetaDataEntity;
-import io.renren.modules.xj.entity.XjSafeEntity;
-import io.renren.modules.xj.service.XjCatalogAuditService;
-import io.renren.modules.xj.service.XjMetaDataService;
-import io.renren.modules.xj.service.XjSafeService;
+import io.renren.modules.xj.entity.*;
+import io.renren.modules.xj.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.renren.modules.xj.entity.XjCatalogEntity;
-import io.renren.modules.xj.service.XjCatalogService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
@@ -44,7 +35,7 @@ public class XjCatalogController extends AbstractController{
     @Autowired
     private XjCatalogService xjCatalogService;
     @Autowired
-    private XjMetaDataService metaDataService;
+    private XjMeteSetMiddleService meteSetMiddleService;
     @Autowired
     private XjSafeService safeService;
     @Autowired
@@ -110,9 +101,9 @@ public class XjCatalogController extends AbstractController{
         if(parentXjCatalog != null){
             xjCatalog.setParentName(parentXjCatalog.getCatalogName());
         }
-        List<XjMetaDataEntity> meteDataList = new ArrayList<>();
+        List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
         if(xjCatalog.getMeteSetId() != null && xjCatalog.getMeteSetId() != 0L){
-            meteDataList = metaDataService.selectList(new EntityWrapper<XjMetaDataEntity>().eq("mete_set_id",xjCatalog.getMeteSetId()));
+            meteDataList = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",xjCatalog.getMeteSetId()));
             if(meteDataList != null && meteDataList.size() > 0){
                 xjCatalog.setMeteDataList(meteDataList);
             }
@@ -171,7 +162,7 @@ public class XjCatalogController extends AbstractController{
             }
             xjCatalogService.deleteById(catalogId);
             safeService.delete(new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalogId));
-            // TODO: 2020-04-24 删除关联的数据连接信息 
+            // TODO: 2020-04-24 删除关联的数据连接信息
         }
 
         return R.ok();
@@ -285,4 +276,5 @@ public class XjCatalogController extends AbstractController{
         xjCatalogService.updateById(catalog);
         return R.ok();
     }
+
 }
