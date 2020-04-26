@@ -112,7 +112,7 @@ public class XjCatalogEntity implements Serializable {
 	@TableField(exist = false)
 	private String parentName;
 	@TableField(exist = false)
-	private List<XjMetaDataEntity> meteDataList;
+	private List<XjMeteSetMiddleEntity> meteDataList;
 	/**
 	 * 设置：目录id
 	 */
@@ -374,11 +374,11 @@ public class XjCatalogEntity implements Serializable {
 		this.createUserName = createUserName;
 	}
 
-	public List<XjMetaDataEntity> getMeteDataList() {
+	public List<XjMeteSetMiddleEntity> getMeteDataList() {
 		return meteDataList;
 	}
 
-	public void setMeteDataList(List<XjMetaDataEntity> meteDataList) {
+	public void setMeteDataList(List<XjMeteSetMiddleEntity> meteDataList) {
 		this.meteDataList = meteDataList;
 	}
 }
