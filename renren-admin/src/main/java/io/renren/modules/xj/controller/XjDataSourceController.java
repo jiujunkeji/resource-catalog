@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjCatalogEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +49,8 @@ public class XjDataSourceController {
 
     @RequestMapping("/list2")
     public R list2(@RequestParam Map<String, Object> params){
-        List list = xjDataSourceService.list2(params);
+        EntityWrapper<XjDataSourceEntity> wrapper = new EntityWrapper<XjDataSourceEntity>();
+        List<XjDataSourceEntity> list = xjDataSourceService.selectList(wrapper);
 
         return R.ok().put("list",list);
     }
