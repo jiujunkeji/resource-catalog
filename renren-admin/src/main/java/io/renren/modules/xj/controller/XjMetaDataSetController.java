@@ -148,46 +148,49 @@ public class XjMetaDataSetController extends AbstractController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetadataset:save")
     public R save(@RequestBody XjMetaDataSetEntity xjMetaDataSet){
-        /**
-         * 保存元数据集的想换信息
-         */
-        xjMetaDataSet.setCurrentVersion("v1.0");
-        xjMetaDataSet.setCreateDate(new Date());
-        xjMetaDataSet.setUpdateTime(new Date());
-        xjMetaDataSet.setCreateUserId(getUser().getUserId());
-        xjMetaDataSetService.insertOrUpdate(xjMetaDataSet);
-        /**
-         * 之后遍历元数据集下的元数据的信息，然后将元数据集与元数据的信息保存到中间表
-         */
-        List<XjMetaDataEntity> meteList = xjMetaDataSet.getMeteDataList();
-        if(meteList != null && meteList.size() > 0){
-            List<XjMeteSetMiddleEntity> aList = new ArrayList<>();
-            for(XjMetaDataEntity mete : meteList){
-                XjMeteSetMiddleEntity a = new XjMeteSetMiddleEntity();
-                a.setMeteId(mete.getMeteId());
-                a.setMeteSetId(xjMetaDataSet.getMeteSetId());
-                a.setMeteSetCname(xjMetaDataSet.getCnName());
-                a.setMeteSetEname(xjMetaDataSet.getEuName());
-                a.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
-                a.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
-                a.setMeteCname(mete.getCnName());
-                a.setMeteEname(mete.getEuName());
-                a.setMeteEuShortName(mete.getEuShortName());
-                a.setMeteCname(mete.getMeteNumber());
-                a.setMeteDataType(mete.getDataType());
-                a.setMeteDataLength(mete.getDataLength());
-                a.setMeteDefinition(mete.getDefinition());
-                a.setMeteRange(mete.getRange());
-                a.setMeteRangeDescription(mete.getRangeDescription());
-                a.setCreateDate(new Date());
-                a.setUpdateTime(new Date());
-                a.setCreateUserId(getUser().getUserId());
-                a.setVersionNumber("v1.0");
-                aList.add(a);
+        try {
+            /**
+             * 保存元数据集的想换信息
+             */
+            xjMetaDataSet.setCurrentVersion("v1.0");
+            xjMetaDataSet.setCreateDate(new Date());
+            xjMetaDataSet.setUpdateTime(new Date());
+            xjMetaDataSet.setCreateUserId(getUser().getUserId());
+            xjMetaDataSetService.insertOrUpdate(xjMetaDataSet);
+            /**
+             * 之后遍历元数据集下的元数据的信息，然后将元数据集与元数据的信息保存到中间表
+             */
+            List<XjMetaDataEntity> meteList = xjMetaDataSet.getMeteDataList();
+            if (meteList != null && meteList.size() > 0) {
+                List<XjMeteSetMiddleEntity> aList = new ArrayList<>();
+                for (XjMetaDataEntity mete : meteList) {
+                    XjMeteSetMiddleEntity a = new XjMeteSetMiddleEntity();
+                    a.setMeteId(mete.getMeteId());
+                    a.setMeteSetId(xjMetaDataSet.getMeteSetId());
+                    a.setMeteSetCname(xjMetaDataSet.getCnName());
+                    a.setMeteSetEname(xjMetaDataSet.getEuName());
+                    a.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
+                    a.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
+                    a.setMeteCname(mete.getCnName());
+                    a.setMeteEname(mete.getEuName());
+                    a.setMeteEuShortName(mete.getEuShortName());
+                    a.setMeteCname(mete.getMeteNumber());
+                    a.setMeteDataType(mete.getDataType());
+                    a.setMeteDataLength(mete.getDataLength());
+                    a.setMeteDefinition(mete.getDefinition());
+                    a.setMeteRange(mete.getRange());
+                    a.setMeteRangeDescription(mete.getRangeDescription());
+                    a.setCreateDate(new Date());
+                    a.setUpdateTime(new Date());
+                    a.setCreateUserId(getUser().getUserId());
+                    a.setVersionNumber("v1.0");
+                    aList.add(a);
+                }
+                xjMeteSetMiddleService.insertBatch(aList);
             }
-            xjMeteSetMiddleService.insertBatch(aList);
+        }catch (Exception e){
+            return R.error("元数据集的编号不允许重复！");
         }
-
         return R.ok();
     }
 

@@ -119,7 +119,11 @@ public class XjMeteSetCategoryController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetesetcategory:save")
     public R save(@RequestBody XjMeteSetCategoryEntity xjMeteSetCategory){
+        try{
         xjMeteSetCategoryService.insert(xjMeteSetCategory);
+        }catch (Exception e){
+            return R.error("元数据集的分类编号或者排序码不允许重复！");
+        }
 
         return R.ok();
     }
