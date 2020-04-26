@@ -73,7 +73,6 @@ public class XjKtrController {
     public R save(@RequestBody XjKtrEntity xjKtr){
         XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
         xjKtr.setKtrStatus("0");
-        xjKtr.setKtrDsname(ds.getDsDatabasename());
         xjKtr.setKtrCreatetime(new Date());
         xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
@@ -109,17 +108,18 @@ public class XjKtrController {
      * 任务执行
      */
     @RequestMapping("/run")
-    public R run(@RequestBody XjKtrEntity xjKtr) throws Exception {
-        xjKtr.setKtrStatus("1");
-        xjKtrService.updateById(xjKtr);
-        XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
-        String result = xjKtrService.kettleJob(xjKtr,ds);
+    public R run(@RequestParam int ktrId) throws Exception {
+        XjKtrEntity xk = xjKtrService.selectById(ktrId);
+        xk.setKtrStatus("1");
+        xjKtrService.updateById(xk);
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xk.getKtrDsid());
+        String result = xjKtrService.kettleJob(xk,ds);
         if (result == "success"){
-            xjKtr.setKtrStatus("2");
+            xk.setKtrStatus("2");
         }else {
-            xjKtr.setKtrStatus("3");
+            xk.setKtrStatus("3");
         }
-        xjKtrService.updateById(xjKtr);
+        xjKtrService.updateById(xk);
         return R.ok();
     }
 
