@@ -71,6 +71,30 @@ public class XjDataSourceEntity implements Serializable {
 	 * 密码
 	 */
 	private String dsPassword;
+	/**
+	 * 创建时间
+	 */
+	private Date dsCreatetime;
+	/**
+	 * 修改时间
+	 */
+	private Date dsUpdatetime;
+
+	public Date getDsCreatetime() {
+		return dsCreatetime;
+	}
+
+	public void setDsCreatetime(Date dsCreatetime) {
+		this.dsCreatetime = dsCreatetime;
+	}
+
+	public Date getDsUpdatetime() {
+		return dsUpdatetime;
+	}
+
+	public void setDsUpdatetime(Date dsUpdatetime) {
+		this.dsUpdatetime = dsUpdatetime;
+	}
 
 	/**
 	 * 设置：

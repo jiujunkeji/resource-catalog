@@ -1,6 +1,7 @@
 package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
@@ -61,6 +62,8 @@ public class XjDataSourceController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjdatasource:save")
     public R save(@RequestBody XjDataSourceEntity xjDataSource){
+        xjDataSource.setDsCreatetime(new Date());
+        xjDataSource.setDsUpdatetime(new Date());
         xjDataSourceService.insert(xjDataSource);
 
         return R.ok();
@@ -73,6 +76,7 @@ public class XjDataSourceController {
     //@RequiresPermissions("xj:xjdatasource:update")
     public R update(@RequestBody XjDataSourceEntity xjDataSource){
         ValidatorUtils.validateEntity(xjDataSource);
+        xjDataSource.setDsUpdatetime(new Date());
         xjDataSourceService.updateAllColumnById(xjDataSource);//全部更新
         
         return R.ok();
