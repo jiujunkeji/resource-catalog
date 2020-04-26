@@ -105,9 +105,23 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    vm.saveOrUpdate();
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetecategory/save',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.meteCategory),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.reload();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
 
-                    layer.close(index);
+                    // layer.close(index);
                 },
                 btn2:function () {
                     vm.reload();
@@ -136,8 +150,21 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    vm.saveOrUpdate();
-                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjmetecategory/update',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.meteCategory),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.reload();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
 
                 },
                 btn2:function () {
@@ -150,7 +177,7 @@ var vm = new Vue({
             
             vm.getInfo(meteCategoryId);
 		},
-		saveOrUpdate: function (event) {
+		saveOrUpdate: function (index) {
             if(vm.validator()){
                 return ;
             }
@@ -163,9 +190,10 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
                         vm.reload();
+                        layer.close(index);
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
 					}else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}
 				}
 			});
