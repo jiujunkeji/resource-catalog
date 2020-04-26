@@ -56,8 +56,7 @@ import javax.servlet.http.HttpSession;
 public class XjMetaDataController extends AbstractController {
     @Autowired
     private XjMetaDataService xjMetaDataService;
-    @Autowired
-    private SysUserService sysUserService;
+
 
     @Autowired
     private XjMeteCategoryService xjMeteCategoryService;
@@ -70,6 +69,7 @@ public class XjMetaDataController extends AbstractController {
     /**
      * 中间表的版本表
      */
+    @Autowired
     private XjMeteSetMiddleVersionService xjMeteSetMiddleVersionService;
 
 
