@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
@@ -219,6 +220,7 @@ public class XjMetaDataSetController extends AbstractController {
             setVersion.setMeteSetNumber(oldSet.getMeteSetNumber());
             setVersion.setCnName(oldSet.getCnName());
             setVersion.setEuName(oldSet.getEuName());
+            setVersion.setEuShortName(oldSet.getEuShortName());
             setVersion.setVersionNumber(oldSet.getCurrentVersion());
             setVersion.setMeteCategorySetId(oldSet.getMeteCategorySetId());
             setVersion.setCreateUserId(oldSet.getCreateUserId());
