@@ -162,10 +162,14 @@ public class XjMetaDataController extends AbstractController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetadata:save")
     public R save(@RequestBody XjMetaDataEntity xjMetaData) {
-        xjMetaData.setCreateDate(new Date());
-        xjMetaData.setUpdateTime(new Date());
-        xjMetaData.setCreateUserId(getUser().getUserId());
-        xjMetaDataService.insert(xjMetaData);
+        try {
+            xjMetaData.setCreateDate(new Date());
+            xjMetaData.setUpdateTime(new Date());
+            xjMetaData.setCreateUserId(getUser().getUserId());
+            xjMetaDataService.insert(xjMetaData);
+        }catch (Exception e){
+            return R.error("元数据的编号不允许重复！");
+        }
         return R.ok();
     }
 

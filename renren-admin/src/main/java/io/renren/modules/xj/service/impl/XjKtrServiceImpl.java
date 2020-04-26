@@ -59,7 +59,7 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
         KettleEnvironment.init();
         KettleDatabaseRepository kettleDatabaseRepository = repositoryCon(ds);
         //createAndSaveTrans(kettleDatabaseRepository);
-        JobMeta jobMeta = generateJob(kettleDatabaseRepository,xjKtr);
+        JobMeta jobMeta = generateJob(kettleDatabaseRepository,xjKtr,ds);
         saveJob(kettleDatabaseRepository, jobMeta);
         Job job = setSql(ds,xjKtr);
         job.start();
@@ -112,12 +112,12 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
      * @return
      * @throws Exception
      */
-    private static JobMeta generateJob(KettleDatabaseRepository kettleDatabaseRepository,XjKtrEntity ke) throws Exception {
+    private static JobMeta generateJob(KettleDatabaseRepository kettleDatabaseRepository,XjKtrEntity ke,XjDataSourceEntity ds) throws Exception {
         // 创建作业
         JobMeta jobMeta = createJob(ke.getKtrName());
         // 创建作业中的各个节点
         JobEntryCopy start = createJobStart();
-        JobEntryCopy trans1 = createJobTrans1(kettleDatabaseRepository,ke);
+        JobEntryCopy trans1 = createJobTrans1(kettleDatabaseRepository,ds);
         JobEntryCopy success = createJobSuccess();
         // 将节点加入作业中
         jobMeta.addJobEntry(start);
@@ -155,7 +155,7 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
     /**
      *  * 创建作业转换节点  *   * @return  * @throws Exception
      */
-    private static JobEntryCopy createJobTrans1(KettleDatabaseRepository kettleDatabaseRepository,XjKtrEntity ke) throws Exception {
+    private static JobEntryCopy createJobTrans1(KettleDatabaseRepository kettleDatabaseRepository,XjDataSourceEntity ds) throws Exception {
         JobEntryTrans jobEntryTrans = new JobEntryTrans();
         // 指定从资源库中以转换名称的方式找到目标转换cgmTransName对象
         jobEntryTrans
@@ -165,7 +165,7 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
         // 指定从资源库的哪个目录下查找转换对象
         jobEntryTrans.setDirectory("/");
         // 指定被查找的转换目标名称(转换名为数据库名)
-        jobEntryTrans.setTransname(ke.getKtrDsname());
+        jobEntryTrans.setTransname(ds.getDsDatabasename());
         JobEntryCopy jobEntryCopy = new JobEntryCopy(jobEntryTrans);
         // 设置job中的转换名称
         jobEntryCopy.setName("JTrans");

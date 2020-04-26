@@ -138,7 +138,12 @@ public class XjMeteCategoryController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjmetecategory:save")
     public R save(@RequestBody XjMeteCategoryEntity xjMeteCategory){
-        xjMeteCategoryService.insert(xjMeteCategory);
+        try {
+            xjMeteCategoryService.insert(xjMeteCategory);
+        }catch (Exception e){
+            return R.error("元数据的分类编号或者排序码不允许重复！");
+        }
+
 
         return R.ok();
     }

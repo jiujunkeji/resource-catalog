@@ -30,7 +30,7 @@ public class XjKtrEntity implements Serializable {
 	/**
 	 * 数据库名
 	 */
-	private String ktrDsname;
+	private XjDataSourceEntity ktrDsname;
 	/**
 	 * 表名
 	 */
@@ -63,6 +63,18 @@ public class XjKtrEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date ktrUpdatetime;
+	/**
+	 *状态
+	 */
+	private String ktrStatus;
+
+	public String getKtrStatus() {
+		return ktrStatus;
+	}
+
+	public void setKtrStatus(String ktrStatus) {
+		this.ktrStatus = ktrStatus;
+	}
 
 	public String getKtrType() {
 		return ktrType;
@@ -136,18 +148,11 @@ public class XjKtrEntity implements Serializable {
 	public String getKtrName() {
 		return ktrName;
 	}
-	/**
-	 * 设置：
-	 */
-	public void setKtrDsname(String ktrDsname) {
-		this.ktrDsname = ktrDsname;
-	}
-	/**
-	 * 获取：
-	 */
-	public String getKtrDsname() {
-		return ktrDsname;
-	}
+
+	public XjDataSourceEntity getKtrDsname() { return ktrDsname; }
+
+	public void setKtrDsname(XjDataSourceEntity ktrDsname) { this.ktrDsname = ktrDsname; }
+
 	/**
 	 * 设置：
 	 */
