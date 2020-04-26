@@ -21,7 +21,7 @@ public class XjDataSourceEntity implements Serializable {
 	 * 
 	 */
 	@TableId
-	private Integer dsId;
+	private Long dsId;
 	/**
 	 * 数据源名称
 	 */
@@ -75,13 +75,13 @@ public class XjDataSourceEntity implements Serializable {
 	/**
 	 * 设置：
 	 */
-	public void setDsId(Integer dsId) {
+	public void setDsId(Long dsId) {
 		this.dsId = dsId;
 	}
 	/**
 	 * 获取：
 	 */
-	public Integer getDsId() {
+	public Long getDsId() {
 		return dsId;
 	}
 	/**

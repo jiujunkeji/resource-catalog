@@ -277,4 +277,16 @@ public class XjCatalogController extends AbstractController{
         return R.ok();
     }
 
+
+    /**
+     * 查询数据
+     */
+    @RequestMapping("/selectDataList")
+    public R selectDataList(@RequestParam Map<String, Object> params){
+        String catalogId = (String)params.get("catalogId");
+        XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        catalog.getMeteSetId();
+        PageUtils page = xjCatalogService.queryPage(params);
+        return R.ok().put("page",page);
+    }
 }
