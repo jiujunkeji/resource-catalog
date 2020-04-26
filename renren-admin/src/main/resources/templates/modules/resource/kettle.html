@@ -40,6 +40,9 @@
             .el-autocomplete-suggestion{
                 z-index:100000000!important;
             }
+            .switchIn .el-select{
+                width: calc(100% - 116px);
+            }
         </style>
         </head>
 <body>
@@ -189,8 +192,8 @@
                     width="100">
                 <template slot-scope="scope">
                     <i class="el-icon-edit" @click="update(scope.row.ktrId)"></i>
-                    <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                    <el-button type="text" @click="implement(scope.row.ktrId)">执行</el-button>
+                    <span v-if="scope.row.ktrStatus != 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                    <el-button v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" type="text" @click="implement(scope.row.ktrId)">执行</el-button>
                 </template>
             </el-table-column>
         </el-table>

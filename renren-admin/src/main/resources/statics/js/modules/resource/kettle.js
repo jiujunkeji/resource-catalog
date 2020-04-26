@@ -337,14 +337,17 @@ var vm = new Vue({
             console.log(item);
         },
         // 执行
-        implement:function (obj) {
+        implement:function (id) {
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
                     url: baseURL + "xj/xjktr/run",
                     // contentType: "application/json",
                     dataType: 'json',
-                    data:JSON.stringify(obj),
+                    data:{
+                        ktrId:id
+                    },
+                    // data:JSON.stringify(id),
                     success: function(r){
                         if(r.code == 0){
                             vm.reload();
