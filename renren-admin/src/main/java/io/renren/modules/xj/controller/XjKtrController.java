@@ -5,10 +5,12 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
+import io.renren.modules.xj.service.XjDataSourceService;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +52,6 @@ public class XjKtrController {
         return R.ok().put("page", page);
     }
 
-
     /**
      * 信息
      */
@@ -68,6 +69,7 @@ public class XjKtrController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjktr:save")
     public R save(@RequestBody XjKtrEntity xjKtr){
+        xjKtr.setKtrStatus("0");
         xjKtr.setKtrCreatetime(new Date());
         xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
@@ -104,7 +106,15 @@ public class XjKtrController {
      */
     @RequestMapping("/run")
     public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
-        xjKtrService.kettleJob(xjKtr,ds);
+        xjKtr.setKtrStatus("1");
+        xjKtrService.updateAllColumnById(xjKtr);
+        String result = xjKtrService.kettleJob(xjKtr,ds);
+        if (result == "success"){
+            xjKtr.setKtrStatus("2");
+        }else {
+            xjKtr.setKtrStatus("3");
+        }
+        xjKtrService.updateAllColumnById(xjKtr);
         return R.ok();
     }
 

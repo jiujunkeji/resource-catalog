@@ -2,6 +2,7 @@ package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
@@ -42,6 +43,13 @@ public class XjDataSourceController {
         PageUtils page = xjDataSourceService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/list2")
+    public R list2(@RequestParam Map<String, Object> params){
+        List list = xjDataSourceService.list2(params);
+
+        return R.ok().put("list",list);
     }
 
 
