@@ -843,14 +843,9 @@ var vm = new Vue({
         getShujuyuanList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjdatasource/list',
+                url: baseURL + 'xj/xjdatasource/list2',
                 // contentType: "application/json",
                 dataType: 'json',
-                data: {
-                    page:this.page,
-                    dsDatabasename:this.q.name,
-                    dsType:this.q.type,
-                },
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){

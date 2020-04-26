@@ -372,11 +372,6 @@ var vm = new Vue({
                 url: baseURL + 'xj/xjdatasource/list',
                 // contentType: "application/json",
                 dataType: 'json',
-                data: {
-                    page:this.page,
-                    dsDatabasename:this.q.name,
-                    dsType:this.q.type,
-                },
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
