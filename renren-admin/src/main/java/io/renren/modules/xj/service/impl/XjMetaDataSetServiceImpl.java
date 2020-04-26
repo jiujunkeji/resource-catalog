@@ -34,10 +34,10 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
         String meteCategorySetId = (String) params.get("meteCategorySetId");
         String meteSetNumber = (String) params.get("meteSetNumber");
         String cnName = (String) params.get("cnName");
-        Integer reviewState= (Integer) params.get("reviewState");
+        String reviewState= (String) params.get("reviewState");
         Page<XjMetaDataSetEntity> page =null;
         if(StringUtils.isNotBlank(meteCategorySetId)){
-            if(reviewState!=null){
+            if(StringUtils.isNotBlank(reviewState)){
                 if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
                     page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)).and().eq("review_state",reviewState));
                     return new PageUtils(page);
@@ -68,7 +68,7 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
             }
 
         }else{
-            if(reviewState!=null){
+            if(StringUtils.isNotBlank(reviewState)){
                 if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
                     page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("review_state",reviewState));
                     return new PageUtils(page);
