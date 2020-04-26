@@ -1,11 +1,15 @@
 package io.renren.modules.xj.controller;
 
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +22,8 @@ import io.renren.modules.xj.service.XjKtrService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -100,5 +106,31 @@ public class XjKtrController {
     public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
         xjKtrService.kettleJob(xjKtr,ds);
         return R.ok();
+    }
+
+    /**
+     * 下载采集插件
+     */
+    @RequestMapping("/downTemplate")
+    public void downTemplate(HttpServletResponse response, XjKtrEntity xe){
+        try{
+            String pathName = xe.getKtrName()+".txt";
+            String fileName = xe.getKtrName()+".txt";
+            String fn = URLEncoder.encode(fileName,"UTF-8");
+            response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            String filePath = getClass().getClassLoader().getResource("D:/data-integration/xj/" + pathName).getPath();
+            System.out.println(filePath);
+            FileInputStream input = new FileInputStream(filePath);
+            OutputStream out = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int len;
+            while((len = input.read(b)) != -1){
+                out.write(b,0,len);
+            }
+            response.setHeader("Conten-Length",String.valueOf(input.getChannel().size()));
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
     }
 }
