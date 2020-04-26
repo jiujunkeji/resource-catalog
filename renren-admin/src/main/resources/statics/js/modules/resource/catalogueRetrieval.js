@@ -68,17 +68,21 @@ var vm = new Vue({
         },
         // 获取树目录列表
         getMenuList: function (event) {
-            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
+            $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
+                console.log(r.length);
+                console.log(vm.menuList);
+                vm.menuList = [];
                 var _len=0;
-                for(var i = 1;i<100;i++){
+                for(var i = 1;i<10;i++){
                     if(i == 1){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(1111);
                         r.forEach(function (item) {
                             if(item.parentId == 0){
                                 vm.menuList.push({
-                                    name:item.name,
+                                    name:item.catalogName,
                                     id:item.catalogId,
                                     list:[]
                                 })
@@ -87,13 +91,14 @@ var vm = new Vue({
                         })
                     }else if(i == 2){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
+                        console.log(222);
                         vm.menuList.forEach(function (item) {
                             r.forEach(function (n) {
                                 if(n.parentId == item.id){
                                     item.list.push({
-                                        name:n.name,
+                                        name:n.catalogName,
                                         id:n.catalogId,
                                         list:[]
                                     })
@@ -103,14 +108,14 @@ var vm = new Vue({
                         })
                     }else if(i == 3){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
                                 r.forEach(function (n) {
                                     if(n.parentId == i.id){
                                         i.list.push({
-                                            name:n.name,
+                                            name:n.catalogName,
                                             id:n.catalogId,
                                             list:[]
                                         })
@@ -122,7 +127,7 @@ var vm = new Vue({
                         })
                     }else if(i == 4){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -130,7 +135,7 @@ var vm = new Vue({
                                     r.forEach(function (n) {
                                         if(n.parentId == j.id){
                                             j.list.push({
-                                                name:n.name,
+                                                name:n.catalogName,
                                                 id:n.catalogId,
                                                 list:[]
                                             })
@@ -143,7 +148,7 @@ var vm = new Vue({
                         })
                     }else if(i == 5){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -152,7 +157,7 @@ var vm = new Vue({
                                         r.forEach(function (n) {
                                             if(n.parentId == m.id){
                                                 m.list.push({
-                                                    name:n.name,
+                                                    name:n.catalogName,
                                                     id:n.catalogId,
                                                     list:[]
                                                 })
@@ -166,7 +171,7 @@ var vm = new Vue({
                         })
                     }else if(i == 6){
                         if(_len == r.length){
-                            return ;
+                            break ;
                         }
                         vm.menuList.forEach(function (item) {
                             item.list.forEach(function (i) {
@@ -176,7 +181,7 @@ var vm = new Vue({
                                             r.forEach(function (n) {
                                                 if(n.parentId == x.id){
                                                     x.list.push({
-                                                        name:n.name,
+                                                        name:n.catalogName,
                                                         id:n.catalogId,
                                                         list:[]
                                                     })
@@ -192,16 +197,15 @@ var vm = new Vue({
                     }
 
                 }
-
+                console.log(vm.menuList);
                 var _list = [{
-                    name:'全部',
+                    name:'资源目录',
                     id:null,
                     list:[]
                 }]
                 _list[0].list = vm.menuList;
-
                 vm.menuList = _list;
-                console.log(vm.menuList);
+                // console.log(_list);
             });
         },
         // 获取表格列表
@@ -239,12 +243,12 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
-            if(data.list.length == 0 || data.id == null){
-                console.log('进来了')
-                vm.catalogId = data.id;
-                vm.getTableList();
+            if(data.name == '资源目录'){
+                vm.q.name = '';
+            }else {
+                vm.q.name = data.name;
             }
+            vm.getTableList();
         },
         // 选项卡
         tabClick:function (num) {

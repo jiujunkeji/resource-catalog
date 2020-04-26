@@ -46,6 +46,12 @@ var vm = new Vue({
             safe:'',
             encryptCode:''
         },
+        q1: {
+            name:'',
+            meteNumber:'',
+            meteCategoryId:'',
+            cnName:''
+        },
         showList: true,
         title: null,
         resourceMeteData: {
@@ -65,6 +71,8 @@ var vm = new Vue({
         name:null,
         open:true,
         openText:'展开筛选',
+        open1:true,
+        openText1:'展开筛选',
         h:0,
         props: {
             label: 'name',
@@ -74,8 +82,9 @@ var vm = new Vue({
         id:0,
         filterText:'',
         menuList:[],
+        menuList1:[],
         tableList:[],
-        tableListUp:[],
+        tableList1:[],
         totalPage:0,
         totalPage1:0,
         page:1,
@@ -84,8 +93,13 @@ var vm = new Vue({
         tab:0,
         checkIdList:[],
         checkIdList1:[],
+        checkIdList2:[],
+        fenlSelect:[],
+        fenlSelect1:[],
         catalogId:null,
-        fileData:{},
+        fileData:{
+            cnName:''
+        },
         comList:[],
         safeLevelList:[],
         encryptMethodList:[],
@@ -102,7 +116,13 @@ var vm = new Vue({
             vm.reload();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q = {
+                name:'',
+                safeTypeCode:'',
+                safe:'',
+                encryptCode:''
+            };
+            vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -183,8 +203,6 @@ var vm = new Vue({
             });
         },
         add: function(){
-
-
             vm.showList = false;
             vm.title = "新增目录安全设置";
             vm.resourceMeteData = {
@@ -216,8 +234,8 @@ var vm = new Vue({
             // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            console.log(vm.resourceMeteData.catalogId == '');
-            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjsafe/save" : "xj/xjsafe/update";
+            console.log(vm.resourceMeteData);
+            var url = vm.resourceMeteData.safeId == null  ? "xj/xjsafe/save" : "xj/xjsafe/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -503,15 +521,15 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
-            console.log(JSON.stringify(data.id) == 'null');
+            vm.catalogId = data.id;
+            vm.getTableList();
 
-            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
-                console.log('进来了')
-                vm.catalogId = data.id;
-                // vm.q.name = data.name;
-                vm.getTableList();
-            }
+            // if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+            //     console.log('进来了')
+            //     vm.catalogId = data.id;
+            //     // vm.q.name = data.name;
+            //     vm.getTableList();
+            // }
 
         },
         // 选项卡
@@ -586,229 +604,167 @@ var vm = new Vue({
         },
 
         // 编辑方法
-        // 新增
-        addUp:function () {
-            vm.fileData = {};
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#addUp'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['500px', '320px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate1();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.getFileTableList();
-                }
-
-            })
+        query1: function () {
+            vm.getTableList1();
         },
-        // 删除
-        delUp:function () {
-            var list = []
-            vm.checkIdList1.forEach(function (item) {
-                list.push(item.fieldId)
-            })
-            console.log(list);
-            if(list.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
+        clean1:function () {
+            vm.q1 = {
+                name:'',
+                meteNumber:'',
+                meteCategoryId:'',
+                cnName:''
+            }
+        },
+        // 收缩展开搜索
+        openSwitch1:function () {
+            if(vm.open1){
+                vm.open1 = false;
+                vm.openText1 = '收起筛选'
+
             }else {
-                layer.confirm('确定要删除选中的记录？', function(index){
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + "resource/resourcefield/delete",
-                        contentType: "application/json",
-                        data: JSON.stringify(list),
-                        success: function(r){
-                            if(r.code == 0){
-                                layer.close(index);
-                                vm.getFileTableList();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操111作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
-                        }
-                    });
-                });
+                vm.open1 = true;
+                vm.openText1 = '展开筛选'
+            }
+        },
+        filterNode1:function(value, data) {
+            if (!value) return true;
+            return data.name.indexOf(value) !== -1;
+        },
+        // 树结构目录获取元数据分类列表
+        getMenuList1: function (event) {
+            $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
+
+                r.forEach(function(item,i){
+                    vm.fenlSelect1.push({
+                        name:item.name,
+                        id:item.meteCategoryId,
+                        list:[]
+                    })
+                })
+
+                var _list = [{
+                    name:'元数据分类',
+                    id:null,
+                    list:[]
+                }]
+                _list[0].list = vm.fenlSelect1;
+                vm.menuList1 = _list;
+                console.log(vm.menuList1);
+            });
+        },
+        // 树目录点击事件
+        handleNodeClick1:function(data) {
+            console.log(data);
+            console.log(JSON.stringify(data.id) == 'null');
+
+            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+                console.log('进来了')
+                vm.q.meteCategoryId = data.id;
+                vm.getTableList1();
             }
 
-
         },
-        // 保存方法
-        saveOrUpdate1: function (event) {
-            var url = vm.fileData.fieldId == null ? "resource/resourcefield/save" : "resource/resourcefield/update";
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.fileData),
-                success: function(r){
-                    if(r.code === 0){
-                        vm.page1 = 1;
-                        vm.getFileTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作11成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:1000});
-                    }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }
-                }
-            });
-        },
-        // 获取信息方法
-        getFileInfo:function (fileId) {
-            $.get(baseURL + "resource/resourcefield/info/"+fileId, function(r){
-                console.log(r);
-                vm.fileData = r.resourceField;
-            });
-        },
-        // 批量设置
-        setUp:function () {
-            layer.open({
-                type: 1,
-                title: '新增',
-                content: $('#addUp'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['600px', '520px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['新增','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate1();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.reload();
-                }
-
-            })
-        },
-        // 修改
-        editUp:function (id) {
-            vm.getFileInfo(id);
-            layer.open({
-                type: 1,
-                title: '修改',
-                content: $('#addUp'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['500px', '310px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['修改','取消'],
-                btn1:function (index) {
-                    vm.saveOrUpdate1();
-                    layer.close(index);
-                },
-                btn2:function () {
-                    vm.getFileTableList();
-                }
-
-            })
-
-        },
-        // 获取文件列表
-        getFileTableList:function () {
+        // 获取元数据列表
+        getTableList1:function () {
+            var _this = this;
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcefield/list',
+                url: baseURL + 'xj/xjmetadata/queryList',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    page:vm.page1,
-                    id:vm.resourceMeteData.meteId
+                    page:this.page1,
+                    meteNumber:this.q1.meteNumber,
+                    meteCategoryId:this.q1.meteCategoryId,
+                    cnName:this.q1.cnName
                 },
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.resourceMeteData.fieldList = r.page.list;
+                        vm.tableList1 = [];
                         vm.totalPage1 = r.page.totalCount;
+                        r.page.list.forEach(function (item) {
+                            if(item.isDisabled == 0){
+                                vm.tableList1.push(item)
+                            }
+                        })
+
+                        if (vm.resourceMeteData.meteDataList.length != 0) {
+                            vm.resourceMeteData.meteDataList.forEach(function (item) {
+                                vm.tableList1.forEach(function (m,n) {
+                                    if(m.meteId == item.meteId){
+                                        console.log("@@@@@@@")
+                                        console.log(m)
+                                        _this.$nextTick(function () {
+                                            this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
+                                        })
+                                    }
+                                })
+                                // _this.$refs.multipleTable.toggleRowSelection(t,true);
+                            });
+                        } else {
+                            _this.$refs.multipleTable.clearSelection();
+                        }
                     }else{
                         alert(r.msg);
                     }
                 }
             });
         },
-        // 导入完成
-        handleAvatarSuccess:function(res, file) {
-            // vm.imageUrl = URL.createObjectURL(file.raw);
-            // vm.file = file;
-            console.log(res);
-            if(res.code == 0){
-                this.$message({
-                    type: 'success',
-                    message: '导入成功！'
-                });
-                vm.getFileTableList();
-            }
-        },
-        // 导入前
-        beforeAvatarUpload:function(file) {
-            var FileExt = file.name.replace(/.+\./, "");
-            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
-                this.$message({
-                    type: 'warning',
-                    message: '上传文件只能是excel！'
-                });
-                return false;
-            }else {
-                file.type = 'xls';
-                vm.fileData = file;
-                console.log(vm.fileData);
-            }
-        },
-        handlePreview:function(file) {
-            var FileExt = file.name.replace(/.+\./, "");
-            if (['xlsx','xls'].indexOf(FileExt.toLowerCase()) === -1){
-                this.$message({
-                    type: 'warning',
-                    message: '上传文件只能是excel！'
-                });
-                return false;
-            }else {
-                file.type = 'xls';
-                vm.fileData = file;
-                console.log(vm.fileData);
-                vm.inUp();
-            }
-        },
-        inUp:function () {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'resource/resourcefield/importField',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    file:vm.fileData,
+        addUp:function () {
+            vm.getMenuList1();
+            vm.getTableList1();
+
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['1000px', '660px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    // vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    console.log(vm.resourceMeteData)
+                    layer.close(index);
                 },
-                success: function(r){
-                    console.log(r);
-                    if(r.code === 0){
-                        // vm.resourceMeteData.fieldList = r.page.list;
-                        // vm.totalPage1 = r.page.totalPage;
-                    }else{
-                        alert(r.msg);
-                    }
+                btn2:function () {
+
                 }
-            });
+
+            })
+        },
+        delUp:function () {
+            var arr =[];
+            vm.checkIdList1.forEach(function (item,i) {
+                vm.resourceMeteData.meteDataList.forEach(function (m,n) {
+                    if(m.meteId == item.meteId){
+                        vm.resourceMeteData.meteDataList.splice(n,1);
+                        return
+                    }
+                })
+            })
+            // console.log(arr);
+            // arr.forEach(function (item) {
+            //     vm.resourceMeteData.meteDataList.splice(item,1)
+            // })
+
         },
         // 导出
         outUp:function () {
-            window.location.href = baseURL + "resource/resourcefield/downField/"+vm.resourceMeteData.meteId
-        },
-        // 下载模版
-        downUp:function () {
-            window.location.href = baseURL + "resource/resourcefield/downTemplate"
+            window.location.href = baseURL + "xj/xjmetadataset/downField/"+vm.id
         },
         // 表格选中方法
         toggleSelection1:function(selection) {
             console.log(selection);
             vm.checkIdList1 = selection;
+        },
+        // 表格选中方法
+        toggleSelection2:function(selection) {
+            console.log(selection);
+            vm.checkIdList2 = selection;
         },
         // 数据字典
         dictClick:function (type) {
@@ -858,6 +814,28 @@ var vm = new Vue({
                     vm.resourceMeteData.safeType = item.value;
                     return
                 }
+            })
+        },
+        // 设置安全级别
+        setSafe:function (row) {
+            vm.fileData.cnName = row.meteCname;
+            layer.open({
+                type: 1,
+                title: '设置',
+                content: $('#safeDiv'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['500px', '260px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    row.safe = vm.fileData.safe;
+                    layer.close(index);
+                },
+                btn2:function () {
+
+                }
+
             })
         }
     },

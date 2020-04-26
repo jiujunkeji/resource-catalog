@@ -11,10 +11,12 @@ var setting = {
             enable: true,
             idKey: "catalogId",
             pIdKey: "parentId",
-            rootPId: -1
+            rootPId: -1,
+
         },
         key: {
-            url:"nourl"
+            url:"nourl",
+            name:'catalogName'
         }
     }
 };
@@ -39,10 +41,10 @@ var vm = new Vue({
     el:'#rrapp',
     data:{
         q: {
-            cnName:'',
-            meteSetNumber:'',
-            meteCategorySetId:'',
-
+            name:'',
+            safeTypeCode:'',
+            safe:'',
+            encryptCode:''
         },
         q1: {
             name:'',
@@ -53,8 +55,16 @@ var vm = new Vue({
         showList: true,
         title: null,
         resourceMeteData: {
-            meteDataList:[]
-            // meteCategorySetId:null
+            meteType:null,
+            categoryId:null,
+            categoryName:'',
+            catagoryCode:'',
+            catalogId:'',
+            catalogName:'',
+            fieldList:[],
+            parentName:'',
+            parentId:0,
+            isUsed:1
         },
         imageUrl:'',
         fileData:null,
@@ -84,15 +94,17 @@ var vm = new Vue({
         checkIdList:[],
         checkIdList1:[],
         checkIdList2:[],
-        catalogId:null,
-        fileData:{},
-        comList:[],
         fenlSelect:[],
         fenlSelect1:[],
-        hisList:[],
-        optionList:[],
-        auditOpinion:'',
-        multipleTable:[]
+        catalogId:null,
+        fileData:{
+            cnName:''
+        },
+        comList:[],
+        safeLevelList:[],
+        encryptMethodList:[],
+        safeTypeList:[]
+
     },
     watch: {
         filterText:function(val) {
@@ -105,16 +117,16 @@ var vm = new Vue({
         },
         clean:function () {
             vm.q = {
-                cnName:'',
-                meteSetNumber:'',
-                meteCategorySetId:'',
-
+                name:'',
+                safeTypeCode:'',
+                safe:'',
+                encryptCode:''
             };
             vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
-            $.get(baseURL + "resource/resourcecatalog/list", function(r){
+            $.get(baseURL + "/xj/xjcatalog/list", function(r){
                 console.log(r);
                 // r.push({
                 //     parentId:-1,
@@ -144,9 +156,10 @@ var vm = new Vue({
                     console.log(node);
                     //选择上级菜单
                     vm.resourceMeteData.catalogId = node[0].catalogId;
-                    vm.resourceMeteData.catalogName = node[0].name;
+                    vm.resourceMeteData.catalogName = node[0].catalogName;
                     // vm.resourceMeteData.catagoryCode = node[0].code;
                     layer.close(index);
+                    console.log(vm.resourceMeteData);
                 }
             });
         },
@@ -190,46 +203,54 @@ var vm = new Vue({
             });
         },
         add: function(){
-
             vm.showList = false;
-            vm.title = "新增元数据集";
-            // vm.resourceMeteData = {
-            //     meteType:null,
-            //     categoryId:null,
-            //     categoryName:'',
-            //     catagoryCode:'',
-            //     catalogId:'',
-            //     catalogName:'',
-            //     fieldList:[]
-            // };
+            vm.title = "新增目录安全设置";
+            vm.resourceMeteData = {
+                meteType:null,
+                categoryId:null,
+                categoryName:'',
+                catagoryCode:'',
+                catalogId:'',
+                catalogName:'',
+                fieldList:[],
+                parentId:0,
+                parentName:''
+            };
+            vm.getMenu();
+            // vm.getMenu1();
+            vm.getComList();
 
         },
         update: function (id) {
-            var meteId = id;
-            if(meteId == null){
+            var catalogId = id;
+            if(catalogId == null){
                 return ;
             }
-            //
             vm.showList = false;
-            vm.title = "修改元数据集";
-
-            vm.getInfo(meteId);
-
+            vm.title = "修改目录安全设置";
+            vm.getInfo(catalogId);
+            vm.getMenu();
+            // vm.getMenu1();
+            // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            var url = vm.resourceMeteData.meteSetId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
+            console.log(vm.resourceMeteData);
+            var url = vm.resourceMeteData.safeId == null  ? "xj/xjcataloglinkdata/save" : "xj/xjcataloglinkdata/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.resourceMeteData),
                 success: function(r){
+                    console.log(r);
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
+                        console.log('成功')
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        console.log('失败')
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败<br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -241,7 +262,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "xj/xjmetadataset/delete",
+                    url: baseURL + "xj/xjcataloglinkdata/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -256,16 +277,18 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function(meteId){
-            $.get(baseURL + "xj/xjmetadataset/info/"+meteId, function(r){
+        getInfo: function(catalogId){
+            $.get(baseURL + "xj/xjcataloglinkdata/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.xjMetaDataSet;
+                vm.resourceMeteData = r.xjSafe;
+                // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
         },
         reload: function (event) {
             vm.showList = true;
             vm.getTableList();
+            vm.getMenuList();
         },
         validator: function () {
             if(isBlank(vm.resourceCatalog.name)){
@@ -317,42 +340,164 @@ var vm = new Vue({
         },
         // 树结构目录获取
         getMenuList: function (event) {
-            $.getJSON(baseURL + "xj/xjmetesetcategory/list", function(r){
-                console.log(r);
-                r.forEach(function(item,i){
-                    vm.fenlSelect.push({
-                        name:item.name,
-                        id:item.meteCategorySetId,
-                        list:[]
-                    })
-                })
+            $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
+                console.log(r.length);
+                console.log(vm.menuList);
+                vm.menuList = [];
+                var _len=0;
+                for(var i = 1;i<10;i++){
+                    if(i == 1){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        console.log(1111);
+                        r.forEach(function (item) {
+                            if(item.parentId == 0){
+                                vm.menuList.push({
+                                    name:item.catalogName,
+                                    id:item.catalogId,
+                                    list:[]
+                                })
+                                _len++;
+                            }
+                        })
+                    }else if(i == 2){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        console.log(222);
+                        vm.menuList.forEach(function (item) {
+                            r.forEach(function (n) {
+                                if(n.parentId == item.id){
+                                    item.list.push({
+                                        name:n.catalogName,
+                                        id:n.catalogId,
+                                        list:[]
+                                    })
+                                    _len++;
+                                }
+                            })
+                        })
+                    }else if(i == 3){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                r.forEach(function (n) {
+                                    if(n.parentId == i.id){
+                                        i.list.push({
+                                            name:n.catalogName,
+                                            id:n.catalogId,
+                                            list:[]
+                                        })
+                                    }
+                                    _len++;
+                                })
+                            })
 
+                        })
+                    }else if(i == 4){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    r.forEach(function (n) {
+                                        if(n.parentId == j.id){
+                                            j.list.push({
+                                                name:n.catalogName,
+                                                id:n.catalogId,
+                                                list:[]
+                                            })
+                                        }
+                                        _len++;
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 5){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        r.forEach(function (n) {
+                                            if(n.parentId == m.id){
+                                                m.list.push({
+                                                    name:n.catalogName,
+                                                    id:n.catalogId,
+                                                    list:[]
+                                                })
+                                            }
+                                            _len++;
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
+                    }else if(i == 6){
+                        if(_len == r.length){
+                            break ;
+                        }
+                        vm.menuList.forEach(function (item) {
+                            item.list.forEach(function (i) {
+                                i.list.forEach(function (j) {
+                                    j.list.forEach(function (m) {
+                                        m.list.forEach(function (x) {
+                                            r.forEach(function (n) {
+                                                if(n.parentId == x.id){
+                                                    x.list.push({
+                                                        name:n.catalogName,
+                                                        id:n.catalogId,
+                                                        list:[]
+                                                    })
+                                                }
+                                                _len++;
+                                            })
+                                        })
+                                    })
+                                })
+                            })
+
+                        })
+                    }
+
+                }
+                console.log(vm.menuList);
                 var _list = [{
-                    name:'元数据分类',
+                    name:'资源目录',
                     id:null,
                     list:[]
                 }]
-                _list[0].list = vm.fenlSelect;
+                _list[0].list = vm.menuList;
                 vm.menuList = _list;
-                console.log(vm.menuList);
+                // console.log(_list);
             });
         },
         // 获取表格列表
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetadataset/queryList',
+                url: baseURL + 'xj/xjcataloglinkdata/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    meteCategorySetId:this.q.meteCategorySetId,
-                    meteSetNumber:this.q.meteSetNumber,
-                    cnName:this.q.cnName,
-                    reviewState:this.tab
+                    name:this.q.name,
+                    safeTypeCode:this.q.safeTypeCode,
+                    safeCode:this.q.safeCode,
+                    encryptCode:this.q.encryptCode,
+                    catalogId:this.catalogId
                 },
                 success: function(r){
                     console.log(r);
+                    // vm.tableList = r
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
@@ -376,15 +521,15 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
-            console.log(JSON.stringify(data.id) == 'null');
+            vm.catalogId = data.id;
+            vm.getTableList();
 
-            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
-                console.log('进来了')
-                vm.meteCategorySetId = data.id;
-                vm.q.meteCategorySetId = data.id;
-                vm.getTableList();
-            }
+            // if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+            //     console.log('进来了')
+            //     vm.catalogId = data.id;
+            //     // vm.q.name = data.name;
+            //     vm.getTableList();
+            // }
 
         },
         // 选项卡
@@ -402,7 +547,7 @@ var vm = new Vue({
         subMit:function () {
             var list = []
             vm.checkIdList.forEach(function (item) {
-                list.push(item.meteSetId)
+                list.push(item.meteId)
             })
             console.log(list);
             if(list.length == 0){
@@ -413,7 +558,7 @@ var vm = new Vue({
             }else {
                 $.ajax({
                     type: "post",
-                    url: baseURL + 'xj/xjmetesetaudit/submit',
+                    url: baseURL + 'resource/resourcemetedata/submit',
                     contentType: "application/json",
                     // dataType: 'json',
                     data: JSON.stringify(list),
@@ -433,173 +578,27 @@ var vm = new Vue({
         },
         // 撤回
         revoke:function (id) {
-
-            layer.confirm('确定要撤回该条记录？', function(index){
-                $.ajax({
-                    type: "get",
-                    url: baseURL + 'xj/xjmetesetaudit/revoke',
-                    // contentType: "application/json",
-                    dataType: 'json',
-                    data: {
-                        meteSetId:id
-                    },
-                    success: function(r){
-                        if(r.code === 0){
-                            vm.tab = 0;
-                            vm.page = 1;
-                            vm.getTableList();
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }else{
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }
-                    }
-                });
-            });
-
-
-        },
-        // 通过方法
-        agree:function (id) {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'xj/xjmetesetaudit/agree',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    meteSetId:id
-                },
-                // data:JSON.stringify([id]),
-                success: function(r){
-                    console.log(r);
-                    if(r.code === 0){
-                        vm.tab = 1;
-                        vm.page = 1;
-                        vm.getTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }
-                }
-            });
-        },
-        // 拒绝
-        refuse:function (id) {
-            layer.open({
-                type: 1,
-                title: '审核意见',
-                content: $('#refuseDiv'), //这里content是一个普通的String
-                skin: 'openClass',
-                area: ['562px', '260px'],
-                shadeClose: true,
-                closeBtn:0,
-                btn: ['确定','取消'],
-                btn1:function (index) {
-                    $.ajax({
-                        type: "post",
-                        url: baseURL + 'xj/xjmetesetaudit/refuse',
-                        contentType: "application/json",
-                        // dataType: 'json',
-                        data: JSON.stringify({
-                            meteSetId:id,
-                            auditOpinion:vm.auditOpinion
-                        }),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.tab = 3;
-                                vm.page = 1;
-                                vm.getTableList();
-                                layer.close(index);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
-                        }
-                    });
-
-                },
-                btn2:function () {
-                    // layer.close(index);
-                    vm.getTableList();
-                }
-
+            var list = []
+            vm.menuList.forEach(function (item) {
+                list.push(item.meteId)
             })
-
-        },
-        // 发布
-        push:function (id) {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetesetaudit/push',
+                url: baseURL + 'resource/resourcemetedata/revoke',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    meteSetId:id
+                    meteId:id
                 },
                 success: function(r){
                     if(r.code === 0){
-                        vm.tab = 4;
+                        vm.tab = 0;
                         vm.page = 1;
                         vm.getTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
-                }
-            });
-        },
-        // 停止发布
-        stopPush:function (id) {
-            layer.confirm('确定要停止发布该条记录？', function(index){
-                $.ajax({
-                    type: "get",
-                    url: baseURL + 'xj/xjmetesetaudit/stopPush',
-                    // contentType: "application/json",
-                    dataType: 'json',
-                    data: {
-                        meteSetId:id
-                    },
-                    success: function(r){
-                        if(r.code === 0){
-                            vm.tab = 2;
-                            vm.page = 1;
-                            vm.getTableList();
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }else{
-                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
-                        }
-                    }
-                });
-            })
-
-        },
-        // 获取审核记录
-        getoptionList:function (id) {
-            $.ajax({
-                type: "get",
-                url: baseURL + 'xj/xjmetesetaudit/list',
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    meteSetId:id
-                },
-                success: function(r){
-                    console.log(r)
-                    vm.optionList = r;
-                    layer.open({
-                        type: 1,
-                        title: '审核记录',
-                        content: $('#shenheList'), //这里content是一个普通的String
-                        skin: 'openClass',
-                        area: ['562px', '460px'],
-                        shadeClose: true,
-                        closeBtn:0,
-                        btn: ['关闭'],
-                        btn1:function (index) {
-
-                            layer.close(index);
-                        }
-
-                    })
                 }
             });
         },
@@ -742,12 +741,15 @@ var vm = new Vue({
             vm.checkIdList1.forEach(function (item,i) {
                 vm.resourceMeteData.meteDataList.forEach(function (m,n) {
                     if(m.meteId == item.meteId){
-                        vm.resourceMeteData.meteDataList.splice(n,1)
+                        vm.resourceMeteData.meteDataList.splice(n,1);
                         return
                     }
                 })
             })
-
+            // console.log(arr);
+            // arr.forEach(function (item) {
+            //     vm.resourceMeteData.meteDataList.splice(item,1)
+            // })
 
         },
         // 导出
@@ -764,45 +766,85 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList2 = selection;
         },
-        // 获取历史版本
-        getHist:function (id) {
-            var _this = this;
-            $.get(baseURL + "xj/xjmetadataset/historyInfo/"+id, function(r){
-                console.log(r);
-                if(r.hList.length == 0){
-                    _this.$message({
-                        message: '暂无历史版本',
-                        type: 'warning'
-                    });
-                }else {
-                    vm.hisList = r.hList;
-                    layer.open({
-                        type: 1,
-                        title: '历史版本',
-                        content: $('#hisList'), //这里content是一个普通的String
-                        skin: 'openClass',
-                        area: ['1000px', '580px'],
-                        shadeClose: true,
-                        closeBtn:0,
-                        btn: ['关闭'],
-                        btn1:function (index) {
-                            layer.close(index);
-                        },
-                        btn2:function () {
-                        }
+        // 数据字典
+        dictClick:function (type) {
+            $.ajax({
+                type: "get",
+                url: baseURL + "sys/dict/selectDict",
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    type:type
+                },
+                success: function(r){
+                    console.log(r);
+                    if(type == 'safe_level'){
+                        vm.safeLevelList = r;
+                    }else if(type == 'encrypt_method'){
+                        vm.encryptMethodList =r;
+                    }else if(type == 'safe_type'){
+                        vm.safeTypeList =r;
+                    }
+                }
+            });
+        },
+        // 加密修改
+        encryptChan:function (opt) {
+            console.log(opt);
+            vm.encryptMethodList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.encrypt = item.value;
+                    return
+                }
+            })
+        },
+        // 安全等级修改
+        safeLevelChan:function (opt) {
+            vm.safeLevelList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.safe = item.value;
+                    return
+                }
+            })
+        },
+        // 安全类型修改
+        safeTypeChan:function (opt) {
+            vm.safeTypeList.forEach(function (item) {
+                if(item.code == opt){
+                    vm.resourceMeteData.safeType = item.value;
+                    return
+                }
+            })
+        },
+        // 设置安全级别
+        setSafe:function (row) {
+            vm.fileData.cnName = row.meteCname;
+            layer.open({
+                type: 1,
+                title: '设置',
+                content: $('#safeDiv'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['500px', '260px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    row.safe = vm.fileData.safe;
+                    layer.close(index);
+                },
+                btn2:function () {
 
-                    })
                 }
 
-                // vm.tableListUp = r.resourceMeteData.list;
-            });
-
-        },
+            })
+        }
     },
     created:function () {
         this.getMenuList();
         this.getTableList();
-
+        this.dictClick('safe_level');
+        this.dictClick('encrypt_method');
+        this.dictClick('safe_type');
         // this.h = height
     }
 });

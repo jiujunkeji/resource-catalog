@@ -64,7 +64,7 @@ var vm = new Vue({
             console.log(selection);
             vm.checkIdList = [];
             selection.forEach(function(item,i){
-                vm.checkIdList.push(item.meteCategorySetId)
+                vm.checkIdList.push(item.dsId)
             })
         },
         getMenu: function(menuId){
@@ -115,9 +115,23 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    vm.saveOrUpdate();
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjdatasource/save',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.meteCategory),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.reload();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
 
-                    layer.close(index);
+
                 },
                 btn2:function () {
                     vm.reload();
@@ -142,8 +156,21 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    vm.saveOrUpdate();
-                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'xj/xjdatasource/update',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.meteCategory),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.reload();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
                 },
                 btn2:function () {
                     vm.reload();
@@ -207,7 +234,7 @@ var vm = new Vue({
 		},
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "xj/xjdatasource/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.xjMeteSetCategory;
+                vm.meteCategory = r.xjDataSource;
                 console.log('修改')
                 console.log(vm.meteCategory)
             });
@@ -232,7 +259,7 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    dsNam:this.q.name,
+                    dsDatabasename:this.q.name,
                     dsType:this.q.type,
                 },
                 success: function(r){

@@ -90,7 +90,7 @@ var vm = new Vue({
         fenlSelect:[],
         fenlSelect1:[],
         hisList:[],
-        look:false
+        look:false,
     },
     watch: {
         filterText:function(val) {
@@ -107,7 +107,8 @@ var vm = new Vue({
                 meteSetNumber:'',
                 meteCategorySetId:'',
 
-            }
+            };
+            vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -190,15 +191,9 @@ var vm = new Vue({
 
             vm.showList = false;
             vm.title = "新增元数据集";
-            // vm.resourceMeteData = {
-            //     meteType:null,
-            //     categoryId:null,
-            //     categoryName:'',
-            //     catagoryCode:'',
-            //     catalogId:'',
-            //     catalogName:'',
-            //     fieldList:[]
-            // };
+            vm.resourceMeteData = {
+                meteDataList:[]
+            };
 
         },
         update: function (id) {
@@ -525,6 +520,7 @@ var vm = new Vue({
         },
         // 获取元数据列表
         getTableList1:function () {
+            var _this = this;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetadata/queryList',
@@ -539,8 +535,30 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.tableList1 = r.page.list;
+                        vm.tableList1 = [];
                         vm.totalPage1 = r.page.totalCount;
+                        r.page.list.forEach(function (item) {
+                            if(item.isDisabled == 0){
+                                vm.tableList1.push(item)
+                            }
+                        })
+
+                        if (vm.resourceMeteData.meteDataList.length != 0) {
+                            vm.resourceMeteData.meteDataList.forEach(function (item) {
+                                vm.tableList1.forEach(function (m,n) {
+                                    if(m.meteId == item.meteId){
+                                        console.log("@@@@@@@")
+                                        console.log(m)
+                                        _this.$nextTick(function () {
+                                            this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
+                                        })
+                                    }
+                                })
+                                // _this.$refs.multipleTable.toggleRowSelection(t,true);
+                            });
+                        } else {
+                            _this.$refs.multipleTable.clearSelection();
+                        }
                     }else{
                         alert(r.msg);
                     }
@@ -550,6 +568,7 @@ var vm = new Vue({
         addUp:function () {
             vm.getMenuList1();
             vm.getTableList1();
+
             layer.open({
                 type: 1,
                 title: '新增',
@@ -560,14 +579,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
-                        console.log('jin')
-                        vm.checkIdList2.forEach(function (item,i) {
-                            vm.resourceMeteData.meteDataList.push(item);
-                        })
-                    }else {
-                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
-                    }
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);
@@ -583,15 +595,15 @@ var vm = new Vue({
             vm.checkIdList1.forEach(function (item,i) {
                 vm.resourceMeteData.meteDataList.forEach(function (m,n) {
                     if(m.meteId == item.meteId){
-                        arr.push(n);
+                        vm.resourceMeteData.meteDataList.splice(n,1);
                         return
                     }
                 })
             })
-            console.log(arr);
-            arr.forEach(function (item) {
-                vm.resourceMeteData.meteDataList.splice(item,1)
-            })
+            // console.log(arr);
+            // arr.forEach(function (item) {
+            //     vm.resourceMeteData.meteDataList.splice(item,1)
+            // })
 
         },
         // 导出
