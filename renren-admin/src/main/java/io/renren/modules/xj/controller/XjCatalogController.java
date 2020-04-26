@@ -285,7 +285,18 @@ public class XjCatalogController extends AbstractController{
     public R selectDataList(@RequestParam Map<String, Object> params){
         String catalogId = (String)params.get("catalogId");
         XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
-        catalog.getMeteSetId();
+        if(catalog.getMeteSetId() != null){
+            List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
+            meteDataList = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",catalog.getMeteSetId()));
+            if(meteDataList != null && meteDataList.size() > 0){
+
+            }else{
+                return R.error("该目录未关联元数据");
+            }
+        }else{
+            return R.error("该目录未关联元数据集");
+        }
+
         PageUtils page = xjCatalogService.queryPage(params);
         return R.ok().put("page",page);
     }
