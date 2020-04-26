@@ -1,10 +1,268 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+    <title>监控管理</title>
+    <#include "/header.html">
+        <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+        <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+        <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+        <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+        <style>
+            span.stop{
+                display: inline-block;
+                padding: 2px 4px;
+                border-radius: 2px;
+                background: #f56c6c;
+                color: #fff;
+                font-size: 12px;
+            }
+            span.ok{
+                display: inline-block;
+                padding: 2px 4px;
+                border-radius: 2px;
+                background: #409eff;
+                color: #fff;
+                font-size: 12px;
+            }
+            .el-select-dropdown{
+                z-index:100000000!important;
+                width: 193px;
+            }
+            .el-select,.el-autocomplete{
+                width: 100%;
+            }
+            .el-input__inner{
+                height: 34px;
+            }
+            .el-autocomplete-suggestion{
+                z-index:100000000!important;
+            }
+        </style>
+        </head>
 <body>
+<div id="rrapp" v-cloak>
+    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
+        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+            <div class="right">
+                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
+            </div>
 
+        </div>
+        <div class="switchIn">
+            <span>
+                <label>数据源类型：</label>
+                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >
+            </span>
+            <span>
+                <label>数据源名称：</label>
+                <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >
+            </span>
+        </div>
+        <button class="clean" @click="clean">重置</button>
+        <button class="look" @click="query">查询</button>
+    </div>
+    <div class="divBox">
+        <div class="grid-btn">
+            <span class="title">
+                <i class="el-icon-s-operation"></i>
+                数据列表
+            </span>
+            <div class="right">
+                <#if shiro.hasPermission("resource:metecategory:save")>
+                    <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
+                    <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+                </#if>
+                <!--<#if shiro.hasPermission("resource:metecategory:update")>-->
+                <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
+                <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+                <!--</#if>-->
+                <#if shiro.hasPermission("resource:metecategory:delete")>
+                    <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
+                    <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+                </#if>
+            </div>
+        </div>
+        <el-table
+                :data="tableList"
+                border
+                stripe
+                @selection-change="toggleSelection"
+                style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="40">
+            </el-table-column>
+            <el-table-column
+                    prop="dsNam"
+                    label="数据源名称"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="dsType"
+                    label="数据源类型"
+                    width="">
+            </el-table-column>
+            <el-table-column
+                    prop="dsDepartment"
+                    label="部门"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsLinetype"
+                    label="连接类型"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsIpname"
+                    label="主机名"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="dsPort"
+                    label="端口号"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    label="是否禁用"
+                    width="90">
+                <template slot-scope="scope">
+                    <el-tag
+                            v-if="scope.row.isDisabled == 0"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        否
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.isDisabled == 1"
+                            size="small"
+                            type="danger"
+                            effect="dark">
+                        是
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="center"
+                    header-align="center"
+                    width="100">
+                <template slot-scope="scope">
+                    <i class="el-icon-edit" @click="update(scope.row.meteCategorySetId)"></i>
+                </template>
+            </el-table-column>
+        </el-table>
+        <br>
+        <el-pagination
+                background
+                pager-count="1"
+                :current-page="page"
+                layout="prev, pager, next, jumper,total,->,slot"
+                @current-change="layerPage"
+                :total="totalPage">
+        </el-pagination>
+        <!--<table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">-->
+        <!--<thead>-->
+        <!--<tr>-->
+        <!--<th data-field="selectItem" data-checkbox="true"></th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--</table>-->
+    </div>
+
+    <div style="display: none" id="addUp" class="panel panel-default">
+        <!--<div class="panel-heading">{{title}}</div>-->
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据源名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsNam" placeholder="数据源名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据源类型</div>
+                <div class="col-sm-10">
+                    <el-autocomplete
+                            class="inline-input"
+                            v-model="meteCategory.dsType"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入内容"
+                            @select="handleSelect"
+                    ></el-autocomplete>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">部门</div>
+                <div class="col-sm-10">
+                    <el-select v-model="meteCategory.dsDepartment" placeholder="请选择">
+                        <el-option
+                                v-for="item in comList"
+                                :key="item.organisationId"
+                                :label="item.organisationName"
+                                :value="item.organisationId">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">连接类型</div>
+                <div class="col-sm-10">
+                    <el-select v-model="meteCategory.dsLinetype" placeholder="请选择">
+                        <el-option
+                                key="0"
+                                label="Native(JDBC)"
+                                value="Native(JDBC)">
+                        </el-option>
+                        <el-option
+                                key="1"
+                                label="ODBC"
+                                value="ODBC">
+                        </el-option>
+                        <el-option
+                                key="2"
+                                label="JNDI"
+                                value="JNDI">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">主机名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsIpname" placeholder="主机名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">主机IP</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsIp" placeholder="主机IP"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">端口号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsPort" placeholder="端口号"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 选择上级菜单 -->
+    <div id="menuLayer" style="display: none;padding:10px;">
+        <ul id="menuTree" class="ztree"></ul>
+    </div>
+
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/resource/datasource.js?_${.now?long}"></script>
 </body>
 </html>

@@ -90,7 +90,14 @@ var vm = new Vue({
             vm.reload();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q = {
+                name:'',
+                meteNumber:'',
+                meteCategoryId:'',
+                cnName:''
+            };
+            vm.getTableList();
+
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -680,26 +687,6 @@ var vm = new Vue({
                 }
             });
         },
-        // 历史版本
-        histC:function () {
-            $.ajax({
-                type: "get",
-                url: baseURL + "sys/dict/selectDict",
-                // contentType: "application/json",
-                dataType: 'json',
-                data: {
-                    type:type
-                },
-                success: function(r){
-                    console.log(r);
-                    if(type == 'control_type'){
-                        vm.controlTypeList = r;
-                    }else if(type == 'data_type'){
-                        vm.dataTypeList =r;
-                    }
-                }
-            });
-        },
         // 禁用
         closeC:function () {
             var list = []
@@ -783,7 +770,7 @@ var vm = new Vue({
                     vm.hisList = r.hList;
                     layer.open({
                         type: 1,
-                        title: '新增',
+                        title: '历史版本',
                         content: $('#hisList'), //这里content是一个普通的String
                         skin: 'openClass',
                         area: ['1000px', '580px'],

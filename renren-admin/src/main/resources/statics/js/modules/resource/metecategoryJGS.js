@@ -347,7 +347,7 @@ var vm = new Vue({
                     meteCategorySetId:this.q.meteCategorySetId,
                     meteSetNumber:this.q.meteSetNumber,
                     cnName:this.q.cnName,
-
+                    reviewState:this.tab
                 },
                 success: function(r){
                     console.log(r);

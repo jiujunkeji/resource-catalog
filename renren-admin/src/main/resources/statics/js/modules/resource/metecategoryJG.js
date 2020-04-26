@@ -89,7 +89,8 @@ var vm = new Vue({
         comList:[],
         fenlSelect:[],
         fenlSelect1:[],
-        hisList:[]
+        hisList:[],
+        look:false
     },
     watch: {
         filterText:function(val) {
@@ -261,6 +262,7 @@ var vm = new Vue({
         },
         reload: function (event) {
             vm.showList = true;
+            vm.look = false;
             vm.getTableList();
         },
         validator: function () {
@@ -452,6 +454,13 @@ var vm = new Vue({
                 }
             });
         },
+        // 查看
+        lookC:function (id) {
+            vm.look = true;
+            vm.showList = false;
+            vm.title = "查看元数据集";
+            vm.getInfo(id);
+        },
 
         // 编辑方法
         query1: function () {
@@ -613,7 +622,7 @@ var vm = new Vue({
                     vm.hisList = r.hList;
                     layer.open({
                         type: 1,
-                        title: '新增',
+                        title: '历史版本',
                         content: $('#hisList'), //这里content是一个普通的String
                         skin: 'openClass',
                         area: ['1000px', '580px'],
