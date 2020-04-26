@@ -91,7 +91,8 @@ var vm = new Vue({
         fenlSelect1:[],
         hisList:[],
         optionList:[],
-        auditOpinion:''
+        auditOpinion:'',
+        multipleTable:[]
     },
     watch: {
         filterText:function(val) {
@@ -108,7 +109,8 @@ var vm = new Vue({
                 meteSetNumber:'',
                 meteCategorySetId:'',
 
-            }
+            };
+            vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -681,6 +683,24 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList1 = r.page.list;
                         vm.totalPage1 = r.page.totalCount;
+
+                        if (vm.resourceMeteData.meteDataList.length != 0) {
+                            var arr = [];
+
+                            vm.resourceMeteData.meteDataList.forEach(function (item) {
+                                vm.tableList1.forEach(function (m,n) {
+                                    if(m.meteId == item.meteId){
+                                        arr.push(n)
+                                    }
+                                })
+                            })
+
+                            arr.forEach(function (t) {
+                                this.$refs.multipleTable.toggleRowSelection(t);
+                            });
+                        } else {
+                            this.$refs.multipleTable.clearSelection();
+                        }
                     }else{
                         alert(r.msg);
                     }
@@ -690,6 +710,7 @@ var vm = new Vue({
         addUp:function () {
             vm.getMenuList1();
             vm.getTableList1();
+
             layer.open({
                 type: 1,
                 title: '新增',
@@ -723,15 +744,12 @@ var vm = new Vue({
             vm.checkIdList1.forEach(function (item,i) {
                 vm.resourceMeteData.meteDataList.forEach(function (m,n) {
                     if(m.meteId == item.meteId){
-                        arr.push(n);
+                        vm.resourceMeteData.meteDataList.splice(n,1)
                         return
                     }
                 })
             })
-            console.log(arr);
-            arr.forEach(function (item) {
-                vm.resourceMeteData.meteDataList.splice(item,1)
-            })
+
 
         },
         // 导出
@@ -762,7 +780,7 @@ var vm = new Vue({
                     vm.hisList = r.hList;
                     layer.open({
                         type: 1,
-                        title: '新增',
+                        title: '历史版本',
                         content: $('#hisList'), //这里content是一个普通的String
                         skin: 'openClass',
                         area: ['1000px', '580px'],

@@ -98,7 +98,8 @@ var vm = new Vue({
             vm.reload();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q.name = null;
+            vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -481,7 +482,8 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name
+                    name:this.q.name,
+                    catalogId:this.catalogId
                 },
                 success: function(r){
                     console.log(r);
@@ -511,18 +513,24 @@ var vm = new Vue({
         handleNodeClick:function(data) {
             console.log(data);
             console.log(JSON.stringify(data.id) == 'null');
-
-            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
-                console.log('进来了')
-                console.log('进来了')
-                vm.catalogId = data.id;
-                if(data.name == '资源目录'){
-                    vm.q.name = '';
-                }else {
-                    vm.q.name = data.name;
-                }
-                vm.getTableList();
+            if(data.name == '资源目录'){
+                vm.q.name = '';
+            }else {
+                vm.q.name = data.name;
             }
+            vm.getTableList();
+
+            // if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+            //     console.log('进来了')
+            //     console.log('进来了')
+            //     vm.catalogId = data.id;
+            //     if(data.name == '资源目录'){
+            //         vm.q.name = '';
+            //     }else {
+            //         vm.q.name = data.name;
+            //     }
+            //     vm.getTableList();
+            // }
 
         },
         // 选项卡

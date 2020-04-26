@@ -102,7 +102,13 @@ var vm = new Vue({
             vm.reload();
         },
         clean:function () {
-            vm.q.name = null
+            vm.q = {
+                name:'',
+                safeTypeCode:'',
+                safe:'',
+                encryptCode:''
+            };
+            vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -183,8 +189,6 @@ var vm = new Vue({
             });
         },
         add: function(){
-
-
             vm.showList = false;
             vm.title = "新增目录安全设置";
             vm.resourceMeteData = {
@@ -216,8 +220,8 @@ var vm = new Vue({
             // vm.getComList();
         },
         saveOrUpdate: function (event) {
-            console.log(vm.resourceMeteData.catalogId == '');
-            var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjsafe/save" : "xj/xjsafe/update";
+            console.log(vm.resourceMeteData);
+            var url = vm.resourceMeteData.safeId == null  ? "xj/xjsafe/save" : "xj/xjsafe/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -503,15 +507,15 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
-            console.log(JSON.stringify(data.id) == 'null');
+            vm.catalogId = data.id;
+            vm.getTableList();
 
-            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
-                console.log('进来了')
-                vm.catalogId = data.id;
-                // vm.q.name = data.name;
-                vm.getTableList();
-            }
+            // if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+            //     console.log('进来了')
+            //     vm.catalogId = data.id;
+            //     // vm.q.name = data.name;
+            //     vm.getTableList();
+            // }
 
         },
         // 选项卡

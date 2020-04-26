@@ -456,22 +456,22 @@
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="meteNumber"
+                    prop="meteSetNumber"
                     label="编号"
                     width="90">
             </el-table-column>
             <el-table-column
-                    prop="cnName"
+                    prop="meteCname"
                     label="中文名称"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="euName"
+                    prop="meteEname"
                     label="英文名称"
                     width="130">
             </el-table-column>
             <el-table-column
-                    prop="euShortName"
+                    prop="meteEuShortName"
                     label="英文短名"
                     width="110">
             </el-table-column>
@@ -479,26 +479,6 @@
                     prop="updateTime"
                     label="更新时间"
                     width="200">
-            </el-table-column>
-            <el-table-column
-                    label="是否禁用"
-                    width="90">
-                <template slot-scope="scope">
-                    <el-tag
-                            v-if="scope.row.isDisabled == 0"
-                            size="small"
-                            type="success"
-                            effect="dark">
-                        否
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.isDisabled == 1"
-                            size="small"
-                            type="danger"
-                            effect="dark">
-                        是
-                    </el-tag>
-                </template>
             </el-table-column>
             <el-table-column
                     label="操作"
