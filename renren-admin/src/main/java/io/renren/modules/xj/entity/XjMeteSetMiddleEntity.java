@@ -102,7 +102,7 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	/**
 	 * 元数据的安全级别设置
 	 */
-	private Integer safeMode;//安全级别
+	private Integer safeCode;//安全级别
 
 	private String  safe;//安全类型
 
@@ -338,12 +338,12 @@ public class XjMeteSetMiddleEntity implements Serializable {
 	}
 
 
-	public Integer getSafeMode() {
-		return safeMode;
+	public Integer getSafeCode() {
+		return safeCode;
 	}
 
-	public void setSafeMode(Integer safeMode) {
-		this.safeMode = safeMode;
+	public void setSafeCode(Integer safeCode) {
+		this.safeCode = safeCode;
 	}
 
 	public String getSafe() {
