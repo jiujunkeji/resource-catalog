@@ -58,11 +58,11 @@ public class XjKtrEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private Data ktrCreatetime;
+	private Date ktrCreatetime;
 	/**
 	 * 修改时间
 	 */
-	private Data ktrUpdatetime;
+	private Date ktrUpdatetime;
 
 	public String getKtrType() {
 		return ktrType;
@@ -96,19 +96,19 @@ public class XjKtrEntity implements Serializable {
 		this.ktrText = ktrText;
 	}
 
-	public Data getKtrCreatetime() {
+	public Date getKtrCreatetime() {
 		return ktrCreatetime;
 	}
 
-	public void setKtrCreatetime(Data ktrCreatetime) {
+	public void setKtrCreatetime(Date ktrCreatetime) {
 		this.ktrCreatetime = ktrCreatetime;
 	}
 
-	public Data getKtrUpdatetime() {
+	public Date getKtrUpdatetime() {
 		return ktrUpdatetime;
 	}
 
-	public void setKtrUpdatetime(Data ktrUpdatetime) {
+	public void setKtrUpdatetime(Date ktrUpdatetime) {
 		this.ktrUpdatetime = ktrUpdatetime;
 	}
 
