@@ -691,8 +691,17 @@ var vm = new Vue({
                         })
 
                         if (vm.resourceMeteData.meteDataList.length != 0) {
-                            vm.resourceMeteData.meteDataList.forEach(function (t) {
-                                _this.$refs.multipleTable.toggleRowSelection(t,true);
+                            vm.resourceMeteData.meteDataList.forEach(function (item) {
+                                vm.tableList1.forEach(function (m,n) {
+                                    if(m.meteId == item.meteId){
+                                        console.log("@@@@@@@")
+                                        console.log(m)
+                                        _this.$nextTick(function () {
+                                            this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
+                                        })
+                                    }
+                                })
+                                // _this.$refs.multipleTable.toggleRowSelection(t,true);
                             });
                         } else {
                             _this.$refs.multipleTable.clearSelection();
@@ -717,14 +726,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
-                        console.log('jin')
-                        vm.checkIdList2.forEach(function (item,i) {
-                            vm.resourceMeteData.meteDataList.push(item);
-                        })
-                    }else {
-                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
-                    }
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);

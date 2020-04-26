@@ -549,7 +549,9 @@ var vm = new Vue({
                                     if(m.meteId == item.meteId){
                                         console.log("@@@@@@@")
                                         console.log(m)
-                                        _this.$refs.multipleTable.toggleRowSelection(vm.tableList1[n],true);
+                                        _this.$nextTick(function () {
+                                            this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
+                                        })
                                     }
                                 })
                                 // _this.$refs.multipleTable.toggleRowSelection(t,true);
@@ -577,14 +579,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
-                        console.log('jin')
-                        vm.checkIdList2.forEach(function (item,i) {
-                            vm.resourceMeteData.meteDataList.push(item);
-                        })
-                    }else {
-                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
-                    }
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);

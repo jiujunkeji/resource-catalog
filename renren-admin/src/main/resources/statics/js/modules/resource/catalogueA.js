@@ -690,38 +690,26 @@ var vm = new Vue({
                         })
 
                         if (vm.resourceMeteData.meteDataList.length != 0) {
-                            var arr = [];
-
                             vm.resourceMeteData.meteDataList.forEach(function (item) {
                                 vm.tableList1.forEach(function (m,n) {
                                     if(m.meteId == item.meteId){
-                                        arr.push(n)
+                                        console.log("@@@@@@@")
+                                        console.log(m)
+                                        _this.$nextTick(function () {
+                                            this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
+                                        })
                                     }
                                 })
-                            })
-                            console.log(arr);
-
-                            vm.setSelect(arr);
+                                // _this.$refs.multipleTable.toggleRowSelection(t,true);
+                            });
                         } else {
-                            vm.clearSelect()
+                            _this.$refs.multipleTable.clearSelection();
                         }
                     }else{
                         alert(r.msg);
                     }
                 }
             });
-        },
-        // 设置表格选中项
-        setSelect:function (arr) {
-            var _this = this;
-            arr.forEach(function (t) {
-                _this.$refs.multipleTable.toggleRowSelection(t,true);
-            });
-        },
-        // 取消表格选中
-        clearSelect:function () {
-            var _this = this;
-            _this.$refs.multipleTable.clearSelection();
         },
         addUp:function () {
             vm.getMenuList1();
@@ -737,14 +725,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.resourceMeteData.meteDataList) != 'null'){
-                        console.log('jin')
-                        vm.checkIdList2.forEach(function (item,i) {
-                            vm.resourceMeteData.meteDataList.push(item);
-                        })
-                    }else {
-                        vm.resourceMeteData.meteDataList = vm.checkIdList2;
-                    }
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);
