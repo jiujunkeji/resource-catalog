@@ -25,7 +25,7 @@
         <result property="createUserId" column="create_user_id"/>
         <result property="createDate" column="create_date"/>
         <result property="updateTime" column="update_time"/>
-        <result property="safeMode" column="safe_mode"/>
+        <result property="safeCode" column="safe_code"/>
         <result property="safe" column="safe"/>
     </resultMap>
 
