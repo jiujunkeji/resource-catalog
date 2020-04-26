@@ -369,13 +369,13 @@ var vm = new Vue({
         getShujuyuanList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjdatasource/list',
+                url: baseURL + 'xj/xjdatasource/list2',
                 // contentType: "application/json",
                 dataType: 'json',
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.dataSourceList = r.page.list;
+                        vm.dataSourceList = r;
                     }else{
                         alert(r.msg);
                     }

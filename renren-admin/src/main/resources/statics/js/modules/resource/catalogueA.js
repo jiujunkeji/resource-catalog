@@ -98,7 +98,8 @@ var vm = new Vue({
         fenlSelect1:[],
         catalogId:null,
         fileData:{
-            cnName:''
+            cnName:'',
+            safe:{}
         },
         comList:[],
         safeLevelList:[],
@@ -818,6 +819,10 @@ var vm = new Vue({
         },
         // 设置安全级别
         setSafe:function (row) {
+            vm.fileData = {
+                cnName:'',
+                safe:null
+            }
             vm.fileData.cnName = row.meteCname;
             layer.open({
                 type: 1,
@@ -829,7 +834,10 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['确定','取消'],
                 btn1:function (index) {
-                    row.safe = vm.fileData.safe;
+                    console.log(vm.fileData.safe)
+                    row.safe = vm.fileData.safe.value;
+                    row.safeCode = vm.fileData.safe.code;
+                    console.log(row)
                     layer.close(index);
                 },
                 btn2:function () {
@@ -837,6 +845,9 @@ var vm = new Vue({
                 }
 
             })
+        },
+        safeChange:function () {
+            
         }
     },
     created:function () {

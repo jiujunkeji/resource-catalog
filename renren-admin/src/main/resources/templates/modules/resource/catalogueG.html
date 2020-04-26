@@ -226,12 +226,12 @@
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="encrypt"
+                            prop="tableName"
                             label="数据表名"
                             width="">
                     </el-table-column>
                     <el-table-column
-                            prop="createTime"
+                            prop="tableNameCn"
                             label="数据表中文名"
                             width="">
                     </el-table-column>
@@ -242,9 +242,9 @@
                             fixed="right"
                             width="100">
                         <template slot-scope="scope">
-                            <i class="el-icon-edit" @click="update(scope.row.safeId)" title="编辑"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.linkId)" title="编辑"></i>
                             <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                            <i class="el-icon-delete" @click="del(scope.row.safeId)" title="删除"></i>
+                            <i class="el-icon-delete" @click="del(scope.row.linkId)" title="删除"></i>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -332,37 +332,28 @@
                     @selection-change="toggleSelection1"
                     style="width: 100%">
                 <el-table-column
-                        type="selection"
-                        width="40">
-                </el-table-column>
-                <el-table-column
-                        prop="cnName"
+                        prop="meteCname"
                         label="中文名称"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="safe"
-                        label="安全级别"
-                        width="">
-                </el-table-column>
-                <el-table-column
-                        prop="euName"
+                        prop="meteEname"
                         label="英文名称"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="dataLength"
+                        prop="meteDataLength"
                         label="数据长度"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        label="源数据名称"
+                        label="源字段"
                         align="center"
-                        width="100">
+                        width="200">
                     <template slot-scope="scope">
                         <el-input
                                 placeholder="请输入内容"
-                                v-model="scope.row"
+                                v-model="scope.row.field"
                                 clearable>
                         </el-input>
                     </template>

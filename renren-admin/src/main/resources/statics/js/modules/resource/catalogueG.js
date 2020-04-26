@@ -64,7 +64,8 @@ var vm = new Vue({
             fieldList:[],
             parentName:'',
             parentId:0,
-            isUsed:1
+            isUsed:1,
+            meteDataList:[]
         },
         imageUrl:'',
         fileData:null,
@@ -161,6 +162,7 @@ var vm = new Vue({
                     // vm.resourceMeteData.catagoryCode = node[0].code;
                     layer.close(index);
                     console.log(vm.resourceMeteData);
+                    vm.getyuanshujuList(vm.resourceMeteData.catalogId)
                 }
             });
         },
@@ -215,7 +217,8 @@ var vm = new Vue({
                 catalogName:'',
                 fieldList:[],
                 parentId:0,
-                parentName:''
+                parentName:'',
+                meteDataList:[]
             };
             vm.getMenu();
             // vm.getMenu1();
@@ -236,7 +239,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             console.log(vm.resourceMeteData);
-            var url = vm.resourceMeteData.safeId == null  ? "xj/xjcataloglinkdata/save" : "xj/xjcataloglinkdata/update";
+            var url = vm.resourceMeteData.linkId == null  ? "xj/xjcataloglinkdata/save" : "xj/xjcataloglinkdata/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -281,7 +284,7 @@ var vm = new Vue({
         getInfo: function(catalogId){
             $.get(baseURL + "xj/xjcataloglinkdata/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.xjSafe;
+                vm.resourceMeteData = r.xjCatalogLinkData;
                 // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
@@ -849,7 +852,7 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.dataSourceList = r.page.list;
+                        vm.dataSourceList = r;
                     }else{
                         alert(r.msg);
                     }
@@ -869,11 +872,7 @@ var vm = new Vue({
         getyuanshujuList: function(catalogId){
             $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
                 console.log(r);
-                $.get(baseURL + "xj/xjmetadataset/info/"+r.xjCatalog.meteSetId, function(r){
-                    console.log(r);
-                    vm.yuanshujuList = r.xjMetaDataSet.meteDataList;
-                    // vm.tableListUp = r.resourceMeteData.list;
-                });
+                vm.resourceMeteData.meteDataList = r.xjCatalog.meteDataList;
                 // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
