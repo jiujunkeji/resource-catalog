@@ -89,7 +89,9 @@ var vm = new Vue({
         comList:[],
         fenlSelect:[],
         fenlSelect1:[],
-        hisList:[]
+        hisList:[],
+        optionList:[],
+        auditOpinion:''
     },
     watch: {
         filterText:function(val) {
@@ -344,7 +346,8 @@ var vm = new Vue({
                     page:this.page,
                     meteCategorySetId:this.q.meteCategorySetId,
                     meteSetNumber:this.q.meteSetNumber,
-                    cnName:this.q.cnName
+                    cnName:this.q.cnName,
+
                 },
                 success: function(r){
                     console.log(r);
@@ -397,7 +400,7 @@ var vm = new Vue({
         subMit:function () {
             var list = []
             vm.checkIdList.forEach(function (item) {
-                list.push(item.meteId)
+                list.push(item.meteSetId)
             })
             console.log(list);
             if(list.length == 0){
@@ -408,7 +411,7 @@ var vm = new Vue({
             }else {
                 $.ajax({
                     type: "post",
-                    url: baseURL + 'resource/resourcemetedata/submit',
+                    url: baseURL + 'xj/xjmetesetaudit/submit',
                     contentType: "application/json",
                     // dataType: 'json',
                     data: JSON.stringify(list),
@@ -428,27 +431,173 @@ var vm = new Vue({
         },
         // 撤回
         revoke:function (id) {
-            var list = []
-            vm.menuList.forEach(function (item) {
-                list.push(item.meteId)
-            })
+
+            layer.confirm('确定要撤回该条记录？', function(index){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + 'xj/xjmetesetaudit/revoke',
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data: {
+                        meteSetId:id
+                    },
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.tab = 0;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            });
+
+
+        },
+        // 通过方法
+        agree:function (id) {
             $.ajax({
                 type: "get",
-                url: baseURL + 'resource/resourcemetedata/revoke',
+                url: baseURL + 'xj/xjmetesetaudit/agree',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    meteId:id
+                    meteSetId:id
                 },
+                // data:JSON.stringify([id]),
                 success: function(r){
+                    console.log(r);
                     if(r.code === 0){
-                        vm.tab = 0;
+                        vm.tab = 1;
                         vm.page = 1;
                         vm.getTableList();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
+                }
+            });
+        },
+        // 拒绝
+        refuse:function (id) {
+            layer.open({
+                type: 1,
+                title: '审核意见',
+                content: $('#refuseDiv'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '260px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    $.ajax({
+                        type: "post",
+                        url: baseURL + 'xj/xjmetesetaudit/refuse',
+                        contentType: "application/json",
+                        // dataType: 'json',
+                        data: JSON.stringify({
+                            meteSetId:id,
+                            auditOpinion:vm.auditOpinion
+                        }),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.tab = 3;
+                                vm.page = 1;
+                                vm.getTableList();
+                                layer.close(index);
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+
+                },
+                btn2:function () {
+                    // layer.close(index);
+                    vm.getTableList();
+                }
+
+            })
+
+        },
+        // 发布
+        push:function (id) {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetesetaudit/push',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    meteSetId:id
+                },
+                success: function(r){
+                    if(r.code === 0){
+                        vm.tab = 4;
+                        vm.page = 1;
+                        vm.getTableList();
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }else{
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    }
+                }
+            });
+        },
+        // 停止发布
+        stopPush:function (id) {
+            layer.confirm('确定要停止发布该条记录？', function(index){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + 'xj/xjmetesetaudit/stopPush',
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data: {
+                        meteSetId:id
+                    },
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.tab = 2;
+                            vm.page = 1;
+                            vm.getTableList();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            })
+
+        },
+        // 获取审核记录
+        getoptionList:function (id) {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetesetaudit/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    meteSetId:id
+                },
+                success: function(r){
+                    console.log(r)
+                    vm.optionList = r;
+                    layer.open({
+                        type: 1,
+                        title: '审核记录',
+                        content: $('#shenheList'), //这里content是一个普通的String
+                        skin: 'openClass',
+                        area: ['562px', '460px'],
+                        shadeClose: true,
+                        closeBtn:0,
+                        btn: ['关闭'],
+                        btn1:function (index) {
+
+                            layer.close(index);
+                        }
+
+                    })
                 }
             });
         },
