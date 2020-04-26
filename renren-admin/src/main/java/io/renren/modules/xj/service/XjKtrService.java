@@ -18,7 +18,8 @@ import java.util.Map;
 public interface XjKtrService extends IService<XjKtrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    PageUtils selectByname(Map<String, Object> params);
 
-    String kettleMysql(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws KettleException;
+    String kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception;
 }
 

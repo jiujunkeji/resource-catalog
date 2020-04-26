@@ -1,12 +1,11 @@
 package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +62,8 @@ public class XjKtrController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjktr:save")
     public R save(@RequestBody XjKtrEntity xjKtr){
+        xjKtr.setKtrCreatetime(new Date());
+        xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
 
         return R.ok();
@@ -75,6 +76,7 @@ public class XjKtrController {
     //@RequiresPermissions("xj:xjktr:update")
     public R update(@RequestBody XjKtrEntity xjKtr){
         ValidatorUtils.validateEntity(xjKtr);
+        xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.updateAllColumnById(xjKtr);//全部更新
         
         return R.ok();
@@ -92,11 +94,11 @@ public class XjKtrController {
     }
 
     /**
-     * mysql抽取
+     * 任务执行
      */
-    @RequestMapping("/extract")
-    public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws KettleException {
-        xjKtrService.kettleMysql(xjKtr,ds);
+    @RequestMapping("/run")
+    public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+        xjKtrService.kettleJob(xjKtr,ds);
         return R.ok();
     }
 }
