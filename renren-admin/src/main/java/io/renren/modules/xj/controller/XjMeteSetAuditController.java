@@ -45,10 +45,9 @@ public class XjMeteSetAuditController extends AbstractController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("xj:xjmetesetaudit:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = xjMeteSetAuditService.queryPage(params);
-
-        return R.ok().put("page", page);
+    public List<XjMeteSetAuditEntity> list(@RequestParam String meteSetId){
+        List<XjMeteSetAuditEntity> list = xjMeteSetAuditService.selectList(new EntityWrapper<XjMeteSetAuditEntity>().eq("mete_set_id",Long.valueOf(meteSetId)));
+        return list;
     }
 
 
