@@ -39,10 +39,10 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
             if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
                 return new PageUtils(page);
-            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(cnName)) {
+            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteSetNumber)) {
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName).and().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(cnName)){
+            }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(meteSetNumber)){
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_category_set_id",Long.valueOf(meteCategorySetId)));
                 return new PageUtils(page);
             }else{
@@ -53,10 +53,10 @@ public class XjMetaDataSetServiceImpl extends ServiceImpl<XjMetaDataSetDao, XjMe
             if (StringUtils.isNotBlank(meteSetNumber) && StringUtils.isBlank(cnName)) {
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber));
                 return new PageUtils(page);
-            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(cnName)) {
+            } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteSetNumber)) {
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().like("cn_name", cnName));
                 return new PageUtils(page);
-            }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(cnName)){
+            }else if(StringUtils.isBlank(cnName) && StringUtils.isBlank(meteSetNumber)){
                return queryPage(params);
             }else{
                 page = this.selectPage(new Query<XjMetaDataSetEntity>(params).getPage(), new EntityWrapper<XjMetaDataSetEntity>().eq("mete_set_number", meteSetNumber));
