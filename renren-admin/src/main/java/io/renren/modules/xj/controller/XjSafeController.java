@@ -1,14 +1,14 @@
 package io.renren.modules.xj.controller;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.entity.XjCatalogEntity;
+import io.renren.modules.xj.entity.XjMeteSetMiddleEntity;
 import io.renren.modules.xj.service.XjCatalogService;
+import io.renren.modules.xj.service.XjMeteSetMiddleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +38,8 @@ public class XjSafeController extends AbstractController{
     private XjSafeService xjSafeService;
     @Autowired
     private XjCatalogService catalogService;
+    @Autowired
+    private XjMeteSetMiddleService meteSetMiddleService;
     /**
      * 列表
      */
@@ -72,7 +74,10 @@ public class XjSafeController extends AbstractController{
     //@RequiresPermissions("xj:xjsafe:info")
     public R info(@PathVariable("safeId") Long safeId){
         XjSafeEntity xjSafe = xjSafeService.selectById(safeId);
-
+        XjCatalogEntity catalog = catalogService.selectById(xjSafe.getCatalogId());
+        List<XjMeteSetMiddleEntity> list = new ArrayList<>();
+        list = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",catalog.getMeteSetId()));
+        xjSafe.setMeteDataList(list);
         return R.ok().put("xjSafe", xjSafe);
     }
 
@@ -105,6 +110,11 @@ public class XjSafeController extends AbstractController{
         xjSafe.setCreateUser(getUser().getName());
         xjSafe.setCreateTime(new Date());
         xjSafeService.insert(xjSafe);
+        List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
+        meteDataList = xjSafe.getMeteDataList();
+        if(meteDataList != null && meteDataList.size() > 0){
+            meteSetMiddleService.updateBatchById(meteDataList);
+        }
         return R.ok();
     }
 
@@ -134,6 +144,11 @@ public class XjSafeController extends AbstractController{
         xjSafe.setUpdateUser(getUser().getName());
         xjSafe.setUpdateTime(new Date());
         xjSafeService.updateById(xjSafe);
+        List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
+        meteDataList = xjSafe.getMeteDataList();
+        if(meteDataList != null && meteDataList.size() > 0){
+            meteSetMiddleService.updateBatchById(meteDataList);
+        }
         return R.ok();
     }
 
