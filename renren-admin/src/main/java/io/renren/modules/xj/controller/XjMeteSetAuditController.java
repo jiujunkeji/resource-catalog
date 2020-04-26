@@ -200,8 +200,8 @@ public class XjMeteSetAuditController extends AbstractController {
      * 停止发布
      */
     @RequestMapping("/stopPush")
-    public R stopPush(@RequestParam Long catalogId) {
-        XjMetaDataSetEntity metset = xjMetaDataSetService.selectById(catalogId);
+    public R stopPush(@RequestParam Long meteSetId) {
+        XjMetaDataSetEntity metset = xjMetaDataSetService.selectById(meteSetId);
         metset.setPushState(0);
         xjMetaDataSetService.updateById(metset);
         return R.ok();

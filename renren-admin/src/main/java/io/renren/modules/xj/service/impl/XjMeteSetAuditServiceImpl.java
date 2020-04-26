@@ -18,12 +18,22 @@ public class XjMeteSetAuditServiceImpl extends ServiceImpl<XjMeteSetAuditDao, Xj
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        Page<XjMeteSetAuditEntity> page = this.selectPage(
-                new Query<XjMeteSetAuditEntity>(params).getPage(),
-                new EntityWrapper<XjMeteSetAuditEntity>()
-        );
+        Long meteSetId= (Long) params.get("meteSetId");
+        if(meteSetId!=null){
+            Page<XjMeteSetAuditEntity> page = this.selectPage(
+                    new Query<XjMeteSetAuditEntity>(params).getPage(),
+                    new EntityWrapper<XjMeteSetAuditEntity>().eq("mete_set_id",meteSetId)
+            );
+            return new PageUtils(page);
+        }else{
+            Page<XjMeteSetAuditEntity> page = this.selectPage(
+                    new Query<XjMeteSetAuditEntity>(params).getPage(),
+                    new EntityWrapper<XjMeteSetAuditEntity>()
 
-        return new PageUtils(page);
+            );
+            return new PageUtils(page);
+        }
+
     }
 
 }
