@@ -852,7 +852,7 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.dataSourceList = r;
+                        vm.dataSourceList = r.list;
                     }else{
                         alert(r.msg);
                     }

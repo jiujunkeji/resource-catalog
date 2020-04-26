@@ -148,12 +148,9 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="ktrDsname.dsName"
+                    prop="ktrDsname"
                     label="数据源名"
                     width="">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.ktrDsname">{{scope.row.ktrDsname.dsName}}</span>
-                </template>
             </el-table-column>
             <el-table-column
                     prop="ktrTablename"
@@ -227,12 +224,12 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">数据源</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrDsname" placeholder="请选择">
+                    <el-select v-model="meteCategory.ktrDsid" placeholder="请选择" @change="dsChange">
                         <el-option
                                 v-for="item in dataSourceList"
                                 :key="item.dsId"
                                 :label="item.dsName"
-                                :value="item">
+                                :value="item.dsId">
                         </el-option>
                     </el-select>
                 </div>

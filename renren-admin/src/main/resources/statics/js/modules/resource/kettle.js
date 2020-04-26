@@ -337,16 +337,14 @@ var vm = new Vue({
             console.log(item);
         },
         // 执行
-        implement:function (id) {
+        implement:function (obj) {
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
                     url: baseURL + "xj/xjktr/run",
                     // contentType: "application/json",
                     dataType: 'json',
-                    data: {
-                        ktrId:id
-                    },
+                    data:JSON.stringify(obj),
                     success: function(r){
                         if(r.code == 0){
                             vm.reload();
@@ -375,12 +373,21 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.dataSourceList = r;
+                        vm.dataSourceList = r.list;
                     }else{
                         alert(r.msg);
                     }
                 }
             });
+        },
+        // 数据源改变
+        dsChange:function (opt) {
+            console.log(opt);
+            vm.dataSourceList.forEach(function (item) {
+                if(item.dsId = opt){
+                    vm.meteCategory.ktrDsname = item.dsName
+                }
+            })
         },
 	},
 	created:function () {
