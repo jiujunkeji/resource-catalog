@@ -416,8 +416,32 @@
             <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
             <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
             <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
+            <div :class="open1 ? 'divBox open' : 'divBox'" :style="open1 ? 'height:45px' : 'height:'+h1+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
+                    </div>
 
-            <div class="divBox" style="margin-bottom: 0;height: calc(100% - 10px);">
+                </div>
+                <div class="switchIn up">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean1">重置</button>
+                <button class="look" @click="query1">查询</button>
+            </div>
+
+            <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">
                     <span class="title">

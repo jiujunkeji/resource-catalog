@@ -64,6 +64,7 @@ var vm = new Vue({
         open1:true,
         openText1:'展开筛选',
         h:0,
+        h1:0,
         props: {
             label: 'name',
             children: 'list',
@@ -304,6 +305,17 @@ var vm = new Vue({
                 vm.openText = '展开筛选'
             }
         },
+        // 收缩展开搜索
+        openSwitch:function () {
+            if(vm.open){
+                vm.open1 = false;
+                vm.openText1 = '收起筛选'
+
+            }else {
+                vm.open1 = true;
+                vm.openText1 = '展开筛选'
+            }
+        },
         filterNode:function(value, data) {
             if (!value) return true;
             return data.name.indexOf(value) !== -1;
@@ -471,7 +483,8 @@ var vm = new Vue({
                 meteNumber:'',
                 meteCategoryId:'',
                 cnName:''
-            }
+            };
+            vm.getTableList1();
         },
         // 收缩展开搜索
         openSwitch1:function () {
@@ -538,7 +551,6 @@ var vm = new Vue({
                     cnName:this.q1.cnName
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.tableList1 = [];
                         vm.totalPage1 = r.page.totalCount;
@@ -547,15 +559,13 @@ var vm = new Vue({
                                 vm.tableList1.push(item)
                             }
                         })
-                        console.log(vm.resourceMeteData);
 
                         if (JSON.stringify(vm.resourceMeteData.meteDataList) != 'null' && vm.resourceMeteData.meteDataList.length != 0) {
                             vm.checkIdList2 = vm.resourceMeteData.meteDataList;
                             vm.resourceMeteData.meteDataList.forEach(function (item) {
                                 vm.tableList1.forEach(function (m,n) {
                                     if(m.meteId == item.meteId){
-                                        console.log("@@@@@@@")
-                                        console.log(m)
+
                                         _this.$nextTick(function () {
                                             this.$refs.multipleTable.toggleRowSelection(this.$refs.multipleTable.data[n],true);
                                         })
@@ -582,7 +592,7 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['1000px', '660px'],
+                area: ['1000px', '700px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
@@ -598,6 +608,11 @@ var vm = new Vue({
                 }
 
             })
+            var _height = $('.switchIn.up').height();
+            var height = _height + 45 + 70;
+            vm.h1 = height;
+            console.log('@@@@');
+            console.log(vm.h1);
         },
         delUp:function () {
             var arr =[];

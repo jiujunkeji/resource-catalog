@@ -243,12 +243,11 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            if(data.name == '资源目录'){
-                vm.q.name = '';
-            }else {
-                vm.q.name = data.name;
+            // console.log(data);
+            if(data.id){
+                vm.catalogId = data.id;
+                vm.getTableList();
             }
-            vm.getTableList();
         },
         // 选项卡
         tabClick:function (num) {
