@@ -114,9 +114,11 @@ public class XjFtpServiceImpl extends ServiceImpl<XjFtpDao, XjFtpEntity> impleme
         boolean statu = uploadFile2(fe);
         if (statu = true){
             fe.setFtpStatus(3);
+
         }else {
             fe.setFtpStatus(4);
         }
+        this.updateById(fe);
 
     }
 
