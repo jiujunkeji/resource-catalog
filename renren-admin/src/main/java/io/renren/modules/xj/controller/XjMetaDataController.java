@@ -194,7 +194,7 @@ public class XjMetaDataController extends AbstractController {
         xjMetaDataEntity.setDataType(xjMetaData.getDataType());
         xjMetaDataEntity.setControlType(xjMetaData.getControlType());
         xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
-        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
+//        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
         xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
         xjMetaDataEntity.setRange(xjMetaData.getRange());
         xjMetaDataEntity.setRangeDescription(xjMetaData.getRangeDescription());
@@ -321,7 +321,7 @@ public class XjMetaDataController extends AbstractController {
 
         List<XjMetaDataEntity> fieldList =xjMetaDataService.selectList(new EntityWrapper<XjMetaDataEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
-            String[] headers = {"编号", "中文名称", "英文名称", "英文短名", "元数据编号", "数据类型", "数据长度", "是否必选/非必选", "定义", "值域", "值域描述", "分类名称", "校验类型", "是否禁用", "创建人", "创建日期","更新日期"};
+            String[] headers = {"编号", "中文名称", "英文名称", "英文短名", "数据类型", "数据长度", "是否必选/非必选", "定义", "值域", "值域描述", "分类名称", "校验类型", "是否禁用", "创建人", "创建日期","更新日期"};
             String fileName = "元数据字段";
             exportExcel(headers, fieldList, fileName, response, request, session);
         }
@@ -371,8 +371,6 @@ public class XjMetaDataController extends AbstractController {
                 }else if(i == 3){
                     cell.setCellValue(t.getEuShortName());
                 }else if(i == 4){
-                    cell.setCellValue(t.getMeteNumber());
-                }else if(i == 5){
                     if (t.getDataType() != null){
                         if (t.getDataType()==2){
                             cell.setCellValue("整型");
@@ -386,36 +384,36 @@ public class XjMetaDataController extends AbstractController {
                             cell.setCellValue("日期");
                         }
                     }
-                }else if (i == 6){
+                }else if (i == 5){
                     cell.setCellValue(t.getDataLength());
-                }else if(i == 7){
+                }else if(i == 6){
                     if (t.getJudgeMandatory()== 0){
                         cell.setCellValue("必选");
                     }else if (t.getJudgeMandatory() == 1){
                         cell.setCellValue("非必选");
                     }
                 }
-                else if(i == 8){
+                else if(i == 7){
                     cell.setCellValue(t.getDefinition());
-                }else if(i == 9){
+                }else if(i == 8){
                     cell.setCellValue(t.getRange());
-                }else if(i == 10){
+                }else if(i == 9){
                     cell.setCellValue(t.getRangeDescription());
-                }else if(i == 11){
+                }else if(i == 10){
                     XjMeteCategoryEntity xjMeteCategoryEntity=xjMeteCategoryService.selectOne(new EntityWrapper<XjMeteCategoryEntity>().eq("mete_category_id",t.getMeteCategoryId()));
                     cell.setCellValue(xjMeteCategoryEntity.getName());
-                }else if(i == 12){
+                }else if(i == 11){
                     cell.setCellValue(t.getCheckType());
-                }else if(i == 13){
+                }else if(i == 12){
                     cell.setCellValue(t.getIsDisabled());
-                }else if(i == 14){
+                }else if(i == 13){
                     cell.setCellValue(getUser().getUsername());
-                }else if(i == 15){
+                }else if(i == 14){
                     LocalDateTime localDateTime=LocalDateTime.now();
                     DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String ss = dateTimeFormatter.format(localDateTime).toString();
                     cell.setCellValue(ss);
-                }else if(i == 16){
+                }else if(i == 15){
                     LocalDateTime localDateTime=LocalDateTime.now();
                     DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String ss = dateTimeFormatter.format(localDateTime).toString();
