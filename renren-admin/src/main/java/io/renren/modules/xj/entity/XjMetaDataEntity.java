@@ -77,7 +77,7 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 是否禁用（0-不禁用；1-禁用）
 	 */
-	private Integer isDisabled;
+	private Integer isDisabled=0;
 	/**
 	 * 
 	 */

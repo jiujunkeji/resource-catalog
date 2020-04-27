@@ -43,7 +43,7 @@ public class XjMetaDataSetEntity implements Serializable {
 	/**
 	 * 审核状态（0：待提交；1：待审核；2：通过；3：未通过）
 	 */
-	private Integer reviewState;
+	private Integer reviewState=0;
 
 	/**
 	 * 元数据集的发布状态(0-停止发布;1-发布)
