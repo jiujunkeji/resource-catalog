@@ -364,7 +364,7 @@ var vm = new Vue({
         layerPage1:function (currentPage) {
             console.log(currentPage);
             vm.page1 = currentPage;
-            vm.getFileTableList();
+            vm.getTableList1();
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
@@ -458,6 +458,9 @@ var vm = new Vue({
         },
 
         // 编辑方法
+        getRowKey:function (row) {
+            return row.meteId
+        },
         query1: function () {
             vm.getTableList1();
         },
@@ -487,6 +490,7 @@ var vm = new Vue({
         // 树结构目录获取元数据分类列表
         getMenuList1: function (event) {
             $.getJSON(baseURL + "xj/xjmetecategory/list", function(r){
+                vm.fenlSelect1 = [];
 
                 r.forEach(function(item,i){
                     vm.fenlSelect1.push({
@@ -513,7 +517,7 @@ var vm = new Vue({
 
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
                 console.log('进来了')
-                vm.q.meteCategoryId = data.id;
+                vm.q1.meteCategoryId = data.id;
                 vm.getTableList1();
             }
 
@@ -542,8 +546,9 @@ var vm = new Vue({
                                 vm.tableList1.push(item)
                             }
                         })
+                        console.log(vm.resourceMeteData);
 
-                        if (vm.resourceMeteData.meteDataList.length != 0) {
+                        if (JSON.stringify(vm.resourceMeteData.meteDataList) != 'null' && vm.resourceMeteData.meteDataList.length != 0) {
                             vm.resourceMeteData.meteDataList.forEach(function (item) {
                                 vm.tableList1.forEach(function (m,n) {
                                     if(m.meteId == item.meteId){
@@ -579,13 +584,14 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);
+                    vm.page1 = 1;
                 },
                 btn2:function () {
-
+                    vm.page1 = 1;
                 }
 
             })
@@ -618,7 +624,7 @@ var vm = new Vue({
         // 表格选中方法
         toggleSelection2:function(selection) {
             console.log(selection);
-            vm.checkIdList2 = selection;
+            vm.resourceMeteData.meteDataList = selection;
         },
         // 获取历史版本
         getHist:function (id) {
