@@ -429,12 +429,12 @@
                     </div>
                 </div>
                 <el-table
-                        ref="multipleTable"
                         :data="tableList1"
                         :row-key="getRowKey"
+                        ref="multipleTable"
                         border
                         stripe
-                        @selection-change="toggleSelection2"
+                        @select="toggleSelection2"
                         style="width: 100%">
                     <el-table-column
                             type="selection"

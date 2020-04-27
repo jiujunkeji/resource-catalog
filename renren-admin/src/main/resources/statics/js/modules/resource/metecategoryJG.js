@@ -459,6 +459,7 @@ var vm = new Vue({
 
         // 编辑方法
         getRowKey:function (row) {
+            // console.log(row.meteNumber);
             return row.meteId
         },
         query1: function () {
@@ -549,6 +550,7 @@ var vm = new Vue({
                         console.log(vm.resourceMeteData);
 
                         if (JSON.stringify(vm.resourceMeteData.meteDataList) != 'null' && vm.resourceMeteData.meteDataList.length != 0) {
+                            vm.checkIdList2 = vm.resourceMeteData.meteDataList;
                             vm.resourceMeteData.meteDataList.forEach(function (item) {
                                 vm.tableList1.forEach(function (m,n) {
                                     if(m.meteId == item.meteId){
@@ -562,6 +564,7 @@ var vm = new Vue({
                                 // _this.$refs.multipleTable.toggleRowSelection(t,true);
                             });
                         } else {
+                            vm.resourceMeteData.meteDataList = [];
                             _this.$refs.multipleTable.clearSelection();
                         }
                     }else{
@@ -584,7 +587,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    // vm.resourceMeteData.meteDataList = vm.checkIdList2;
+                    vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     console.log(vm.resourceMeteData)
                     layer.close(index);
@@ -622,9 +625,30 @@ var vm = new Vue({
             vm.checkIdList1 = selection;
         },
         // 表格选中方法
-        toggleSelection2:function(selection) {
-            console.log(selection);
-            vm.resourceMeteData.meteDataList = selection;
+        toggleSelection2:function (selection,row) {
+
+            var arr = [];
+            var arr1 = [];
+            selection.forEach(function (item) {
+                arr.push(item.meteId)
+            })
+            vm.resourceMeteData.meteDataList.forEach(function (item) {
+                arr1.push(item.meteId)
+            })
+            if(arr.indexOf(row.meteId) != -1){
+                if(arr1.indexOf(row.meteId) == -1){
+                    vm.resourceMeteData.meteDataList.push(row);
+                }
+
+            }else {
+                vm.resourceMeteData.meteDataList.forEach(function (t,n) {
+                    if(t.meteId == row.meteId){
+                        vm.checkIdList2.splice(n,1);
+                        return
+                    }
+                })
+            }
+
         },
         // 获取历史版本
         getHist:function (id) {
