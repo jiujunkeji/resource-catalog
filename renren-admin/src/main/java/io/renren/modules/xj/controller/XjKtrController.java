@@ -128,7 +128,7 @@ public class XjKtrController {
             String fn = URLEncoder.encode(fileName,"UTF-8");
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-            String filePath = getClass().getClassLoader().getResource("D:/data-integration/xj/" + pathName).getPath();
+            String filePath = "D:\\xj\\"+pathName;
             System.out.println(filePath);
             FileInputStream input = new FileInputStream(filePath);
             OutputStream out = response.getOutputStream();
