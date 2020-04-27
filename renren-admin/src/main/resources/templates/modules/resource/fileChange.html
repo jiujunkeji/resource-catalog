@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>文件交换</title>
+    <title>kettle作业管理</title>
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
@@ -40,34 +40,45 @@
             .el-autocomplete-suggestion{
                 z-index:100000000!important;
             }
+            .switchIn .el-select{
+                width: calc(100% - 116px);
+            }
         </style>
         </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-            <div class="right">
-                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
-            </div>
+    <!--<div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">-->
+    <!--<div class="grid-btn" style="border-bottom: 1px solid #e7eaec">-->
+    <!--<span class="title">-->
+    <!--<i class="el-icon-search"></i>-->
+    <!--筛选查询-->
+    <!--</span>-->
+    <!--<div class="right">-->
+    <!--<el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>-->
+    <!--</div>-->
 
-        </div>
-        <div class="switchIn">
-            <span>
-                <label>数据源类型：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >
-            </span>
-            <span>
-                <label>数据源名称：</label>
-                <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >
-            </span>
-        </div>
-        <button class="clean" @click="clean">重置</button>
-        <button class="look" @click="query">查询</button>
-    </div>
+    <!--</div>-->
+    <!--<div class="switchIn">-->
+    <!--<span>-->
+    <!--<label>任务名：</label>-->
+    <!--<input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >-->
+    <!--</span>-->
+    <!--<span>-->
+    <!--<label>部门：</label>-->
+    <!--<el-select v-model="q.bumen" placeholder="请选择">-->
+    <!--<el-option-->
+    <!--v-for="item in comList"-->
+    <!--:key="item.organisationId"-->
+    <!--:label="item.organisationName"-->
+    <!--:value="item.organisationId">-->
+    <!--</el-option>-->
+    <!--</el-select>-->
+    <!--&lt;!&ndash;<input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >&ndash;&gt;-->
+    <!--</span>-->
+    <!--</div>-->
+    <!--<button class="clean" @click="clean">重置</button>-->
+    <!--<button class="look" @click="query">查询</button>-->
+    <!--</div>-->
     <div class="divBox">
         <div class="grid-btn">
             <span class="title">
@@ -87,6 +98,7 @@
                     <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
                     <!--<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
                 </#if>
+                <el-button size="medium" type="primary" @click="down">下载</el-button>&nbsp;&nbsp;
             </div>
         </div>
         <el-table
@@ -100,62 +112,91 @@
                     width="40">
             </el-table-column>
             <el-table-column
-                    prop="dsNam"
-                    label="数据源名称"
+                    prop="ktrName"
+                    label="任务名"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="dsType"
-                    label="数据源类型"
+                    label="状态"
+                    width="90">
+                <template slot-scope="scope">
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 0"
+                            size="small"
+                            type="info"
+                            effect="dark">
+                        未执行
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 1"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        执行中
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 2"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        已执行
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.ktrStatus == 3"
+                            size="small"
+                            type="success"
+                            effect="dark">
+                        执行失败
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="ktrDsname"
+                    label="数据源名"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="dsDepartment"
+                    prop="ktrTablename"
+                    label="表名"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="ktrSql"
+                    label="SQL"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="ktrType"
+                    label="任务类型"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="ktrPurpose"
+                    label="描述"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="ktrMechanism"
                     label="部门"
                     width="130">
             </el-table-column>
             <el-table-column
-                    prop="dsLinetype"
-                    label="连接类型"
+                    prop="ktrText"
+                    label="备注"
                     width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="dsIpname"
-                    label="主机名"
-                    width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="dsPort"
-                    label="端口号"
-                    width="130">
-            </el-table-column>
-            <el-table-column
-                    label="是否禁用"
-                    width="90">
-                <template slot-scope="scope">
-                    <el-tag
-                            v-if="scope.row.isDisabled == 0"
-                            size="small"
-                            type="success"
-                            effect="dark">
-                        否
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.isDisabled == 1"
-                            size="small"
-                            type="danger"
-                            effect="dark">
-                        是
-                    </el-tag>
-                </template>
             </el-table-column>
             <el-table-column
                     label="操作"
                     align="center"
                     header-align="center"
-                    width="100">
+                    width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-edit" @click="update(scope.row.meteCategorySetId)"></i>
+                    <el-button v-if="scope.row.ktrStatus == 1 || scope.row.ktrStatus == 2" type="text" @click="lookC(scope.row.ktrId)">查看</el-button>
+                    <i class="el-icon-edit" v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" @click="update(scope.row.ktrId)"></i>
+                    <span v-if="scope.row.ktrStatus != 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                    <el-button v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" type="text" @click="implement(scope.row.ktrId)">执行</el-button>
+                    <el-button v-if="scope.row.ktrStatus == 2" type="text" @click="down(scope.row.ktrName)">下载</el-button>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -181,28 +222,64 @@
         <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据源名称</div>
+                <div class="col-sm-2 control-label">任务名</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.dsNam" placeholder="数据源名称"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrName" placeholder="任务名" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据源类型</div>
+                <div class="col-sm-2 control-label">数据源</div>
                 <div class="col-sm-10">
-                    <el-autocomplete
-                            class="inline-input"
-                            v-model="meteCategory.dsType"
-                            :fetch-suggestions="querySearch"
-                            placeholder="请输入内容"
-                            @select="handleSelect"
-                    ></el-autocomplete>
+                    <el-select v-model="meteCategory.ktrDsid" placeholder="请选择" @change="dsChange" :disabled="look">
+                        <el-option
+                                v-for="item in dataSourceList"
+                                :key="item.dsId"
+                                :label="item.dsName"
+                                :value="item.dsId">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">表名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.ktrTablename" placeholder="表名" :readonly="look"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">SQL</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.ktrSql" placeholder="SQL" :readonly="look"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">任务类型</div>
+                <div class="col-sm-10">
+                    <el-select v-model="meteCategory.ktrType" placeholder="请选择":disabled="look">
 
+                        <el-option
+                                key="1"
+                                label="抽取"
+                                value="抽取">
+                        </el-option>
+                        <el-option
+                                key="2"
+                                label="传输"
+                                value="传输">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.ktrPurpose" placeholder="描述" :readonly="look"/>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">部门</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.dsDepartment" placeholder="请选择">
+                    <el-select v-model="meteCategory.ktrMechanism" placeholder="请选择" :disabled="look">
                         <el-option
                                 v-for="item in comList"
                                 :key="item.organisationId"
@@ -212,45 +289,12 @@
                     </el-select>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">连接类型</div>
-                <div class="col-sm-10">
-                    <el-select v-model="meteCategory.dsLinetype" placeholder="请选择">
-                        <el-option
-                                key="0"
-                                label="Native(JDBC)"
-                                value="Native(JDBC)">
-                        </el-option>
-                        <el-option
-                                key="1"
-                                label="ODBC"
-                                value="ODBC">
-                        </el-option>
-                        <el-option
-                                key="2"
-                                label="JNDI"
-                                value="JNDI">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
+
 
             <div class="form-group">
-                <div class="col-sm-2 control-label">主机名</div>
+                <div class="col-sm-2 control-label">备注</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.dsIpname" placeholder="主机名"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">主机IP</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.dsIp" placeholder="主机IP"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">端口号</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.dsPort" placeholder="端口号"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrText" placeholder="备注" :readonly="look"/>
                 </div>
             </div>
         </form>
@@ -263,6 +307,6 @@
 
 </div>
 
-<script src="${request.contextPath}/statics/js/modules/resource/datasource.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/resource/fileChange.js?_${.now?long}"></script>
 </body>
 </html>

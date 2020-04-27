@@ -47,38 +47,38 @@
         </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-            <div class="right">
-                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
-            </div>
+    <!--<div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">-->
+        <!--<div class="grid-btn" style="border-bottom: 1px solid #e7eaec">-->
+                <!--<span class="title">-->
+                    <!--<i class="el-icon-search"></i>-->
+                    <!--筛选查询-->
+                <!--</span>-->
+            <!--<div class="right">-->
+                <!--<el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>-->
+            <!--</div>-->
 
-        </div>
-        <div class="switchIn">
-            <span>
-                <label>任务名：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >
-            </span>
-            <span>
-                <label>部门：</label>
-                <el-select v-model="q.bumen" placeholder="请选择">
-                    <el-option
-                            v-for="item in comList"
-                            :key="item.organisationId"
-                            :label="item.organisationName"
-                            :value="item.organisationId">
-                    </el-option>
-                </el-select>
-                <!--<input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >-->
-            </span>
-        </div>
-        <button class="clean" @click="clean">重置</button>
-        <button class="look" @click="query">查询</button>
-    </div>
+        <!--</div>-->
+        <!--<div class="switchIn">-->
+            <!--<span>-->
+                <!--<label>任务名：</label>-->
+                <!--<input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >-->
+            <!--</span>-->
+            <!--<span>-->
+                <!--<label>部门：</label>-->
+                <!--<el-select v-model="q.bumen" placeholder="请选择">-->
+                    <!--<el-option-->
+                            <!--v-for="item in comList"-->
+                            <!--:key="item.organisationId"-->
+                            <!--:label="item.organisationName"-->
+                            <!--:value="item.organisationId">-->
+                    <!--</el-option>-->
+                <!--</el-select>-->
+                <!--&lt;!&ndash;<input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >&ndash;&gt;-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<button class="clean" @click="clean">重置</button>-->
+        <!--<button class="look" @click="query">查询</button>-->
+    <!--</div>-->
     <div class="divBox">
         <div class="grid-btn">
             <span class="title">
@@ -189,11 +189,14 @@
                     label="操作"
                     align="center"
                     header-align="center"
-                    width="100">
+                    width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-edit" @click="update(scope.row.ktrId)"></i>
+                    <el-button v-if="scope.row.ktrStatus == 1 || scope.row.ktrStatus == 2" type="text" @click="lookC(scope.row.ktrId)">查看</el-button>
+                    <i class="el-icon-edit" v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" @click="update(scope.row.ktrId)"></i>
                     <span v-if="scope.row.ktrStatus != 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
                     <el-button v-if="scope.row.ktrStatus == 0 || scope.row.ktrStatus == 3" type="text" @click="implement(scope.row.ktrId)">执行</el-button>
+                    <el-button v-if="scope.row.ktrStatus == 2" type="text" @click="down(scope.row.ktrName)">下载</el-button>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -221,13 +224,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">任务名</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrName" placeholder="任务名"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrName" placeholder="任务名" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">数据源</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrDsid" placeholder="请选择" @change="dsChange">
+                    <el-select v-model="meteCategory.ktrDsid" placeholder="请选择" @change="dsChange" :disabled="look">
                         <el-option
                                 v-for="item in dataSourceList"
                                 :key="item.dsId"
@@ -240,19 +243,19 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">表名</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrTablename" placeholder="表名"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrTablename" placeholder="表名" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">SQL</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrSql" placeholder="SQL"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrSql" placeholder="SQL" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">任务类型</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrType" placeholder="请选择">
+                    <el-select v-model="meteCategory.ktrType" placeholder="请选择":disabled="look">
 
                         <el-option
                                 key="1"
@@ -270,13 +273,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">描述</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrPurpose" placeholder="描述"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrPurpose" placeholder="描述" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">部门</div>
                 <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrMechanism" placeholder="请选择">
+                    <el-select v-model="meteCategory.ktrMechanism" placeholder="请选择" :disabled="look">
                         <el-option
                                 v-for="item in comList"
                                 :key="item.organisationId"
@@ -291,7 +294,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">备注</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrText" placeholder="备注"/>
+                    <input type="text" class="form-control" v-model="meteCategory.ktrText" placeholder="备注" :readonly="look"/>
                 </div>
             </div>
         </form>
