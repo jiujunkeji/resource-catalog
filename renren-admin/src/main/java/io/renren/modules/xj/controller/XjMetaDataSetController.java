@@ -170,7 +170,7 @@ public class XjMetaDataSetController extends AbstractController {
                     a.setMeteSetCname(xjMetaDataSet.getCnName());
                     a.setMeteSetEname(xjMetaDataSet.getEuName());
                     a.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
-                    a.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
+//                    a.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
                     a.setMeteCname(mete.getCnName());
                     a.setMeteEname(mete.getEuName());
                     a.setMeteEuShortName(mete.getEuShortName());
@@ -220,7 +220,7 @@ public class XjMetaDataSetController extends AbstractController {
             XjMetaDataSetEntity oldSet = xjMetaDataSetService.selectById(xjMetaDataSet.getMeteSetId());
             XjMeteSetVersionEntity setVersion=new XjMeteSetVersionEntity();
             setVersion.setMeteSetId(oldSet.getMeteSetId());
-            setVersion.setMeteSetNumber(oldSet.getMeteSetNumber());
+//            setVersion.setMeteSetNumber(oldSet.getMeteSetNumber());
             setVersion.setCnName(oldSet.getCnName());
             setVersion.setEuName(oldSet.getEuName());
             setVersion.setEuShortName(oldSet.getEuShortName());
@@ -254,7 +254,7 @@ public class XjMetaDataSetController extends AbstractController {
                 av.setMeteCname(a.getMeteCname()==null?"":a.getMeteCname());
                 av.setMeteEname(a.getMeteEname()==null?"":a.getMeteEname());
                 av.setMeteEuShortName(a.getMeteEuShortName()==null?"":a.getMeteEuShortName());
-                av.setMeteNumber(a.getMeteNumber()==null?"":a.getMeteNumber());
+//                av.setMeteNumber(a.getMeteNumber()==null?"":a.getMeteNumber());
                 av.setMeteDataType(a.getMeteDataType());
                 av.setMeteDataLength(a.getMeteDataLength());
                 av.setMeteRange(a.getMeteRange()==null?"":a.getMeteRange());
@@ -263,7 +263,7 @@ public class XjMetaDataSetController extends AbstractController {
                 av.setMeteSetCname(a.getMeteSetCname()==null?"":a.getMeteSetCname());
                 av.setMeteSetEname(a.getMeteSetEname()==null?"":a.getMeteSetEname());
                 av.setMeteSetEuShortName(a.getMeteSetEuShortName()==null?"":a.getMeteSetEuShortName());
-                av.setMeteSetNumber(a.getMeteSetNumber()==null?"":a.getMeteSetNumber());
+//                av.setMeteSetNumber(a.getMeteSetNumber()==null?"":a.getMeteSetNumber());
                 av.setVersionNumber(a.getVersionNumber()==null?"":a.getVersionNumber());
                 av.setCreateUserId(a.getCreateUserId());
                 av.setCreateDate(a.getCreateDate());
@@ -285,7 +285,7 @@ public class XjMetaDataSetController extends AbstractController {
             for(XjMetaDataEntity xjMetaDataEntity:newList){
                 XjMeteSetMiddleEntity middleEntity=new XjMeteSetMiddleEntity();
                 middleEntity.setMeteId(xjMetaDataEntity.getMeteId());
-                middleEntity.setMeteNumber(xjMetaDataEntity.getMeteNumber());
+//                middleEntity.setMeteNumber(xjMetaDataEntity.getMeteNumber());
                 middleEntity.setMeteCname(xjMetaDataEntity.getCnName());
                 middleEntity.setMeteEname(xjMetaDataEntity.getEuName());
                 middleEntity.setMeteEuShortName(xjMetaDataEntity.getEuShortName());
@@ -297,7 +297,7 @@ public class XjMetaDataSetController extends AbstractController {
                 middleEntity.setMeteSetId(xjMetaDataSet.getMeteSetId());
                 middleEntity.setMeteSetCname(xjMetaDataSet.getCnName());
                 middleEntity.setMeteSetEname(xjMetaDataSet.getEuName());
-                middleEntity.setMeteSetEname(xjMetaDataSet.getMeteSetNumber());
+//                middleEntity.setMeteSetEname(xjMetaDataSet.getMeteSetNumber());
                 middleEntity.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
                 middleEntity.setCreateDate(new Date());
                 middleEntity.setUpdateTime(new Date());
@@ -404,7 +404,7 @@ public class XjMetaDataSetController extends AbstractController {
 
         List<XjMetaDataSetEntity> fieldList =xjMetaDataSetService.selectList(new EntityWrapper<XjMetaDataSetEntity>()) ;
         if (fieldList != null && fieldList.size() > 0) {
-            String[] headers = {"编号","元数据集编号", "中文名称", "英文名称","英文短名","分类名称","当前版本","创建人","创建日期","更新日期"};
+            String[] headers = {"编号","中文名称", "英文名称","英文短名","分类名称","当前版本","创建人","创建日期","更新日期"};
             String fileName = "元数据集字段";
             exportExcel(headers, fieldList, fileName, response, request, session);
         }
@@ -448,27 +448,24 @@ public class XjMetaDataSetController extends AbstractController {
             for (short i = 1; i < headers.length + 1; i++) {
                 Cell cell = row.createCell(i);
                 if(i == 1){
-                    cell.setCellValue(t.getMeteSetNumber());
-                }
-                else if(i == 2){
                     cell.setCellValue(t.getCnName());
-                }else if(i == 3){
+                }else if(i == 2){
                     cell.setCellValue(t.getEuName());
-                }else if(i == 4){
+                }else if(i == 3){
                     cell.setCellValue(t.getEuShortName());
-                }else if(i == 5){
+                }else if(i == 4){
                     XjMeteSetCategoryEntity xjMeteSetCategoryEntity=xjMeteSetCategoryService.selectOne(new EntityWrapper<XjMeteSetCategoryEntity>().eq("mete_category_set_id",t.getMeteCategorySetId()));
                     cell.setCellValue(xjMeteSetCategoryEntity.getName());
-                } else if(i == 6){
+                } else if(i == 5){
                     cell.setCellValue(t.getCurrentVersion());
-                }else if(i == 7){
+                }else if(i == 6){
                     cell.setCellValue(getUser().getUsername());
-                }else if(i == 8){
+                }else if(i == 7){
                     LocalDateTime localDateTime=LocalDateTime.now();
                     DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String ss = dateTimeFormatter.format(localDateTime).toString();
                     cell.setCellValue(ss);
-                }else if(i == 9){
+                }else if(i == 8){
                     LocalDateTime localDateTime=LocalDateTime.now();
                     DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String ss = dateTimeFormatter.format(localDateTime).toString();
