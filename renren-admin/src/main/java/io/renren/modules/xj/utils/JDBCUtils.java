@@ -17,7 +17,7 @@ public class JDBCUtils {
      * 获取数据库连接
      * @return 数据库连接对象
      */
-    public Connection getConnection(Connection conn, Config config) {
+    public static Connection getConnection(Connection conn, Config config) {
         if(conn == null){
             try {
                 Class.forName(config.getDriver());
@@ -35,7 +35,7 @@ public class JDBCUtils {
      * @param values
      * @throws SQLException
      */
-    private JSONArray queryJsonArray(int pageIndex, int pageSize, Config config, String sql, Object... values) throws SQLException {
+    public static JSONArray queryJsonArray(int pageIndex, int pageSize, Config config, String sql, Object... values) throws SQLException {
         JSONArray jsonArray = null;
         Connection conn = null;
         PreparedStatement pStmt = null;
@@ -46,7 +46,7 @@ public class JDBCUtils {
         if(pageSize <= 0){
             pageSize = PAGE_SIZE_DEFAULT;
         }
-        conn = this.getConnection(conn,config);
+        conn = getConnection(conn,config);
         pStmt = conn.prepareStatement(sql);
         //设置参数
         if(pStmt != null && values != null && values.length > 0){
@@ -92,11 +92,11 @@ public class JDBCUtils {
      * @param values
      * @throws SQLException
      */
-    public int queryCount(String sql,Config config, Object... values) throws SQLException{
+    public static int queryCount(String sql,Config config, Object... values) throws SQLException{
         int count = -1;
         Connection conn = null;
         PreparedStatement pStmt = null;
-        conn = this.getConnection(conn,config);
+        conn = getConnection(conn,config);
         pStmt = conn.prepareStatement(sql);
         //设置参数
         if(pStmt != null && values != null && values.length > 0){

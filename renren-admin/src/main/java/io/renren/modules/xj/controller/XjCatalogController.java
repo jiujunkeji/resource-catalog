@@ -1,5 +1,6 @@
 package io.renren.modules.xj.controller;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -9,6 +10,9 @@ import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.*;
+import io.renren.modules.xj.utils.Config;
+import io.renren.modules.xj.utils.JDBCUtils;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +46,10 @@ public class XjCatalogController extends AbstractController{
     private XjCatalogAuditService auditService;
     @Autowired
     private MeteCategoryService meteCategoryService;
+    @Autowired
+    private XjCatalogLinkDataService linkDataService;
+    @Autowired
+    private XjDataSourceService dataSourceService;
     /**
      * 目录列表
      */
@@ -285,11 +293,47 @@ public class XjCatalogController extends AbstractController{
     public R selectDataList(@RequestParam Map<String, Object> params){
         String catalogId = (String)params.get("catalogId");
         XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
+        XjCatalogLinkDataEntity link = linkDataService.selectOne(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",catalogId));
+        if(link != null){
+            return R.error("该目录进行数据关联");
+        }
+        XjDataSourceEntity dataSource = dataSourceService.selectById(link.getDataSourceId());
         if(catalog.getMeteSetId() != null){
             List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
             meteDataList = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",catalog.getMeteSetId()));
             if(meteDataList != null && meteDataList.size() > 0){
-
+                StringBuffer sqlBuf =   new StringBuffer();
+                sqlBuf.append("SELECT ");
+                for(XjMeteSetMiddleEntity mete : meteDataList){
+                    if(StringUtils.isBlank(mete.getField())){
+                        sqlBuf.append(mete.getMeteEname()).append(" ");
+                    }else{
+                        sqlBuf.append(mete.getField()).append(" AS ").append(mete.getMeteEname()).append(" ");
+                    }
+                }
+                sqlBuf.append("FROM ").append(link.getTableName());
+                String sql = sqlBuf.toString();
+                Config config = new Config();
+                config.setUsername(dataSource.getDsUsername());
+                config.setPassword(dataSource.getDsPassword());
+                if(dataSource.getDsType().toLowerCase().contains("mysql")){
+                    config.setUrl("jdbc:mysql://" + dataSource.getDsIp() + ":" + dataSource.getDsPort() + "/" + dataSource.getDsDatabasename());
+                    config.setDriver("com.mysql.jdbc.Driver");
+                }else if(dataSource.getDsType().toLowerCase().contains("gbase")){
+                    config.setUrl("jdbc:gbase://" + dataSource.getDsIp() + ":" + dataSource.getDsPort() + "/" + dataSource.getDsDatabasename());
+                    config.setDriver("com.gbase.jdbc.Driver");
+                }else{
+                    config.setUrl("jdbc:gbase://" + dataSource.getDsIp() + ":" + dataSource.getDsPort() + "/" + dataSource.getDsDatabasename());
+                    config.setDriver("com.gbase.jdbc.Driver");
+                }
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = JDBCUtils.queryJsonArray(Integer.parseInt(params.get("page").toString()),0,config,sql,null);
+                    System.out.println(jsonArray.toString());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return R.error("查询失败");
+                }
             }else{
                 return R.error("该目录未关联元数据");
             }
