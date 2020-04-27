@@ -72,8 +72,8 @@ var vm = new Vue({
             vm.checkIdList = [];
             vm.checkIdList2 = [];
             selection.forEach(function(item,i){
-                vm.checkIdList.push(item.ktrId);
-                vm.checkIdList2.push(item.ktrId)
+                vm.checkIdList.push(item.ftpId);
+                vm.checkIdList2.push(item.ftpId)
             })
         },
         getMenu: function(menuId){
@@ -126,7 +126,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjktr/save',
+                        url: baseURL + 'xj/xjftp/save',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -167,7 +167,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjktr/update',
+                        url: baseURL + 'xj/xjftp/update',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -214,6 +214,7 @@ var vm = new Vue({
             })
             vm.showList = false;
             vm.title = "查看";
+            vm.look= true;
 
             vm.getInfo(id);
         },
@@ -246,7 +247,7 @@ var vm = new Vue({
                 layer.confirm('确定要删除选中的记录？', function(index1){
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "xj/xjktr/delete",
+                        url: baseURL + "xj/xjftp/delete",
                         contentType: "application/json",
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
@@ -267,8 +268,8 @@ var vm = new Vue({
 
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "xj/xjktr/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.xjKtr;
+			$.get(baseURL + "xj/xjftp/info/"+meteCategoryId, function(r){
+                vm.meteCategory = r.xjFtp;
                 console.log('修改')
                 console.log(vm.meteCategory)
             });
@@ -288,13 +289,11 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjktr/list',
+                url: baseURL + 'xj/xjftp/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    page:this.page,
-                    dsNam:this.q.name,
-                    dsType:this.q.type,
+                    page:this.page
                 },
                 success: function(r){
                     console.log(r);
@@ -365,16 +364,16 @@ var vm = new Vue({
         handleSelect:function(item) {
             console.log(item);
         },
-        // 执行
+        // 上传
         implement:function (id) {
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
-                    url: baseURL + "xj/xjktr/run",
+                    url: baseURL + "xj/xjftp/upload",
                     // contentType: "application/json",
                     dataType: 'json',
                     data:{
-                        ktrId:id
+                        ftpId:id
                     },
                     // data:JSON.stringify(id),
                     success: function(r){

@@ -214,6 +214,7 @@ var vm = new Vue({
             })
             vm.showList = false;
             vm.title = "查看";
+            vm.look= true;
 
             vm.getInfo(id);
         },

@@ -47,10 +47,10 @@
 
         </div>
         <div class="switchIn">
-            <span>
-                <label>分类编号：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.metaCategoryNumber" >
-            </span>
+            <!--<span>-->
+                <!--<label>分类编号：</label>-->
+                <!--<input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.metaCategoryNumber" >-->
+            <!--</span>-->
             <span>
                 <label>分类名称：</label>
                 <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >
@@ -93,7 +93,7 @@
                     width="40">
             </el-table-column>
             <el-table-column
-                    prop="metaCategoryNumber"
+                    prop="meteCategoryId"
                     label="分类编号"
                     width="">
             </el-table-column>
@@ -158,12 +158,12 @@
     <div style="display: none" id="addUp" class="panel panel-default">
         <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">分类编码</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.metaCategoryNumber" placeholder="分类编码"/>
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label">分类编码</div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="meteCategory.metaCategoryNumber" placeholder="分类编码"/>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label">分类名称</div>
                 <div class="col-sm-10">

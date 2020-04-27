@@ -183,7 +183,7 @@
                             width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="meteNumber"
+                            prop="meteId"
                             label="编号"
                             width="90">
                     </el-table-column>
@@ -278,12 +278,12 @@
 
             </div>
             <div class="line">
-                <div class="item">
-                    <label>编号</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteNumber" placeholder="编号"/>
-                    </div>
-                </div>
+                <!--<div class="item">-->
+                    <!--<label>编号</label>-->
+                    <!--<div class="inp">-->
+                        <!--<input type="text" class="form-control" v-model="resourceMeteData.meteNumber" placeholder="编号"/>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="item">
                     <label>分类名称</label>
                     <div class="inp">
@@ -303,16 +303,16 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
                     </div>
                 </div>
-
-
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
                     </div>
                 </div>
+
+            </div>
+            <div class="line">
+
                 <div class="item">
                     <label>英文短名</label>
                     <div class="inp">
@@ -332,10 +332,6 @@
                         </el-select>
                     </div>
                 </div>
-
-
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>控件类型</label>
                     <div class="inp">
@@ -349,6 +345,10 @@
                         </el-select>
                     </div>
                 </div>
+
+            </div>
+            <div class="line">
+
                 <div class="item">
                     <label>校验类型</label>
                     <div class="inp">
@@ -372,16 +372,6 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.dataLength" placeholder="数据长度"/>
                     </div>
                 </div>
-
-                <!--<div class="item">-->
-                <!--<label>关键字</label>-->
-                <!--<div class="inp">-->
-                <!--<input type="text" class="form-control" v-model="resourceMeteData.keyword" placeholder="关键字"/>-->
-                <!--</div>-->
-                <!--</div>-->
-
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>是否禁用</label>
                     <div class="inp">
@@ -399,12 +389,17 @@
                         </el-select>
                     </div>
                 </div>
+
+            </div>
+            <div class="line">
+
                 <div class="item">
                     <label>值域</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.range" placeholder="值域"/>
                     </div>
                 </div>
+                <div class="item"></div>
                 <div class="item"></div>
 
             </div>
