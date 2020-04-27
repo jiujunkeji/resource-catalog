@@ -68,7 +68,7 @@ var vm = new Vue({
         },
         // 获取树目录列表
         getMenuList: function (event) {
-            $.getJSON(baseURL + "xj/xjcatalog/list", function(r){
+            $.getJSON(baseURL + "xj/xjcatalog/myList", function(r){
                 console.log(r.length);
                 console.log(vm.menuList);
                 vm.menuList = [];
@@ -212,7 +212,7 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjcatalog/page',
+                url: baseURL + 'xj/xjcatalog/selectDataList',
                 // contentType: "application/json",resource/resourcemetedata/list2
                 dataType: 'json',
                 data: {
