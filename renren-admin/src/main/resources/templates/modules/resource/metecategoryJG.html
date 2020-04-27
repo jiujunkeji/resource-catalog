@@ -149,10 +149,10 @@
 
                 </div>
                 <div class="switchIn">
-                    <span>
-                        <label>编号：</label>
-                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >
-                    </span>
+                    <!--<span>-->
+                        <!--<label>编号：</label>-->
+                        <!--<input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >-->
+                    <!--</span>-->
                     <span>
                         <label>中文名称：</label>
                         <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q.cnName" >
@@ -182,7 +182,7 @@
                         @selection-change="toggleSelection"
                         style="width: 100%">
                     <el-table-column
-                            prop="meteSetNumber"
+                            prop="meteSetId"
                             label="编号"
                             width="">
                     </el-table-column>
@@ -291,12 +291,12 @@
 
             </div>
             <div class="line">
-                <div class="item">
-                    <label>编号</label>
-                    <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" :readonly="look"/>
-                    </div>
-                </div>
+                <!--<div class="item">-->
+                    <!--<label>编号</label>-->
+                    <!--<div class="inp">-->
+                        <!--<input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" :readonly="look"/>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="item">
                     <label>分类名称</label>
                     <div class="inp">
@@ -316,20 +316,22 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称" :readonly="look"/>
                     </div>
                 </div>
-            </div>
-            <div class="line">
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称" :readonly="look"/>
                     </div>
                 </div>
+            </div>
+            <div class="line">
+
                 <div class="item">
                     <label>英文短名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名" :readonly="look"/>
                     </div>
                 </div>
+                <div class="item"></div>
                 <div class="item"></div>
             </div>
         </div>
@@ -358,7 +360,7 @@
                         width="40">
                 </el-table-column>
                 <el-table-column
-                        prop="cnName"
+                        prop="meteId"
                         label="编号"
                         width="">
                 </el-table-column>
@@ -438,7 +440,7 @@
                             width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="meteNumber"
+                            prop="meteId"
                             label="编号"
                             width="90">
                     </el-table-column>

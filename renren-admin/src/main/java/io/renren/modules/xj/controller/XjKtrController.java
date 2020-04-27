@@ -113,13 +113,7 @@ public class XjKtrController {
         xk.setKtrStatus("1");
         xjKtrService.updateById(xk);
         XjDataSourceEntity ds = xjDataSourceService.selectById(xk.getKtrDsid());
-        String result = xjKtrService.kettleJob(xk,ds);
-        if (result == "success"){
-            xk.setKtrStatus("2");
-        }else {
-            xk.setKtrStatus("3");
-        }
-        xjKtrService.updateById(xk);
+        xjKtrService.kettleJob(xk,ds);
         return R.ok();
     }
 
@@ -127,10 +121,10 @@ public class XjKtrController {
      * 下载采集插件
      */
     @RequestMapping("/downTemplate")
-    public void downTemplate(HttpServletResponse response, XjKtrEntity xe){
+    public void downTemplate(HttpServletResponse response, String ktrName){
         try{
-            String pathName = xe.getKtrName()+".txt";
-            String fileName = xe.getKtrName()+".txt";
+            String pathName = ktrName+".txt";
+            String fileName = ktrName+".txt";
             String fn = URLEncoder.encode(fileName,"UTF-8");
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
