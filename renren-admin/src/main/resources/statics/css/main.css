@@ -89,7 +89,7 @@ tbody > tr > th {font-weight: normal; }
 .col-xs-6{padding-left: 0px;padding-right: 0px;}
 .form-horizontal .form-group {margin-left:0px;margin-right:0px;}
 .form-horizontal{
-    width:100%;padding-top:20px;
+    width:100%;padding-top:20px;padding-left: 10px;
 }
 
 .look{
@@ -185,6 +185,7 @@ div.line .item{
     padding-left: 20px;
 }
 div.line .item label{
+    position: relative;
     display: inline-block;
     width: 97px;
     text-align: justify;
@@ -219,6 +220,22 @@ div.line .item>div.inp{
     color: #2593f3;
     font-size: 16px;
     margin-left: 10px;
+}
+.mustFill:before{
+    content: "*";
+    position: absolute;
+    left: 0px;
+    top: 11px;
+    color: #f56c6c;
+    margin-right: 4px;
+}
+.mustFill1:before{
+    content: "*";
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    color: #f56c6c;
+    margin-right: 4px;
 }
 
 

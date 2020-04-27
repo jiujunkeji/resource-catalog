@@ -44,30 +44,30 @@
         </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-            <div class="right">
-                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
-            </div>
+    <!--<div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">-->
+        <!--<div class="grid-btn" style="border-bottom: 1px solid #e7eaec">-->
+                <!--<span class="title">-->
+                    <!--<i class="el-icon-search"></i>-->
+                    <!--筛选查询-->
+                <!--</span>-->
+            <!--<div class="right">-->
+                <!--<el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>-->
+            <!--</div>-->
 
-        </div>
-        <div class="switchIn">
-            <span>
-                <label>数据源类型：</label>
-                <input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >
-            </span>
-            <span>
-                <label>数据源名称：</label>
-                <input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >
-            </span>
-        </div>
-        <button class="clean" @click="clean">重置</button>
-        <button class="look" @click="query">查询</button>
-    </div>
+        <!--</div>-->
+        <!--<div class="switchIn">-->
+            <!--<span>-->
+                <!--<label>数据源类型：</label>-->
+                <!--<input class="el-input__inner" type="text" placeholder="分类编号" v-model="q.type" >-->
+            <!--</span>-->
+            <!--<span>-->
+                <!--<label>数据源名称：</label>-->
+                <!--<input class="el-input__inner" type="text" placeholder="分类名称" v-model="q.name" >-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<button class="clean" @click="clean">重置</button>-->
+        <!--<button class="look" @click="query">查询</button>-->
+    <!--</div>-->
     <div class="divBox">
         <div class="grid-btn">
             <span class="title">
@@ -100,7 +100,7 @@
                     width="40">
             </el-table-column>
             <el-table-column
-                    prop="dsNam"
+                    prop="dsName"
                     label="数据源名称"
                     width="">
             </el-table-column>
@@ -129,33 +129,14 @@
                     label="端口号"
                     width="130">
             </el-table-column>
-            <el-table-column
-                    label="是否禁用"
-                    width="90">
-                <template slot-scope="scope">
-                    <el-tag
-                            v-if="scope.row.isDisabled == 0"
-                            size="small"
-                            type="success"
-                            effect="dark">
-                        否
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.isDisabled == 1"
-                            size="small"
-                            type="danger"
-                            effect="dark">
-                        是
-                    </el-tag>
-                </template>
-            </el-table-column>
+
             <el-table-column
                     label="操作"
                     align="center"
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <i class="el-icon-edit" @click="update(scope.row.meteCategorySetId)"></i>
+                    <i class="el-icon-edit" @click="update(scope.row.dsId)"></i>
                 </template>
             </el-table-column>
         </el-table>
@@ -183,7 +164,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">数据源名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.dsNam" placeholder="数据源名称"/>
+                    <input type="text" class="form-control" v-model="meteCategory.dsName" placeholder="数据源名称"/>
                 </div>
             </div>
             <div class="form-group">
@@ -207,7 +188,7 @@
                                 v-for="item in comList"
                                 :key="item.organisationId"
                                 :label="item.organisationName"
-                                :value="item.organisationId">
+                                :value="item.organisationName">
                         </el-option>
                     </el-select>
                 </div>
@@ -251,6 +232,24 @@
                 <div class="col-sm-2 control-label">端口号</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.dsPort" placeholder="端口号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据库名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsDatabasename" placeholder="数据库名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">用户名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsUsername" placeholder="用户名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">密码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.dsPassword" placeholder="密码"/>
                 </div>
             </div>
         </form>

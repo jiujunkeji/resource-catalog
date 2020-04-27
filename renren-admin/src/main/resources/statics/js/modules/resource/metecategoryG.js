@@ -180,6 +180,7 @@ var vm = new Vue({
 
             vm.showList = false;
             vm.title = "新增元数据";
+            vm.resourceMeteData = {};
             if(vm.catalogId){
                 vm.resourceMeteData.meteCategoryId = vm.catalogId;
             }

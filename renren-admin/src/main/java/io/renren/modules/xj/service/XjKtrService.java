@@ -20,6 +20,6 @@ public interface XjKtrService extends IService<XjKtrEntity> {
     PageUtils queryPage(Map<String, Object> params);
     PageUtils selectByname(Map<String, Object> params);
 
-    String kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception;
+    void kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception;
 }
 

@@ -64,7 +64,8 @@ var vm = new Vue({
             fieldList:[],
             parentName:'',
             parentId:0,
-            isUsed:1
+            isUsed:1,
+            meteDataList:[]
         },
         imageUrl:'',
         fileData:null,
@@ -98,13 +99,13 @@ var vm = new Vue({
         fenlSelect1:[],
         catalogId:null,
         fileData:{
-            cnName:'',
-            safe:{}
+            cnName:''
         },
         comList:[],
         safeLevelList:[],
         encryptMethodList:[],
-        safeTypeList:[]
+        safeTypeList:[],
+        dataSourceList:[]
 
     },
     watch: {
@@ -161,6 +162,7 @@ var vm = new Vue({
                     // vm.resourceMeteData.catagoryCode = node[0].code;
                     layer.close(index);
                     console.log(vm.resourceMeteData);
+                    vm.getyuanshujuList(vm.resourceMeteData.catalogId)
                 }
             });
         },
@@ -205,7 +207,7 @@ var vm = new Vue({
         },
         add: function(){
             vm.showList = false;
-            vm.title = "新增目录安全设置";
+            vm.title = "新增目录关联数据设置";
             vm.resourceMeteData = {
                 meteType:null,
                 categoryId:null,
@@ -215,7 +217,8 @@ var vm = new Vue({
                 catalogName:'',
                 fieldList:[],
                 parentId:0,
-                parentName:''
+                parentName:'',
+                meteDataList:[]
             };
             vm.getMenu();
             // vm.getMenu1();
@@ -228,7 +231,7 @@ var vm = new Vue({
                 return ;
             }
             vm.showList = false;
-            vm.title = "修改目录安全设置";
+            vm.title = "修改目录关联数据设置";
             vm.getInfo(catalogId);
             vm.getMenu();
             // vm.getMenu1();
@@ -236,7 +239,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             console.log(vm.resourceMeteData);
-            var url = vm.resourceMeteData.safeId == null  ? "xj/xjsafe/save" : "xj/xjsafe/update";
+            var url = vm.resourceMeteData.linkId == null  ? "xj/xjcataloglinkdata/save" : "xj/xjcataloglinkdata/update";
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -263,7 +266,7 @@ var vm = new Vue({
             layer.confirm('确定要删除选中的记录？', function(index){
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "xj/xjsafe/delete",
+                    url: baseURL + "xj/xjcataloglinkdata/delete",
                     contentType: "application/json",
                     data: JSON.stringify(list),
                     success: function(r){
@@ -279,9 +282,9 @@ var vm = new Vue({
             });
         },
         getInfo: function(catalogId){
-            $.get(baseURL + "xj/xjsafe/info/"+catalogId, function(r){
+            $.get(baseURL + "xj/xjcataloglinkdata/info/"+catalogId, function(r){
                 console.log(r);
-                vm.resourceMeteData = r.xjSafe;
+                vm.resourceMeteData = r.xjCatalogLinkData;
                 // vm.resourceMeteData.parentId = 0;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
@@ -485,7 +488,7 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjsafe/list',
+                url: baseURL + 'xj/xjcataloglinkdata/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
@@ -819,10 +822,6 @@ var vm = new Vue({
         },
         // 设置安全级别
         setSafe:function (row) {
-            vm.fileData = {
-                cnName:'',
-                safe:null
-            }
             vm.fileData.cnName = row.meteCname;
             layer.open({
                 type: 1,
@@ -834,10 +833,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['确定','取消'],
                 btn1:function (index) {
-                    console.log(vm.fileData.safe)
-                    row.safe = vm.fileData.safe.value;
-                    row.safeCode = vm.fileData.safe.code;
-                    console.log(row)
+                    row.safe = vm.fileData.safe;
                     layer.close(index);
                 },
                 btn2:function () {
@@ -846,9 +842,41 @@ var vm = new Vue({
 
             })
         },
-        safeChange:function () {
-            
-        }
+        // 获取数据源表格列表
+        getShujuyuanList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjdatasource/list2',
+                // contentType: "application/json",
+                dataType: 'json',
+                success: function(r){
+                    console.log(r);
+                    if(r.code === 0){
+                        vm.dataSourceList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 数据源改变
+        dsChange:function (opt) {
+            console.log(opt);
+            vm.dataSourceList.forEach(function (item) {
+                if(item.dsId = opt){
+                    vm.resourceMeteData.dsName = item.dsName
+                }
+            })
+        },
+        // 获取目录关联元数据
+        getyuanshujuList: function(catalogId){
+            $.get(baseURL + "xj/xjcatalog/info/"+catalogId, function(r){
+                console.log(r);
+                vm.resourceMeteData.meteDataList = r.xjCatalog.meteDataList;
+                // vm.resourceMeteData.parentId = 0;
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+        },
     },
     created:function () {
         this.getMenuList();
@@ -856,6 +884,7 @@ var vm = new Vue({
         this.dictClick('safe_level');
         this.dictClick('encrypt_method');
         this.dictClick('safe_type');
+        this.getShujuyuanList();
         // this.h = height
     }
 });

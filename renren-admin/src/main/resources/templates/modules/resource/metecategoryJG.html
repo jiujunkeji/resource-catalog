@@ -149,10 +149,10 @@
 
                 </div>
                 <div class="switchIn">
-                    <span>
-                        <label>编号：</label>
-                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >
-                    </span>
+                    <!--<span>-->
+                        <!--<label>编号：</label>-->
+                        <!--<input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >-->
+                    <!--</span>-->
                     <span>
                         <label>中文名称：</label>
                         <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q.cnName" >
@@ -255,10 +255,10 @@
                             header-align="center"
                             width="100">
                         <template slot-scope="scope">
-                            <i v-if="scope.row.reviewState == 0" class="el-icon-edit" @click="update(scope.row.meteSetId)" title="修改"></i>
-                            <span v-if="scope.row.reviewState == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                            <i v-if="scope.row.reviewState == 0" class="el-icon-delete" @click="del(scope.row.meteSetId)" title="删除"></i>
-                            <el-button v-if="scope.row.reviewState != 0" type="text" @click="lookC(scope.row.meteSetId)">查看</el-button>
+                            <i v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3" class="el-icon-edit" @click="update(scope.row.meteSetId)" title="修改"></i>
+                            <span v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <i v-if="scope.row.reviewState == 0 || scope.row.reviewState == 3" class="el-icon-delete" @click="del(scope.row.meteSetId)" title="删除"></i>
+                            <el-button v-if="scope.row.reviewState != 0 && scope.row.reviewState != 3" type="text" @click="lookC(scope.row.meteSetId)">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -316,6 +316,7 @@
                         <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称" :readonly="look"/>
                     </div>
                 </div>
+
             </div>
             <div class="line">
                 <div class="item">
@@ -340,7 +341,7 @@
                     元数据元素或实体列表
                 </span>
                 <div class="right">
-                    <el-button v-if="!look" size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button v-if="!look" size="medium" type="primary" @click="addUp">选择元数据</el-button>&nbsp;&nbsp;
                     <el-button v-if="!look" size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
 
 
@@ -358,7 +359,7 @@
                         width="40">
                 </el-table-column>
                 <el-table-column
-                        prop="cnName"
+                        prop="meteNumber"
                         label="编号"
                         width="">
                 </el-table-column>
@@ -381,26 +382,6 @@
                         prop="updateTime"
                         label="更新时间"
                         width="110">
-                </el-table-column>
-                <el-table-column
-                        label="是否禁用"
-                        width="90">
-                    <template slot-scope="scope">
-                        <el-tag
-                                v-if="scope.row.isDisabled == 0"
-                                size="small"
-                                type="success"
-                                effect="dark">
-                            否
-                        </el-tag>
-                        <el-tag
-                                v-if="scope.row.isDisabled == 1"
-                                size="small"
-                                type="danger"
-                                effect="dark">
-                            是
-                        </el-tag>
-                    </template>
                 </el-table-column>
             </el-table>
             <br>
@@ -447,6 +428,7 @@
                     </div>
                 </div>
                 <el-table
+                        ref="multipleTable"
                         :data="tableList1"
                         border
                         stripe
@@ -457,7 +439,7 @@
                             width="40">
                     </el-table-column>
                     <el-table-column
-                            prop="meteNumber"
+                            prop="meteId"
                             label="编号"
                             width="90">
                     </el-table-column>

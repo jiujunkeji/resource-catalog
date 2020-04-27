@@ -29,13 +29,26 @@ public class XjCatalogLinkDataEntity implements Serializable {
 	 */
 	private Long catalogId;
 	/**
+	 * 目录名称
+	 */
+	private String catalogName;
+	/**
 	 * 数据源id
 	 */
 	private Long dataSourceId;
 	/**
+	 * 数据源名称
+	 */
+	private String dsName;
+	/**
+	 * 数据表中文名
+	 */
+	private String tableNameCn;
+	/**
 	 * 数据表名
 	 */
 	private String tableName;
+
 
 	/**
 	 * 元数据列表
@@ -97,5 +110,29 @@ public class XjCatalogLinkDataEntity implements Serializable {
 
 	public void setMeteDataList(List<XjMeteSetMiddleEntity> meteDataList) {
 		this.meteDataList = meteDataList;
+	}
+
+	public String getCatalogName() {
+		return catalogName;
+	}
+
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
+	}
+
+	public String getDsName() {
+		return dsName;
+	}
+
+	public void setDsName(String dsName) {
+		this.dsName = dsName;
+	}
+
+	public String getTableNameCn() {
+		return tableNameCn;
+	}
+
+	public void setTableNameCn(String tableNameCn) {
+		this.tableNameCn = tableNameCn;
 	}
 }

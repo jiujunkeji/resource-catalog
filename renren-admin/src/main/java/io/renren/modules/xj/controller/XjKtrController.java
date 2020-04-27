@@ -5,10 +5,12 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
+import io.renren.modules.xj.service.XjDataSourceService;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 public class XjKtrController {
     @Autowired
     private XjKtrService xjKtrService;
+    @Autowired
+    private XjDataSourceService xjDataSourceService;
 
     /**
      * 列表
@@ -49,7 +53,6 @@ public class XjKtrController {
 
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息
@@ -68,6 +71,8 @@ public class XjKtrController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjktr:save")
     public R save(@RequestBody XjKtrEntity xjKtr){
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xjKtr.getKtrDsid());
+        xjKtr.setKtrStatus("0");
         xjKtr.setKtrCreatetime(new Date());
         xjKtr.setKtrUpdatetime(new Date());
         xjKtrService.insert(xjKtr);
@@ -103,8 +108,12 @@ public class XjKtrController {
      * 任务执行
      */
     @RequestMapping("/run")
-    public R extract(@RequestBody XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
-        xjKtrService.kettleJob(xjKtr,ds);
+    public R run(@RequestParam int ktrId) throws Exception {
+        XjKtrEntity xk = xjKtrService.selectById(ktrId);
+        xk.setKtrStatus("1");
+        xjKtrService.updateById(xk);
+        XjDataSourceEntity ds = xjDataSourceService.selectById(xk.getKtrDsid());
+        xjKtrService.kettleJob(xk,ds);
         return R.ok();
     }
 
@@ -112,10 +121,10 @@ public class XjKtrController {
      * 下载采集插件
      */
     @RequestMapping("/downTemplate")
-    public void downTemplate(HttpServletResponse response, XjKtrEntity xe){
+    public void downTemplate(HttpServletResponse response, String ktrName){
         try{
-            String pathName = xe.getKtrName()+".txt";
-            String fileName = xe.getKtrName()+".txt";
+            String pathName = ktrName+".txt";
+            String fileName = ktrName+".txt";
             String fn = URLEncoder.encode(fileName,"UTF-8");
             response.setHeader("Content-disposition","attachment;fileName=" + new String(fn.getBytes("UTF-8"),"iso-8859-1").replace(" ","_"));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");

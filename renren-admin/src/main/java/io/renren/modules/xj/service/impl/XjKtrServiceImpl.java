@@ -17,6 +17,7 @@ import org.pentaho.di.repository.RepositoryDirectoryInterface;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -55,7 +56,9 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
     }
 
     @Override
-    public String kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+    @Async("taskExecutor")
+    public void kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+
         KettleEnvironment.init();
         KettleDatabaseRepository kettleDatabaseRepository = repositoryCon(ds);
         //createAndSaveTrans(kettleDatabaseRepository);
@@ -65,10 +68,11 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
         job.start();
         job.waitUntilFinished();
         if (job.getErrors() > 0) {
-            return "false";
+            xjKtr.setKtrStatus("3");
         }else {
-            return "success";
+            xjKtr.setKtrStatus("2");
         }
+        this.updateById(xjKtr);
     }
 
     /**

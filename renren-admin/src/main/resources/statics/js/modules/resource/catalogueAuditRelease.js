@@ -400,20 +400,23 @@ var vm = new Vue({
                 reviewState:null,
                 pushState:null,
                 name:this.nameS,
+                catalogId:this.catalogId
             }
             if(this.tab == 4){
                 obj = {
                     page:this.page,
                     name:this.nameS,
                     reviewState:null,
-                    pushState:1
+                    pushState:1,
+                    catalogId:this.catalogId
                 }
             }else {
                 obj = {
                     page:this.page,
                     name:this.nameS,
                     reviewState:this.tab,
-                    pushState:null
+                    pushState:null,
+                    catalogId:this.catalogId
                 }
             }
             $.ajax({
@@ -441,20 +444,23 @@ var vm = new Vue({
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
+            console.log(data);
+            vm.catalogId = data.id;
+            vm.getTableList();
 
-            if(data.list.length == 0 || data.id == null){
-
-                vm.catalogId = data.id;
-                if(data.name == '资源目录'){
-                    console.log('进来了')
-                    vm.nameS = '';
-                }else {
-                    vm.nameS = data.name;
-                }
-                console.log(vm.nameS);
-
-                vm.getTableList();
-            }
+            // if(data.list.length == 0 || data.id == null){
+            //
+            //     vm.catalogId = data.id;
+            //     if(data.name == '资源目录'){
+            //         console.log('进来了')
+            //         vm.nameS = '';
+            //     }else {
+            //         vm.nameS = data.name;
+            //     }
+            //     console.log(vm.nameS);
+            //
+            //     vm.getTableList();
+            // }
         },
         // 选项卡
         tabClick:function (num) {
@@ -541,7 +547,7 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.tab = 1;
+                        vm.tab = 2;
                         vm.page = 1;
                         vm.getTableList();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});

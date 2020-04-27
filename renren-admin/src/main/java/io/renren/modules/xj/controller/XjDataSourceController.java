@@ -1,9 +1,13 @@
 package io.renren.modules.xj.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.xj.entity.XjCatalogEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +47,14 @@ public class XjDataSourceController {
         return R.ok().put("page", page);
     }
 
+    @RequestMapping("/list2")
+    public R list2(@RequestParam Map<String, Object> params){
+        EntityWrapper<XjDataSourceEntity> wrapper = new EntityWrapper<XjDataSourceEntity>();
+        List<XjDataSourceEntity> list = xjDataSourceService.selectList(wrapper);
+
+        return R.ok().put("list",list);
+    }
+
 
     /**
      * 信息
@@ -61,6 +73,8 @@ public class XjDataSourceController {
     @RequestMapping("/save")
     //@RequiresPermissions("xj:xjdatasource:save")
     public R save(@RequestBody XjDataSourceEntity xjDataSource){
+        xjDataSource.setDsCreatetime(new Date());
+        xjDataSource.setDsUpdatetime(new Date());
         xjDataSourceService.insert(xjDataSource);
 
         return R.ok();
@@ -73,6 +87,7 @@ public class XjDataSourceController {
     //@RequiresPermissions("xj:xjdatasource:update")
     public R update(@RequestBody XjDataSourceEntity xjDataSource){
         ValidatorUtils.validateEntity(xjDataSource);
+        xjDataSource.setDsUpdatetime(new Date());
         xjDataSourceService.updateAllColumnById(xjDataSource);//全部更新
         
         return R.ok();

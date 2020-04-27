@@ -28,9 +28,22 @@ public class XjKtrEntity implements Serializable {
 	 */
 	private String ktrName;
 	/**
+	 * 数据源
+	 */
+	private int ktrDsid;
+
+	public int getKtrDsid() {
+		return ktrDsid;
+	}
+
+	public void setKtrDsid(int ktrDsid) {
+		this.ktrDsid = ktrDsid;
+	}
+
+	/**
 	 * 数据库名
 	 */
-	private XjDataSourceEntity ktrDsname;
+	private String ktrDsname;
 	/**
 	 * 表名
 	 */
@@ -65,6 +78,7 @@ public class XjKtrEntity implements Serializable {
 	private Date ktrUpdatetime;
 	/**
 	 *状态
+	 * 0 未执行 1 正在执行 2 执行成功 3 执行失败
 	 */
 	private String ktrStatus;
 
@@ -149,9 +163,14 @@ public class XjKtrEntity implements Serializable {
 		return ktrName;
 	}
 
-	public XjDataSourceEntity getKtrDsname() { return ktrDsname; }
 
-	public void setKtrDsname(XjDataSourceEntity ktrDsname) { this.ktrDsname = ktrDsname; }
+	public String getKtrDsname() {
+		return ktrDsname;
+	}
+
+	public void setKtrDsname(String ktrDsname) {
+		this.ktrDsname = ktrDsname;
+	}
 
 	/**
 	 * 设置：

@@ -72,6 +72,10 @@ public class XjCatalogLinkDataController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody XjCatalogLinkDataEntity xjCatalogLinkData){
+        int count = xjCatalogLinkDataService.selectCount(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",xjCatalogLinkData.getCatalogId()));
+        if(count > 0){
+            return R.error("该条目录已有数据关联");
+        }
         xjCatalogLinkDataService.insert(xjCatalogLinkData);
         List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
         meteDataList = xjCatalogLinkData.getMeteDataList();
