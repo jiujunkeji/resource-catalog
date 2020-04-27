@@ -58,6 +58,18 @@ public class XjFtpEntity implements Serializable {
 	 * 删除（0 未删除，1已删除）
 	 */
 	private Integer ftpDelete;
+	/**
+	 * 状态(1 未执行 2 正在执行 3 执行成功 4 执行失败)
+	 */
+	private Integer ftpStatus;
+
+	public Integer getFtpStatus() {
+		return ftpStatus;
+	}
+
+	public void setFtpStatus(Integer ftpStatus) {
+		this.ftpStatus = ftpStatus;
+	}
 
 	/**
 	 * 设置：

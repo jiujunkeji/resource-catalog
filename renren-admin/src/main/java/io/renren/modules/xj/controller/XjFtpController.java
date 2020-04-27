@@ -3,6 +3,7 @@ package io.renren.modules.xj.controller;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
@@ -64,6 +65,8 @@ public class XjFtpController {
     //@RequiresPermissions("resource:xjftp:save")
     public R save(@RequestBody XjFtpEntity xjFtp){
         xjFtp.setFtpCreatetime(new Date());
+        xjFtp.setFtpDelete(0);
+        xjFtp.setFtpStatus(1);
         xjFtpService.insert(xjFtp);
 
         return R.ok();
@@ -87,8 +90,11 @@ public class XjFtpController {
     @RequestMapping("/delete")
     //@RequiresPermissions("resource:xjftp:delete")
     public R delete(@RequestBody Integer[] ftpIds){
-        xjFtpService.deleteBatchIds(Arrays.asList(ftpIds));
-
+        List<Integer> ftpid =  Arrays.asList(ftpIds);
+        for (Integer id: ftpid){
+            XjFtpEntity fe = xjFtpService.selectById(id);
+            fe.setFtpDelete(1);
+        }
         return R.ok();
     }
 
@@ -98,6 +104,7 @@ public class XjFtpController {
     @RequestMapping("/upload")
     public R upload(@RequestParam int ftpId) throws FileNotFoundException {
         XjFtpEntity fe = xjFtpService.selectById(ftpId);
+        fe.setFtpStatus(2);
         xjFtpService.uploadFile(fe);
         return R.ok();
     }

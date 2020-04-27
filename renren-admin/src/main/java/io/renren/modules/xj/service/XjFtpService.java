@@ -18,7 +18,7 @@ public interface XjFtpService extends IService<XjFtpEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    boolean uploadFile(XjFtpEntity fe) throws FileNotFoundException;
+   void uploadFile(XjFtpEntity fe) throws FileNotFoundException;
 
 }
 

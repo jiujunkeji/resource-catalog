@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -107,8 +108,15 @@ public class XjFtpServiceImpl extends ServiceImpl<XjFtpDao, XjFtpEntity> impleme
     }
 
     @Override
-    public boolean uploadFile(XjFtpEntity fe) throws FileNotFoundException {
-        return uploadFile2(fe);
+    @Async("taskExecutor")
+    public void  uploadFile(XjFtpEntity fe) throws FileNotFoundException {
+
+        boolean statu = uploadFile2(fe);
+        if (statu = true){
+            fe.setFtpStatus(3);
+        }else {
+            fe.setFtpStatus(4);
+        }
 
     }
 
