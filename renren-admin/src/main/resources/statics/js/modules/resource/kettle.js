@@ -426,7 +426,7 @@ var vm = new Vue({
         dsChange:function (opt) {
             console.log(opt);
             vm.dataSourceList.forEach(function (item) {
-                if(item.dsId = opt){
+                if(item.dsId == opt){
                     vm.meteCategory.ktrDsname = item.dsName
                 }
             })
