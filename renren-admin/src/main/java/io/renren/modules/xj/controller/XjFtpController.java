@@ -30,7 +30,7 @@ import io.renren.common.utils.R;
  * @date 2020-04-27 11:20:21
  */
 @RestController
-@RequestMapping("resource/xjftp")
+@RequestMapping("xj/xjftp")
 public class XjFtpController {
     @Autowired
     private XjFtpService xjFtpService;
