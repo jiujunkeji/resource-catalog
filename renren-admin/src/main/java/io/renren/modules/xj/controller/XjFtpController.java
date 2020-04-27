@@ -94,6 +94,7 @@ public class XjFtpController {
         for (Integer id: ftpid){
             XjFtpEntity fe = xjFtpService.selectById(id);
             fe.setFtpDelete(1);
+            xjFtpService.updateById(fe);
         }
         return R.ok();
     }
