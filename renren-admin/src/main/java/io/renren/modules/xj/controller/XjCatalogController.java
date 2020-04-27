@@ -80,7 +80,7 @@ public class XjCatalogController extends AbstractController{
         return R.ok().put("page",page);
     }
     /**
-     * 获取我的目录列表（安全级别控制）
+     * 目录检索，获取我的目录列表（安全级别控制）
      */
     @RequestMapping("/myList")
     public List<XjCatalogEntity> myList(@RequestParam Map<String, Object> params){
@@ -88,7 +88,9 @@ public class XjCatalogController extends AbstractController{
         EntityWrapper<XjCatalogEntity> wrapper = new EntityWrapper<XjCatalogEntity>();
         wrapper
                 .like(StringUtils.isNotEmpty(name), "name", name)
-                .eq("is_deleted",0);
+                .eq("is_deleted",0)
+                .eq("review_state",2)
+                .eq("push_state",1);
         List<XjCatalogEntity> list = xjCatalogService.selectUserList(wrapper,getUser());
         for(XjCatalogEntity xjCatalogEntity : list){
             XjCatalogEntity parentXjCatalogEntity = xjCatalogService.selectById(xjCatalogEntity.getParentId());
