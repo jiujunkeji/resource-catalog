@@ -105,6 +105,7 @@ public class XjFtpController {
     public R upload(@RequestParam int ftpId) throws FileNotFoundException {
         XjFtpEntity fe = xjFtpService.selectById(ftpId);
         fe.setFtpStatus(2);
+        xjFtpService.updateById(fe);
         xjFtpService.uploadFile(fe);
         return R.ok();
     }
