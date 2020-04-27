@@ -98,10 +98,10 @@ public class XjFtpServiceImpl extends ServiceImpl<XjFtpDao, XjFtpEntity> impleme
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<XjFtpEntity> wrapper = new EntityWrapper<XjFtpEntity>();
-        wrapper.eq("ftp_delete",0);
         Page<XjFtpEntity> page = this.selectPage(
                 new Query<XjFtpEntity>(params).getPage(),
                 new EntityWrapper<XjFtpEntity>()
+                .eq("ftp_delete",0)
         );
 
         return new PageUtils(page);
