@@ -273,7 +273,7 @@ var vm = new Vue({
     },
     created:function () {
         this.getMenuList();
-        this.getTableList();
+        // this.getTableList();
 
         // this.h = height
     }
