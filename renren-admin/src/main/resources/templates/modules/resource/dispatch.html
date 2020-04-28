@@ -5,11 +5,14 @@
     <#include "/header.html">
         <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
         <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+        <link href="${request.contextPath}/statics/js/font/font-awesome.min.css" rel="stylesheet">
+        <link href="${request.contextPath}/statics/js/cronGen.css" rel="stylesheet">
         <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
         <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
         <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
         <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
         <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+        <script src="${request.contextPath}/statics/js/cronGen.min.js"></script>
         <style>
             span.stop{
                 display: inline-block;
@@ -221,7 +224,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">cron表达式</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式" :readonly="look"/>
+                    <input type="text" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式" readonly @click="cronC"/>
                 </div>
             </div>
 
@@ -232,6 +235,10 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    <div id="cronDiv" style="display: none">
+        <input v-model="cronValue" id="cron" onchange="test()" />
     </div>
 
     <!-- 选择上级菜单 -->
