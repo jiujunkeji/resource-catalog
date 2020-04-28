@@ -220,7 +220,7 @@ public class XjMetaDataSetController extends AbstractController {
             XjMetaDataSetEntity oldSet = xjMetaDataSetService.selectById(xjMetaDataSet.getMeteSetId());
             XjMeteSetVersionEntity setVersion=new XjMeteSetVersionEntity();
             setVersion.setMeteSetId(oldSet.getMeteSetId());
-//            setVersion.setMeteSetNumber(oldSet.getMeteSetNumber());
+            setVersion.setMeteSetNumber(oldSet.getMeteSetNumber());
             setVersion.setCnName(oldSet.getCnName());
             setVersion.setEuName(oldSet.getEuName());
             setVersion.setEuShortName(oldSet.getEuShortName());
@@ -254,7 +254,7 @@ public class XjMetaDataSetController extends AbstractController {
                 av.setMeteCname(a.getMeteCname()==null?"":a.getMeteCname());
                 av.setMeteEname(a.getMeteEname()==null?"":a.getMeteEname());
                 av.setMeteEuShortName(a.getMeteEuShortName()==null?"":a.getMeteEuShortName());
-//                av.setMeteNumber(a.getMeteNumber()==null?"":a.getMeteNumber());
+                av.setMeteNumber(a.getMeteNumber()==null?"":a.getMeteNumber());
                 av.setMeteDataType(a.getMeteDataType());
                 av.setMeteDataLength(a.getMeteDataLength());
                 av.setMeteRange(a.getMeteRange()==null?"":a.getMeteRange());
@@ -263,7 +263,7 @@ public class XjMetaDataSetController extends AbstractController {
                 av.setMeteSetCname(a.getMeteSetCname()==null?"":a.getMeteSetCname());
                 av.setMeteSetEname(a.getMeteSetEname()==null?"":a.getMeteSetEname());
                 av.setMeteSetEuShortName(a.getMeteSetEuShortName()==null?"":a.getMeteSetEuShortName());
-//                av.setMeteSetNumber(a.getMeteSetNumber()==null?"":a.getMeteSetNumber());
+                av.setMeteSetNumber(a.getMeteSetNumber()==null?"":a.getMeteSetNumber());
                 av.setVersionNumber(a.getVersionNumber()==null?"":a.getVersionNumber());
                 av.setCreateUserId(a.getCreateUserId());
                 av.setCreateDate(a.getCreateDate());
@@ -285,7 +285,7 @@ public class XjMetaDataSetController extends AbstractController {
             for(XjMetaDataEntity xjMetaDataEntity:newList){
                 XjMeteSetMiddleEntity middleEntity=new XjMeteSetMiddleEntity();
                 middleEntity.setMeteId(xjMetaDataEntity.getMeteId());
-//                middleEntity.setMeteNumber(xjMetaDataEntity.getMeteNumber());
+                middleEntity.setMeteNumber(xjMetaDataEntity.getMeteNumber());
                 middleEntity.setMeteCname(xjMetaDataEntity.getCnName());
                 middleEntity.setMeteEname(xjMetaDataEntity.getEuName());
                 middleEntity.setMeteEuShortName(xjMetaDataEntity.getEuShortName());
@@ -297,7 +297,7 @@ public class XjMetaDataSetController extends AbstractController {
                 middleEntity.setMeteSetId(xjMetaDataSet.getMeteSetId());
                 middleEntity.setMeteSetCname(xjMetaDataSet.getCnName());
                 middleEntity.setMeteSetEname(xjMetaDataSet.getEuName());
-//                middleEntity.setMeteSetEname(xjMetaDataSet.getMeteSetNumber());
+                middleEntity.setMeteSetNumber(xjMetaDataSet.getMeteSetNumber());
                 middleEntity.setMeteSetEuShortName(xjMetaDataSet.getEuShortName());
                 middleEntity.setCreateDate(new Date());
                 middleEntity.setUpdateTime(new Date());
