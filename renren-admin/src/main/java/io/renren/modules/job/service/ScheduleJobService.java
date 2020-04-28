@@ -35,7 +35,7 @@ public interface ScheduleJobService extends IService<ScheduleJobEntity> {
 	/**
 	 * 保存定时任务
 	 */
-	void save(ScheduleJobEntity scheduleJob);
+	Long save(ScheduleJobEntity scheduleJob);
 	
 	/**
 	 * 更新定时任务

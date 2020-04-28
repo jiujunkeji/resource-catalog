@@ -72,7 +72,7 @@ public class ScheduleJobController {
 		ValidatorUtils.validateEntity(scheduleJob);
 		
 		scheduleJobService.save(scheduleJob);
-		
+
 		return R.ok();
 	}
 	

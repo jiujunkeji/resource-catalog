@@ -73,12 +73,13 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void save(ScheduleJobEntity scheduleJob) {
+	public Long save(ScheduleJobEntity scheduleJob) {
 		scheduleJob.setCreateTime(new Date());
 		scheduleJob.setStatus(Constant.ScheduleStatus.NORMAL.getValue());
         this.insert(scheduleJob);
         
         ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
+        return scheduleJob.getJobId();
     }
 	
 	@Override
