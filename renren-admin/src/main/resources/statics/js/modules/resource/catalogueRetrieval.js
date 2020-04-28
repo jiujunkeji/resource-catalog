@@ -70,8 +70,6 @@ var vm = new Vue({
         // 获取树目录列表
         getMenuList: function (event) {
             $.getJSON(baseURL + "xj/xjcatalog/myList", function(r){
-                console.log(r.length);
-                console.log(vm.menuList);
                 vm.menuList = [];
                 var _len=0;
                 for(var i = 1;i<10;i++){
@@ -79,7 +77,6 @@ var vm = new Vue({
                         if(_len == r.length){
                             break ;
                         }
-                        console.log(1111);
                         r.forEach(function (item) {
                             if(item.parentId == 0){
                                 vm.menuList.push({
@@ -94,7 +91,6 @@ var vm = new Vue({
                         if(_len == r.length){
                             break ;
                         }
-                        console.log(222);
                         vm.menuList.forEach(function (item) {
                             r.forEach(function (n) {
                                 if(n.parentId == item.id){
@@ -198,7 +194,6 @@ var vm = new Vue({
                     }
 
                 }
-                console.log(vm.menuList);
                 var _list = [{
                     name:'资源目录',
                     id:null,
@@ -206,7 +201,6 @@ var vm = new Vue({
                 }]
                 _list[0].list = vm.menuList;
                 vm.menuList = _list;
-                // console.log(_list);
             });
         },
         // 获取表格列表
@@ -222,7 +216,6 @@ var vm = new Vue({
                 },
                 success: function(r){
                     if(r.code === 0){
-                        console.log(r);
                         vm.tableList = r.page.dataList;
                         vm.totalPage = r.page.totalCount;
                         vm.headerList = r.page.headerList
@@ -235,13 +228,11 @@ var vm = new Vue({
 
         // 分页
         layerPage:function (currentPage) {
-            console.log(currentPage);
             vm.page = currentPage;
             vm.getTableList();
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            // console.log(data);
             if(data.id){
                 vm.catalogId = data.id;
                 vm.getTableList();

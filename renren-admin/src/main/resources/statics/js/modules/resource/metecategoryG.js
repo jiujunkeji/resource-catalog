@@ -102,7 +102,6 @@ var vm = new Vue({
         getMenu: function(menuId){
             //加载菜单树
             $.get(baseURL + "resource/resourcecatalog/list", function(r){
-                console.log(r);
                 // r.push({
                 //     parentId:-1,
                 //     catalogId:0,
@@ -111,7 +110,6 @@ var vm = new Vue({
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r);
                 var node = ztree.getNodeByParam("catalogId", vm.resourceMeteData.catalogId);
                 ztree.selectNode(node);
-                console.log(node);
                 // vm.menu.parentName = node.name;
             })
         },
@@ -128,7 +126,6 @@ var vm = new Vue({
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
-                    console.log(node);
                     //选择上级菜单
                     vm.resourceMeteData.catalogId = node[0].catalogId;
                     vm.resourceMeteData.catalogName = node[0].name;
@@ -140,7 +137,6 @@ var vm = new Vue({
         getMenu1: function(menuId){
             //加载菜单树
             $.get(baseURL + "resource/metecategory/list", function(r){
-                console.log(r);
                 // r.push({
                 //     parentId:-1,
                 //     meteCategoryId:0,
@@ -149,7 +145,6 @@ var vm = new Vue({
                 ztree1 = $.fn.zTree.init($("#menuTree1"), setting1, r);
                 var node = ztree1.getNodeByParam("meteCategoryId", vm.resourceMeteData.categoryId);
                 ztree1.selectNode(node);
-                console.log(node);
                 // vm.menu.parentName = node.name;
             })
         },
@@ -166,12 +161,10 @@ var vm = new Vue({
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     var node = ztree1.getSelectedNodes();
-                    console.log(node);
                     //选择上级菜单
                     vm.resourceMeteData.categoryId = node[0].meteCategoryId;
                     vm.resourceMeteData.categoryName = node[0].name;
                     vm.resourceMeteData.catagoryCode = node[0].code;
-                    console.log(vm.resourceMeteData.catagoryCode);
                     layer.close(index);
                 }
             });
@@ -180,7 +173,9 @@ var vm = new Vue({
 
             vm.showList = false;
             vm.title = "新增元数据";
-            vm.resourceMeteData = {};
+            vm.resourceMeteData = {
+                isDisabled:0
+            };
             if(vm.catalogId){
                 vm.resourceMeteData.meteCategoryId = vm.catalogId;
             }
@@ -244,7 +239,6 @@ var vm = new Vue({
         },
         getInfo: function(meteId){
             $.get(baseURL + "xj/xjmetadata/info/"+meteId, function(r){
-                console.log(r);
                 vm.resourceMeteData = r.xjMetaData;
                 // vm.tableListUp = r.resourceMeteData.list;
             });
@@ -270,7 +264,6 @@ var vm = new Vue({
                     page:1,
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.comList = r.list;
                     }else{
@@ -281,7 +274,6 @@ var vm = new Vue({
         },
         // 设置资源提供方信息
         setCom:function (obj) {
-            console.log(obj);
             vm.resourceMeteData.organisationName = obj.organisationName;
             vm.resourceMeteData.organisationId = obj.organisationId;
             vm.resourceMeteData.organisationAddress = obj.organisationAddr;
@@ -320,7 +312,6 @@ var vm = new Vue({
                 }]
                 _list[0].list = vm.fenlSelect;
                 vm.menuList = _list;
-                console.log(vm.menuList);
             });
         },
         // 获取表格列表
@@ -334,10 +325,9 @@ var vm = new Vue({
                     page:this.page,
                     meteNumber:this.q.meteNumber,
                     meteCategoryId:this.q.meteCategoryId,
-                    cnName:this.q.cnName
+                    cnName:this.q.cnName,
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
@@ -349,23 +339,18 @@ var vm = new Vue({
         },
         // 分页
         layerPage:function (currentPage) {
-            console.log(currentPage);
             vm.page = currentPage;
             vm.getTableList();
         },
         // 编辑分页
         layerPage1:function (currentPage) {
-            console.log(currentPage);
             vm.page1 = currentPage;
             vm.getFileTableList();
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
-            console.log(data);
-            console.log(JSON.stringify(data.id) == 'null');
 
             if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
-                console.log('进来了')
                 vm.catalogId = data.id;
                 vm.q.meteCategoryId = data.id;
                 vm.getTableList();
@@ -380,7 +365,6 @@ var vm = new Vue({
         },
         // 表格选中方法
         toggleSelection:function(selection) {
-            console.log(selection);
             vm.checkIdList = selection;
         },
         // 提交
@@ -389,7 +373,6 @@ var vm = new Vue({
             vm.checkIdList.forEach(function (item) {
                 list.push(item.meteId)
             })
-            console.log(list);
             if(list.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -472,7 +455,6 @@ var vm = new Vue({
             vm.checkIdList1.forEach(function (item) {
                 list.push(item.meteId)
             })
-            console.log(list);
             if(list.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -522,7 +504,6 @@ var vm = new Vue({
         // 获取信息方法
         getFileInfo:function (fileId) {
             $.get(baseURL + "resource/resourcefield/info/"+fileId, function(r){
-                console.log(r);
                 vm.fileData = r.resourceField;
             });
         },
@@ -582,7 +563,6 @@ var vm = new Vue({
                     id:vm.resourceMeteData.meteId
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.resourceMeteData.fieldList = r.page.list;
                         vm.totalPage1 = r.page.totalCount;
@@ -596,7 +576,6 @@ var vm = new Vue({
         handleAvatarSuccess:function(res, file) {
             // vm.imageUrl = URL.createObjectURL(file.raw);
             // vm.file = file;
-            console.log(res);
             if(res.code == 0){
                 this.$message({
                     type: 'success',
@@ -617,7 +596,6 @@ var vm = new Vue({
             }else {
                 file.type = 'xls';
                 vm.fileData = file;
-                console.log(vm.fileData);
             }
         },
         handlePreview:function(file) {
@@ -631,7 +609,6 @@ var vm = new Vue({
             }else {
                 file.type = 'xls';
                 vm.fileData = file;
-                console.log(vm.fileData);
                 vm.inUp();
             }
         },
@@ -645,7 +622,6 @@ var vm = new Vue({
                     file:vm.fileData,
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         // vm.resourceMeteData.fieldList = r.page.list;
                         // vm.totalPage1 = r.page.totalPage;
@@ -665,7 +641,6 @@ var vm = new Vue({
         },
         // 表格选中方法
         toggleSelection1:function(selection) {
-            console.log(selection);
             vm.checkIdList1 = selection;
         },
         // 数据字典
@@ -679,7 +654,6 @@ var vm = new Vue({
                     type:type
                 },
                 success: function(r){
-                    console.log(r);
                     if(type == 'control_type'){
                         vm.controlTypeList = r;
                     }else if(type == 'data_type'){
@@ -708,7 +682,6 @@ var vm = new Vue({
                         // dataType: 'json',
                         data: JSON.stringify(list),
                         success: function(r){
-                            console.log(r);
                             if(r.code == 0){
                                 layer.close(index32);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -742,7 +715,6 @@ var vm = new Vue({
                         // dataType: 'json',
                         data: JSON.stringify(list),
                         success: function(r){
-                            console.log(r);
                             if(r.code == 0){
                                 layer.close(index31);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -761,7 +733,6 @@ var vm = new Vue({
         getHist:function (id) {
             var _this = this;
             $.get(baseURL + "xj/xjmetadata/historyInfo/"+id, function(r){
-                console.log(r);
                 if(r.hList.length == 0){
                     _this.$message({
                         message: '暂无历史版本',
