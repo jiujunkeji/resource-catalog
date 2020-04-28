@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
+import io.renren.common.utils.QueryPage;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
@@ -324,6 +325,7 @@ public class XjCatalogController extends AbstractController{
                 }
                 String sql = sqlBuf.substring(0,sqlBuf.length() - 2);
                 sql = sql + " FROM " + link.getTableName();
+                String countSql = "SELECT COUNT(*) FROM " + link.getTableName();
                 Config config = new Config();
                 config.setUsername(dataSource.getDsUsername());
                 config.setPassword(dataSource.getDsPassword());
@@ -340,7 +342,13 @@ public class XjCatalogController extends AbstractController{
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = JDBCUtils.queryJsonArray(Integer.parseInt(params.get("page").toString()),0,config,sql,null);
-                    return R.ok().put("list",jsonArray);
+                    int count = JDBCUtils.queryCount(countSql,config,null);
+                    QueryPage page = new QueryPage();
+                    page.setHeaderList(meteDataList);
+                    page.setDataList(jsonArray);
+                    page.setCurrPage(Integer.parseInt(params.get("page").toString()));
+                    page.setTotalCount(count);
+                    return R.ok().put("page",page);
                 } catch (SQLException e) {
                     e.printStackTrace();
                     return R.error("查询失败");
