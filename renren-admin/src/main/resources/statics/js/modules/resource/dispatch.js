@@ -146,8 +146,12 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-                ktrName:''
+                ktrName:'',
+                triggerCron:''
 			};
+            $("#cron").cronGen({
+                direction : 'bottom'
+            });
             // vm.getMenu();
 		},
 		update: function (id) {
@@ -350,7 +354,7 @@ var vm = new Vue({
                     // contentType: "application/json",
                     dataType: 'json',
                     data:{
-                        ktrId:id
+                        triggerId:id
                     },
                     // data:JSON.stringify(id),
                     success: function(r){
@@ -449,7 +453,27 @@ var vm = new Vue({
             })
         },
         cronC:function () {
+            layer.open({
+                type: 1,
+                title: 'cron表达式选择',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '560px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    console.log(vm.cronValue);
 
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
+            $("#cron").cronGen({
+                direction : 'right'
+            });
         }
 	},
 	created:function () {

@@ -224,7 +224,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">cron表达式</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式" readonly @click="cronC"/>
+                    <input type="text" id="cron" onchange="test()" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式" :readonly="look"/>
                 </div>
             </div>
 
@@ -238,7 +238,7 @@
     </div>
 
     <div id="cronDiv" style="display: none">
-        <input v-model="cronValue" id="cron" onchange="test()" />
+        <!--<input v-model="cronValue" id="cron" onchange="test()" />-->
     </div>
 
     <!-- 选择上级菜单 -->
