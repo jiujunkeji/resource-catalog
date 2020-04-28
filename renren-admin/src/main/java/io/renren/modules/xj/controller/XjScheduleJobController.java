@@ -116,14 +116,9 @@ public class XjScheduleJobController {
      */
     @RequestMapping("/run")
     //@RequiresPermissions("sys:schedule:run")
-    public R run(@RequestBody int triggerId){
+    public R run(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
-        ScheduleJobEntity se = new ScheduleJobEntity();
-        se.setParams(xe.getKtrId().toString());
-        se.setCronExpression(xe.getTriggerCron());
-        scheduleJobService.updateById(se);
-        xe.setStatus(scheduleJobService.run(xe.getScheduleId()));
-        xjScheduleJobService.updateById(xe);
+        scheduleJobService.run(xe.getScheduleId());
         return R.ok();
     }
 
@@ -132,7 +127,7 @@ public class XjScheduleJobController {
      */
     @RequestMapping("/pause")
     //@RequiresPermissions("sys:schedule:pause")
-    public R pause(@RequestBody int triggerId){
+    public R pause(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
         xe.setStatus(scheduleJobService.pause(xe.getScheduleId()));
         xjScheduleJobService.updateById(xe);
@@ -145,7 +140,7 @@ public class XjScheduleJobController {
      */
     @RequestMapping("/resume")
     //@RequiresPermissions("sys:schedule:resume")
-    public R resume(@RequestBody int triggerId){
+    public R resume(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
         xe.setStatus(scheduleJobService.resume(xe.getScheduleId()));
         xjScheduleJobService.updateById(xe);
