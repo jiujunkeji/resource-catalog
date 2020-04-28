@@ -112,6 +112,8 @@ public class XjCatalogEntity implements Serializable {
 	@TableField(exist = false)
 	private String parentName;
 	@TableField(exist = false)
+	private String meteSetName;
+	@TableField(exist = false)
 	private List<XjMeteSetMiddleEntity> meteDataList;
 	/**
 	 * 设置：目录id
@@ -380,5 +382,13 @@ public class XjCatalogEntity implements Serializable {
 
 	public void setMeteDataList(List<XjMeteSetMiddleEntity> meteDataList) {
 		this.meteDataList = meteDataList;
+	}
+
+	public String getMeteSetName() {
+		return meteSetName;
+	}
+
+	public void setMeteSetName(String meteSetName) {
+		this.meteSetName = meteSetName;
 	}
 }

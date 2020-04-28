@@ -51,6 +51,8 @@ public class XjCatalogController extends AbstractController{
     private XjCatalogLinkDataService linkDataService;
     @Autowired
     private XjDataSourceService dataSourceService;
+    @Autowired
+    private XjMetaDataSetService meteSetService;
     /**
      * 目录列表
      */
@@ -114,6 +116,8 @@ public class XjCatalogController extends AbstractController{
         }
         List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
         if(xjCatalog.getMeteSetId() != null && xjCatalog.getMeteSetId() != 0L){
+            XjMetaDataSetEntity metaDataSet = meteSetService.selectById(xjCatalog.getMeteSetId());
+            xjCatalog.setMeteSetName(metaDataSet.getCnName());
             meteDataList = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",xjCatalog.getMeteSetId()));
             if(meteDataList != null && meteDataList.size() > 0){
                 xjCatalog.setMeteDataList(meteDataList);
@@ -173,7 +177,8 @@ public class XjCatalogController extends AbstractController{
             }
             xjCatalogService.deleteById(catalogId);
             safeService.delete(new EntityWrapper<XjSafeEntity>().eq("catalog_id",catalogId));
-            // TODO: 2020-04-24 删除关联的数据连接信息
+            //删除关联的数据连接信息
+            linkDataService.delete(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",catalogId));
         }
 
         return R.ok();
