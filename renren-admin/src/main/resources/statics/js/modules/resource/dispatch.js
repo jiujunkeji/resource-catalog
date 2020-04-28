@@ -41,7 +41,7 @@ var vm = new Vue({
         h:0,
         comList:[],
         restaurants: [],
-        dataSourceList:[],
+        kettleList:[],
         look:false
 	},
 	methods: {
@@ -71,8 +71,7 @@ var vm = new Vue({
             vm.checkIdList = [];
             vm.checkIdList2 = [];
             selection.forEach(function(item,i){
-                vm.checkIdList.push(item.ktrId);
-                vm.checkIdList2.push(item.ktrId)
+                vm.checkIdList.push(item.triggerId);
             })
         },
         getMenu: function(menuId){
@@ -122,7 +121,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjktr/save',
+                        url: baseURL + 'xj/xjschedulejob/save',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -146,7 +145,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-
+                ktrName:''
 			};
             // vm.getMenu();
 		},
@@ -163,7 +162,7 @@ var vm = new Vue({
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjktr/update',
+                        url: baseURL + 'xj/xjschedulejob/update',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -243,7 +242,7 @@ var vm = new Vue({
                 layer.confirm('确定要删除选中的记录？', function(index1){
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "xj/xjktr/delete",
+                        url: baseURL + "xj/xjschedulejob/delete",
                         contentType: "application/json",
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
@@ -264,8 +263,8 @@ var vm = new Vue({
 
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "xj/xjktr/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.xjKtr;
+			$.get(baseURL + "xj/xjschedulejob/info/"+meteCategoryId, function(r){
+                vm.meteCategory = r.xjScheduleJob;
             });
 		},
 		reload: function (event) {
@@ -283,13 +282,11 @@ var vm = new Vue({
         getTableList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjktr/list',
+                url: baseURL + 'xj/xjschedulejob/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
-                    page:this.page,
-                    dsNam:this.q.name,
-                    dsType:this.q.type,
+                    page:this.page
                 },
                 success: function(r){
                     if(r.code === 0){
@@ -348,11 +345,63 @@ var vm = new Vue({
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
-                    url: baseURL + "xj/xjktr/run",
+                    url: baseURL + "xj/xjschedulejob/run",
                     // contentType: "application/json",
                     dataType: 'json',
                     data:{
                         ktrId:id
+                    },
+                    // data:JSON.stringify(id),
+                    success: function(r){
+                        if(r.code == 0){
+                            vm.reload();
+                            layer.close(index1);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+
+
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            });
+        },
+        // 暂停执行
+        implement:function (id) {
+            layer.confirm('确定要执行选中的记录？', function(index1){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + "xj/xjschedulejob/pause",
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data:{
+                        ktrId:id
+                    },
+                    // data:JSON.stringify(id),
+                    success: function(r){
+                        if(r.code == 0){
+                            vm.reload();
+                            layer.close(index1);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+
+
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
+                    }
+                });
+            });
+        },
+        // 恢复执行
+        implement:function (id) {
+            layer.confirm('确定要执行选中的记录？', function(index1){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + "xj/xjschedulejob/resume",
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data:{
+                        triggerId:id
                     },
                     // data:JSON.stringify(id),
                     success: function(r){
@@ -378,12 +427,12 @@ var vm = new Vue({
         getShujuyuanList:function () {
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjdatasource/list2',
+                url: baseURL + 'xj/xjktr/list2',
                 // contentType: "application/json",
                 dataType: 'json',
                 success: function(r){
                     if(r.code === 0){
-                        vm.dataSourceList = r.list;
+                        vm.kettleList = r.list;
                     }else{
                         alert(r.msg);
                     }
@@ -392,16 +441,15 @@ var vm = new Vue({
         },
         // 数据源改变
         dsChange:function (opt) {
-            vm.dataSourceList.forEach(function (item) {
+            vm.kettleList.forEach(function (item) {
                 if(item.dsId == opt){
-                    vm.meteCategory.ktrDsname = item.dsName
+                    vm.meteCategory.ktrName = item.ktrName
                 }
             })
         },
 	},
 	created:function () {
 	    this.getTableList();
-	    this.getBumen();
 	    this.getShujuyuanList()
     },
     mounted:function() {
