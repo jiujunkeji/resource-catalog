@@ -237,6 +237,9 @@ div.line .item>div.inp{
     color: #f56c6c;
     margin-right: 4px;
 }
+.el-popper[x-placement^=top]{
+    z-index: 10000000000!important;
+}
 
 
 *::-webkit-scrollbar {

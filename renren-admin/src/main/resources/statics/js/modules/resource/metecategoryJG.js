@@ -306,7 +306,7 @@ var vm = new Vue({
             }
         },
         // 收缩展开搜索
-        openSwitch:function () {
+        openSwitch1:function () {
             if(vm.open){
                 vm.open1 = false;
                 vm.openText1 = '收起筛选'
@@ -615,15 +615,23 @@ var vm = new Vue({
             console.log(vm.h1);
         },
         delUp:function () {
-            var arr =[];
-            vm.checkIdList1.forEach(function (item,i) {
-                vm.resourceMeteData.meteDataList.forEach(function (m,n) {
-                    if(m.meteId == item.meteId){
-                        vm.resourceMeteData.meteDataList.splice(n,1);
-                        return
-                    }
+            if(vm.checkIdList1.length == 0){
+                this.$message({
+                    message: '请选择一条记录',
+                    type: 'warning'
+                });
+            }else {
+                var arr =[];
+                vm.checkIdList1.forEach(function (item,i) {
+                    vm.resourceMeteData.meteDataList.forEach(function (m,n) {
+                        if(m.meteId == item.meteId){
+                            vm.resourceMeteData.meteDataList.splice(n,1);
+                            return
+                        }
+                    })
                 })
-            })
+            }
+
             // console.log(arr);
             // arr.forEach(function (item) {
             //     vm.resourceMeteData.meteDataList.splice(item,1)

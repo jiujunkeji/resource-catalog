@@ -313,7 +313,7 @@ public class XjCatalogController extends AbstractController{
                     //字段安全等级
                     Integer fieldSafeCode = mete.getSafeCode();
                     if(fieldSafeCode != null && fieldSafeCode < userSafeCode){
-                        sqlBuf.append("****** AS ").append(mete.getMeteEname()).append(", ");
+                        sqlBuf.append("'******' AS ").append(mete.getMeteEname()).append(", ");
                     }else{
                         if(StringUtils.isBlank(mete.getField())){
                             sqlBuf.append(mete.getMeteEname()).append(", ");
