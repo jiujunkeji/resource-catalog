@@ -39,35 +39,66 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
         String cnName = (String) params.get("cnName");
         String isDisabled=(String)params.get("isDisabled");
         Page<XjMetaDataEntity> page = null;
+        if(StringUtils.isNotBlank(isDisabled)){
+            if (StringUtils.isNotBlank(meteCategoryId)) {
+                if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                }
+            }else {
+                if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                } else {
+                    page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                    return new PageUtils(page);
+                }
+            }
+
+        }else{
         if (StringUtils.isNotBlank(meteCategoryId)) {
             if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             } else {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("mete_category_id", Long.valueOf(meteCategoryId)));
                 return new PageUtils(page);
             }
         } else {
             if (StringUtils.isNotBlank(meteNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
                 return new PageUtils(page);
             } else if (StringUtils.isNotBlank(cnName) && StringUtils.isBlank(meteNumber)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName));
                 return new PageUtils(page);
             } else if (StringUtils.isBlank(meteNumber) && StringUtils.isBlank(cnName)) {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().like("cn_name", cnName).and().eq("is_disabled", Integer.parseInt(isDisabled)));
-                return new PageUtils(page);
+                return queryPage(params);
             } else {
-                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber).and().eq("is_disabled", Integer.parseInt(isDisabled)));
+                page = this.selectPage(new Query<XjMetaDataEntity>(params).getPage(), new EntityWrapper<XjMetaDataEntity>().eq("mete_number", meteNumber));
                 return new PageUtils(page);
             }
-        }
+        }}
 
     }
 
