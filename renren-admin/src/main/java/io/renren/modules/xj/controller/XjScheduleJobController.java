@@ -75,6 +75,7 @@ public class XjScheduleJobController {
         scheduleJobEntity.setCreateTime(new Date());
         long sjId = scheduleJobService.save(scheduleJobEntity);
         xjScheduleJob.setStatus(0);
+        xjScheduleJob.setIsDelete(0);
         xjScheduleJob.setCreateTime(new Date());
         xjScheduleJob.setScheduleId(sjId);
         xjScheduleJobService.insert(xjScheduleJob);
