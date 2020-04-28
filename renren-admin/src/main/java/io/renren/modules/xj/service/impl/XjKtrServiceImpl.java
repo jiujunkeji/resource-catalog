@@ -19,6 +19,10 @@ import org.pentaho.di.repository.kdr.KettleDatabaseRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -45,14 +49,18 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
     }
 
     @Override
-    public PageUtils selectByname(Map<String, Object> params) {
-        String name = (String) params.get("ktrName");
-        Page<XjKtrEntity> page = this.selectPage(
-                new Query<XjKtrEntity>(params).getPage(),
-                new EntityWrapper<XjKtrEntity>().eq("ktr_name",name)
-        );
+    public List list2(Map<String, Object> params) {
+        return returnList(params);
+    }
 
-        return new PageUtils(page);
+    public static List  returnList(Map<String, Object> params) {
+        List list = new ArrayList();
+        Iterator iter = params.entrySet().iterator();  //获得map的Iterator
+        while(iter.hasNext()) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            list.add(entry.getValue());
+        }
+        return list;
     }
 
     @Override

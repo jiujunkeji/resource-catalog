@@ -6,6 +6,7 @@ import io.renren.modules.xj.entity.XjDataSourceEntity;
 import io.renren.modules.xj.entity.XjKtrEntity;
 import org.pentaho.di.core.exception.KettleException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Map;
 public interface XjKtrService extends IService<XjKtrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
-    PageUtils selectByname(Map<String, Object> params);
+    List list2(Map<String, Object> params);
 
     void kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception;
 }

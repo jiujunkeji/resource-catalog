@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjDataSourceEntity;
 import io.renren.modules.xj.service.XjDataSourceService;
@@ -52,6 +53,14 @@ public class XjKtrController {
         PageUtils page = xjKtrService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/list2")
+    public R list2(@RequestParam Map<String, Object> params){
+        EntityWrapper<XjKtrEntity> wrapper = new EntityWrapper<XjKtrEntity>();
+        List<XjKtrEntity> list = xjKtrService.selectList(wrapper);
+
+        return R.ok().put("list",list);
     }
 
     /**
