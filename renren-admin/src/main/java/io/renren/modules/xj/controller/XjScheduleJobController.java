@@ -30,7 +30,7 @@ import io.renren.common.utils.R;
  * @date 2020-04-28 15:21:11
  */
 @RestController
-@RequestMapping("resource/xjschedulejob")
+@RequestMapping("xj/xjschedulejob")
 public class XjScheduleJobController {
     @Autowired
     private XjScheduleJobService xjScheduleJobService;
