@@ -138,30 +138,7 @@
             <button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>
             <button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>
             <button :class="tab == 3 ? 'el-button active' : 'el-button'" @click="tabClick(3)">审核失败</button>
-            <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-                <span class="title">
-                    <i class="el-icon-search"></i>
-                    筛选查询
-                </span>
-                    <div class="right">
-                        <el-button size="medium" type="primary" @click="openSwitch" :data-open="open1">{{openText}}</el-button>
-                    </div>
 
-                </div>
-                <div class="switchIn">
-                    <span>
-                        <label>编号：</label>
-                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q.meteSetNumber" >
-                    </span>
-                    <span>
-                        <label>中文名称：</label>
-                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q.cnName" >
-                    </span>
-                </div>
-                <button class="clean" @click="clean">重置</button>
-                <button class="look" @click="query">查询</button>
-            </div>
             <div class="divBox" style="margin-bottom: 0;">
 
                 <div class="grid-btn">

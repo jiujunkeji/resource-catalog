@@ -43,7 +43,8 @@ var vm = new Vue({
         page:1,
         pageSize:10,
         tab:0,
-        catalogId:null
+        catalogId:null,
+        headerList:[]
     },
     watch: {
         filterText:function(val) {
@@ -218,16 +219,13 @@ var vm = new Vue({
                 data: {
                     page:this.page,
                     catalogId:this.catalogId,
-                    resourceTitle:this.q.resourceTitle,
-                    resourceSign:this.q.resourceSign,
-                    keyword:this.q.keyword,
-                    metedataIdentifier:this.q.metedataIdentifier,
                 },
                 success: function(r){
                     if(r.code === 0){
                         console.log(r);
-                        vm.tableList = r.page.list;
+                        vm.tableList = r.page.dataList;
                         vm.totalPage = r.page.totalCount;
+                        vm.headerList = r.page.headerList
                     }else{
                         alert(r.msg);
                     }

@@ -161,7 +161,7 @@
                 <button class="clean" @click="clean">重置</button>
                 <button class="look" @click="query">查询</button>
             </div>
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" :style="open ? 'height:calc(100% - 55px)' : 'height:calc(100% - '+(h+10)+'px)'">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -441,7 +441,7 @@
                 <button class="look" @click="query1">查询</button>
             </div>
 
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" :style="open1 ? 'height:calc(100% - 65px)' : 'height:calc(100% - '+(h1+20)+'px)'">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -562,40 +562,6 @@
                     prop="createDate"
                     label="创建时间"
                     width="110">
-            </el-table-column>
-            <el-table-column
-                    label="状态"
-                    width="90">
-                <template slot-scope="scope">
-                    <el-tag
-                            v-if="scope.row.reviewState == 0"
-                            size="small"
-                            type="warning"
-                            effect="dark">
-                        待提交
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.reviewState == 1"
-                            size="small"
-                            type="warning"
-                            effect="dark">
-                        待审核
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.reviewState == 2"
-                            size="small"
-                            type="success"
-                            effect="dark">
-                        通过
-                    </el-tag>
-                    <el-tag
-                            v-if="scope.row.reviewState == 3"
-                            size="small"
-                            type="danger"
-                            effect="dark">
-                        未通过
-                    </el-tag>
-                </template>
             </el-table-column>
             <el-table-column
                     label="操作"

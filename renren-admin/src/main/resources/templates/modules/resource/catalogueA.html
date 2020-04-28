@@ -38,7 +38,9 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
+                transition: height 1s;
                 /*height: calc(100% - 50px);*/
+                /*margin-bottom: 0;*/
             }
             div.switchIn>span{
                 margin: 0;
@@ -191,7 +193,7 @@
                 <button class="clean" @click="clean">重置</button>
                 <button class="look" @click="query">查询</button>
             </div>
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" :style="open ? 'height:calc(100% - 55px)' : 'height:calc(100% - '+(h+10)+'px)'">
 
                 <div class="grid-btn">
                     <span class="title">

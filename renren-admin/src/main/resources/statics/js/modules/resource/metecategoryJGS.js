@@ -472,7 +472,7 @@ var vm = new Vue({
                 success: function(r){
                     console.log(r);
                     if(r.code === 0){
-                        vm.tab = 1;
+                        vm.tab = 2;
                         vm.page = 1;
                         vm.getTableList();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});

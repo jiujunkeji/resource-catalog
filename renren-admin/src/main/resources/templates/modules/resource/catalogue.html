@@ -38,6 +38,8 @@
                 width: calc(100% - 230px);
             }
             .listCon .divBox{
+                transition: height 1s;
+                /*margin-bottom: 0;*/
                 /*height: calc(100% - 50px);*/
             }
             div.switchIn>span{
@@ -155,7 +157,7 @@
                 <button class="clean" @click="clean">重置</button>
                 <button class="look" @click="query">查询</button>
             </div>
-            <div class="divBox" style="margin-bottom: 0;">
+            <div class="divBox" :style="open ? 'height:calc(100% - 55px)' : 'height:calc(100% - '+(h+10)+'px)'">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -423,7 +425,7 @@
                     style="width: 100%">
                 </el-table-column>
                 <el-table-column
-                        prop="cnName"
+                        prop="meteNumber"
                         label="编号"
                         width="">
                 </el-table-column>

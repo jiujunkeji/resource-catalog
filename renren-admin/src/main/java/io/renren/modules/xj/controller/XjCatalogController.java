@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.annotation.SysLog;
+import io.renren.common.utils.QueryPage;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
@@ -296,7 +297,7 @@ public class XjCatalogController extends AbstractController{
         String catalogId = (String)params.get("catalogId");
         XjCatalogEntity catalog = xjCatalogService.selectById(catalogId);
         XjCatalogLinkDataEntity link = linkDataService.selectOne(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",catalogId));
-        if(link != null){
+        if(link == null){
             return R.error("该目录进行数据关联");
         }
         XjDataSourceEntity dataSource = dataSourceService.selectById(link.getDataSourceId());
@@ -304,17 +305,27 @@ public class XjCatalogController extends AbstractController{
             List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
             meteDataList = meteSetMiddleService.selectList(new EntityWrapper<XjMeteSetMiddleEntity>().eq("mete_set_id",catalog.getMeteSetId()));
             if(meteDataList != null && meteDataList.size() > 0){
+                //当前用户安全等级
+                int userSafeCode = getUser().getSafeCode();
                 StringBuffer sqlBuf =   new StringBuffer();
                 sqlBuf.append("SELECT ");
                 for(XjMeteSetMiddleEntity mete : meteDataList){
-                    if(StringUtils.isBlank(mete.getField())){
-                        sqlBuf.append(mete.getMeteEname()).append(" ");
+                    //字段安全等级
+                    Integer fieldSafeCode = mete.getSafeCode();
+                    if(fieldSafeCode != null && fieldSafeCode < userSafeCode){
+                        sqlBuf.append("'******' AS ").append(mete.getMeteEname()).append(", ");
                     }else{
-                        sqlBuf.append(mete.getField()).append(" AS ").append(mete.getMeteEname()).append(" ");
+                        if(StringUtils.isBlank(mete.getField())){
+                            sqlBuf.append(mete.getMeteEname()).append(", ");
+                        }else{
+                            sqlBuf.append(mete.getField()).append(" AS ").append(mete.getMeteEname()).append(", ");
+                        }
                     }
+
                 }
-                sqlBuf.append("FROM ").append(link.getTableName());
-                String sql = sqlBuf.toString();
+                String sql = sqlBuf.substring(0,sqlBuf.length() - 2);
+                sql = sql + " FROM " + link.getTableName();
+                String countSql = "SELECT COUNT(*) FROM " + link.getTableName();
                 Config config = new Config();
                 config.setUsername(dataSource.getDsUsername());
                 config.setPassword(dataSource.getDsPassword());
@@ -331,7 +342,13 @@ public class XjCatalogController extends AbstractController{
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = JDBCUtils.queryJsonArray(Integer.parseInt(params.get("page").toString()),0,config,sql,null);
-                    System.out.println(jsonArray.toString());
+                    int count = JDBCUtils.queryCount(countSql,config,null);
+                    QueryPage page = new QueryPage();
+                    page.setHeaderList(meteDataList);
+                    page.setDataList(jsonArray);
+                    page.setCurrPage(Integer.parseInt(params.get("page").toString()));
+                    page.setTotalCount(count);
+                    return R.ok().put("page",page);
                 } catch (SQLException e) {
                     e.printStackTrace();
                     return R.error("查询失败");
@@ -342,8 +359,5 @@ public class XjCatalogController extends AbstractController{
         }else{
             return R.error("该目录未关联元数据集");
         }
-
-        PageUtils page = xjCatalogService.queryPage(params);
-        return R.ok().put("page",page);
     }
 }
