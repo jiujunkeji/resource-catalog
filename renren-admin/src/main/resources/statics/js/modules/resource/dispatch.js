@@ -42,7 +42,8 @@ var vm = new Vue({
         comList:[],
         restaurants: [],
         kettleList:[],
-        look:false
+        look:false,
+        cronValue:''
 	},
 	methods: {
 		query: function () {
@@ -367,7 +368,7 @@ var vm = new Vue({
             });
         },
         // 暂停执行
-        implement:function (id) {
+        implement1:function (id) {
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
@@ -393,7 +394,7 @@ var vm = new Vue({
             });
         },
         // 恢复执行
-        implement:function (id) {
+        implement2:function (id) {
             layer.confirm('确定要执行选中的记录？', function(index1){
                 $.ajax({
                     type: "get",
@@ -447,6 +448,9 @@ var vm = new Vue({
                 }
             })
         },
+        cronC:function () {
+
+        }
 	},
 	created:function () {
 	    this.getTableList();
