@@ -40,6 +40,8 @@ import java.util.*;
 public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, ScheduleJobEntity> implements ScheduleJobService {
 	@Autowired
     private Scheduler scheduler;
+	@Autowired
+	private ScheduleJobService scheduleJobService;
 	
 	/**
 	 * 项目启动时，初始化定时器
@@ -111,30 +113,26 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
     
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public void run(Long[] jobIds) {
-    	for(Long jobId : jobIds){
+    public int run(Long jobId) {
     		ScheduleUtils.run(scheduler, this.selectById(jobId));
-    	}
+    		ScheduleJobEntity sj = scheduleJobService.selectById(jobId);
+    		return sj.getStatus();
     }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public void pause(Long[] jobIds) {
-        for(Long jobId : jobIds){
-    		ScheduleUtils.pauseJob(scheduler, jobId);
-    	}
-        
-    	updateBatch(jobIds, Constant.ScheduleStatus.PAUSE.getValue());
+    public int pause(Long jobIds) {
+    		ScheduleUtils.pauseJob(scheduler, jobIds);
+		    ScheduleJobEntity sj = scheduleJobService.selectById(jobIds);
+		    return sj.getStatus();
     }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public void resume(Long[] jobIds) {
-    	for(Long jobId : jobIds){
-    		ScheduleUtils.resumeJob(scheduler, jobId);
-    	}
-
-    	updateBatch(jobIds, Constant.ScheduleStatus.NORMAL.getValue());
+    public int resume(Long jobIds) {
+    		ScheduleUtils.resumeJob(scheduler, jobIds);
+		    ScheduleJobEntity sj = scheduleJobService.selectById(jobIds);
+		    return sj.getStatus();
     }
     
 }
