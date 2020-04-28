@@ -103,6 +103,9 @@
                 color: #fff;
                 border-color: #2593f3;
             }
+            #addUp{
+                display: flex;
+            }
             #addUp .el-select .el-input__inner{
                 background: #f1f4fb;
                 border-color: #f1f4fb;
@@ -347,14 +350,16 @@
                 <div class="item">
                     <label>元数据集</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.meteSetId" placeholder="请选择" @change="getyuanshujuList" :disabled="look">
-                            <el-option
-                                    v-for="item in ysjjList"
-                                    :key="item.meteSetId"
-                                    :label="item.cnName"
-                                    :value="item.meteSetId">
-                            </el-option>
-                        </el-select>
+                        <input v-if="!look" type="text" class="form-control" v-model="resourceMeteData.meteSetName" @click="getYsj" placeholder="选择元数据集" readonly="readonly"/>
+                        <input v-if="look" type="text" class="form-control" v-model="resourceMeteData.meteSetName" placeholder="元数据集" readonly="readonly"/>
+                        <!--<el-select v-model="resourceMeteData.meteSetId" placeholder="请选择" :disabled="look">-->
+                            <!--<el-option-->
+                                    <!--v-for="item in ysjjList"-->
+                                    <!--:key="item.meteSetId"-->
+                                    <!--:label="item.cnName"-->
+                                    <!--:value="item.meteSetId">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
                     </div>
                 </div>
                 <div class="item">
@@ -482,6 +487,110 @@
         </div>
     </div>
 
+    <div id="addUp" class="panel panel-default" style="display: none;height: calc(100% - 20px);">
+        <div class="objectList" style="height: calc(100% - 10px);">
+            <div class="grid-btn">
+                <span class="title">
+                    <i class="el-icon-edit-outline"></i>
+                    对象列表
+                </span>
+            </div>
+
+            <el-input
+                    placeholder="输入关键字进行过滤"
+                    v-model="filterText">
+            </el-input>
+            <el-tree class="filter-tree" :data="menuList1" :props="props"
+                     :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
+            </el-tree>
+        </div>
+        <div class="listCon" style="">
+            <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
+            <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
+            <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
+            <div :class="open1 ? 'divBox open' : 'divBox'" :style="open1 ? 'height:45px' : 'height:'+h1+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn up">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteSetNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean1">重置</button>
+                <button class="look" @click="query1">查询</button>
+            </div>
+
+            <div class="divBox" :style="open1 ? 'height:calc(100% - 65px)' : 'height:calc(100% - '+(h1+20)+'px)'">
+
+                <div class="grid-btn">
+                    <span class="title">
+                        <i class="el-icon-s-operation"></i>
+                        数据列表
+                    </span>
+                    <div class="right">
+
+                    </div>
+                </div>
+                <el-table
+                        :data="tableList1"
+                        ref="multipleTable"
+                        highlight-current-row
+                        @current-change="handleCurrentChange"
+                        border
+                        stripe
+                        style="width: 100%">
+                    <el-table-column
+                            prop="meteSetNumber"
+                            label="编号"
+                            width="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="cnName"
+                            label="中文名称"
+                            width="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="euName"
+                            label="英文名称"
+                            width="130">
+                    </el-table-column>
+                    <el-table-column
+                            prop="euShortName"
+                            label="英文短名"
+                            width="110">
+                    </el-table-column>
+                    <el-table-column
+                            prop="createDate"
+                            label="创建时间"
+                            width="110">
+                    </el-table-column>
+                </el-table>
+                <br>
+                <el-pagination
+                        background
+                        pager-count="1"
+                        :current-page="page1"
+                        layout="prev, pager, next, jumper,total,->,slot"
+                        @current-change="layerPage1"
+                        :total="totalPage1">
+                </el-pagination>
+
+            </div>
+        </div>
+    </div>
 
     <!-- 选择上级菜单 -->
     <div id="menuLayer" style="display: none;padding:10px;">

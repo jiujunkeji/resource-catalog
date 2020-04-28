@@ -64,13 +64,10 @@ var vm = new Vue({
         },
         // 表格选中方法
         toggleSelection:function(selection) {
-            console.log(selection);
             vm.checkIdList = [];
             selection.forEach(function(item,i){
                 vm.checkIdList.push(item.meteCategoryId)
             })
-            console.log(vm.checkIdList);
-
         },
 
         menuTree: function(){
@@ -86,7 +83,6 @@ var vm = new Vue({
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
-                    console.log(node);
                     //选择上级菜单
                     vm.meteCategory.parentId = node[0].meteCategoryId;
                     vm.meteCategory.parentName = node[0].name;
@@ -230,9 +226,6 @@ var vm = new Vue({
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "xj/xjmetecategory/info/"+meteCategoryId, function(r){
                 vm.meteCategory = r.xjMeteCategory;
-                console.log('修改');
-                console.log(r);
-                console.log(vm.meteCategory)
             });
 		},
 		reload: function (event) {
@@ -259,7 +252,6 @@ var vm = new Vue({
                     metaCategoryNumber:this.q.metaCategoryNumber,
                 },
                 success: function(r){
-                    console.log(r);
                     // vm.tableList = r;
                     if(r.code === 0){
                         vm.tableList = r.page.list;
@@ -272,7 +264,6 @@ var vm = new Vue({
         },
         // 分页
         layerPage:function (currentPage) {
-            console.log(currentPage);
             vm.page = currentPage;
             vm.getTableList();
         },
@@ -292,7 +283,6 @@ var vm = new Vue({
                         // dataType: 'json',
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
-                            console.log(r);
                             if(r.code == 0){
                                 layer.close(index31);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -324,7 +314,6 @@ var vm = new Vue({
                         // dataType: 'json',
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
-                            console.log(r);
                             if(r.code == 0){
                                 layer.close(index32);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -342,7 +331,6 @@ var vm = new Vue({
 	created:function () {
 	    this.getTableList();
         // $.get(baseURL + "resource/metecategory/list", function(r){
-        //     console.log(r);
         // });
     }
 });

@@ -61,7 +61,6 @@ var vm = new Vue({
         },
         // 表格选中方法
         toggleSelection:function(selection) {
-            console.log(selection);
             vm.checkIdList = [];
             selection.forEach(function(item,i){
                 vm.checkIdList.push(item.dsId)
@@ -70,7 +69,6 @@ var vm = new Vue({
         getMenu: function(menuId){
             //加载菜单树
             $.get(baseURL + "resource/metecategory/list", function(r){
-                console.log(r);
                 // r.push({
                 //     parentId:-1,
                 //     meteCategoryId:0,
@@ -79,7 +77,6 @@ var vm = new Vue({
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r);
                 var node = ztree.getNodeByParam("meteCategoryId", vm.meteCategory.parentId);
                 ztree.selectNode(node);
-                console.log(node);
                 // vm.menu.parentName = node.name;
             })
         },
@@ -96,7 +93,6 @@ var vm = new Vue({
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
-                    console.log(node);
                     //选择上级菜单
                     vm.meteCategory.parentId = node[0].meteCategoryId;
                     vm.meteCategory.parentName = node[0].name;
@@ -235,8 +231,6 @@ var vm = new Vue({
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "xj/xjdatasource/info/"+meteCategoryId, function(r){
                 vm.meteCategory = r.xjDataSource;
-                console.log('修改')
-                console.log(vm.meteCategory)
             });
 		},
 		reload: function (event) {
@@ -263,7 +257,6 @@ var vm = new Vue({
                     dsType:this.q.type,
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
@@ -275,7 +268,6 @@ var vm = new Vue({
         },
         // 分页
         layerPage:function (currentPage) {
-            console.log(currentPage);
             vm.page = currentPage;
             vm.getTableList();
         },
@@ -290,7 +282,6 @@ var vm = new Vue({
                     page:1,
                 },
                 success: function(r){
-                    console.log(r);
                     if(r.code === 0){
                         vm.comList = r.list;
                     }else{
@@ -300,12 +291,10 @@ var vm = new Vue({
             });
         },
         querySearch:function(queryString, cb) {
-		    console.log(queryString);
             var restaurants = this.restaurants;
             var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
             // 调用 callback 返回建议列表的数据
             cb(results);
-            console.log(results);
         },
         createFilter:function(queryString) {
             return (restaurant) => {
@@ -329,14 +318,12 @@ var vm = new Vue({
             ]
         },
         handleSelect:function(item) {
-            console.log(item);
         }
 	},
 	created:function () {
 	    this.getTableList();
 	    this.getBumen();
         // $.get(baseURL + "resource/metecategory/list", function(r){
-        //     console.log(r);
         // });
     },
     mounted:function() {

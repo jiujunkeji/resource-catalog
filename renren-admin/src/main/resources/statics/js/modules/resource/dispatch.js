@@ -24,21 +24,25 @@ var vm = new Vue({
 	data:{
         q: {
             name:'',
-            metaCategorySetNumber:''
+            bumen:''
         },
 		showList: true,
 		title: null,
 		meteCategory: {
-            parentId:null,
-            parentName:''
+
 		},
         tableList:[],
         totalPage:0,
         page:1,
         checkIdList:[],
+        checkIdList2:[],
         open:true,
         openText:'展开筛选',
         h:0,
+        comList:[],
+        restaurants: [],
+        dataSourceList:[],
+        look:false
 	},
 	methods: {
 		query: function () {
@@ -58,15 +62,17 @@ var vm = new Vue({
         clean:function () {
             vm.q = {
                 name:'',
-                metaCategorySetNumber:''
+                bumen:''
             };
             vm.getTableList();
         },
         // 表格选中方法
         toggleSelection:function(selection) {
             vm.checkIdList = [];
+            vm.checkIdList2 = [];
             selection.forEach(function(item,i){
-                vm.checkIdList.push(item.meteCategorySetId)
+                vm.checkIdList.push(item.ktrId);
+                vm.checkIdList2.push(item.ktrId)
             })
         },
         getMenu: function(menuId){
@@ -109,14 +115,14 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '560px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/save',
+                        url: baseURL + 'xj/xjktr/save',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -140,10 +146,9 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-                parentId:null,
-                parentName:''
+
 			};
-            vm.getMenu();
+            // vm.getMenu();
 		},
 		update: function (id) {
             layer.open({
@@ -151,14 +156,14 @@ var vm = new Vue({
                 title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '560px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/update',
+                        url: baseURL + 'xj/xjktr/update',
                         contentType: "application/json",
                         data: JSON.stringify(vm.meteCategory),
                         success: function(r){
@@ -181,13 +186,37 @@ var vm = new Vue({
             vm.title = "修改";
             
             vm.getInfo(id);
-            vm.getMenu();
+            // vm.getMenu();
 		},
+        // 查看
+        lookC:function (id) {
+            layer.open({
+                type: 1,
+                title: '详情',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '560px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['关闭'],
+                btn1:function (index) {
+                    vm.look = false;
+                    layer.close(index)
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
+            vm.showList = false;
+            vm.title = "查看";
+            vm.look= true;
+
+            vm.getInfo(id);
+        },
 		saveOrUpdate: function (event) {
-            if(vm.validator()){
-                return ;
-            }
-			var url = vm.meteCategory.meteCategorySetId == null ? "xj/xjmetesetcategory/save" : "xj/xjmetesetcategory/update";
+
+			var url = vm.meteCategory.ktrId == null ? "xj/xjktr/save" : "xj/xjktr/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -214,7 +243,7 @@ var vm = new Vue({
                 layer.confirm('确定要删除选中的记录？', function(index1){
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "xj/xjmetesetcategory/delete",
+                        url: baseURL + "xj/xjktr/delete",
                         contentType: "application/json",
                         data: JSON.stringify(vm.checkIdList),
                         success: function(r){
@@ -235,8 +264,8 @@ var vm = new Vue({
 
 		},
 		getInfo: function(meteCategoryId){
-			$.get(baseURL + "xj/xjmetesetcategory/info/"+meteCategoryId, function(r){
-                vm.meteCategory = r.xjMeteSetCategory;
+			$.get(baseURL + "xj/xjktr/info/"+meteCategoryId, function(r){
+                vm.meteCategory = r.xjKtr;
             });
 		},
 		reload: function (event) {
@@ -252,16 +281,15 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
-		    var _this = this;
             $.ajax({
                 type: "get",
-                url: baseURL + 'xj/xjmetesetcategory/queryList',
+                url: baseURL + 'xj/xjktr/list',
                 // contentType: "application/json",
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name,
-                    metaCategorySetNumber:this.q.metaCategorySetNumber,
+                    dsNam:this.q.name,
+                    dsType:this.q.type,
                 },
                 success: function(r){
                     if(r.code === 0){
@@ -278,71 +306,106 @@ var vm = new Vue({
             vm.page = currentPage;
             vm.getTableList();
         },
-        //启用
-        openC:function () {
-            if(vm.checkIdList.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
-            }else {
-                layer.confirm('确定要启动选中的分类？', function(index31){
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/updateEnabledState',
-                        contentType: "application/json",
-                        // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
-                        success: function(r){
-                            if(r.code == 0){
-                                layer.close(index31);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                                vm.getTableList();
-                            }else {
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
+        // 获取部门
+        getBumen:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'resource/organisationinfo/select',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:1,
+                },
+                success: function(r){
+                    if(r.code === 0){
+                        vm.comList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        loadAll:function () {
+            return [
+                {'value':'GBase'},
+                {'value':'mysql'},
+                {'value':'xml'},
+                {'value':'Excel'},
+                {'value':'txt'},
+                {'value':'WebServices'},
+                {'value':'Teradata'},
+                {'value':'Hive'},
+                {'value':'GlusterFS'},
+                {'value':'HBase'},
+                {'value':'Greenplum'},
+                {'value':'Vertica'},
+            ]
+        },
+        handleSelect:function(item) {
+        },
+        // 执行
+        implement:function (id) {
+            layer.confirm('确定要执行选中的记录？', function(index1){
+                $.ajax({
+                    type: "get",
+                    url: baseURL + "xj/xjktr/run",
+                    // contentType: "application/json",
+                    dataType: 'json',
+                    data:{
+                        ktrId:id
+                    },
+                    // data:JSON.stringify(id),
+                    success: function(r){
+                        if(r.code == 0){
+                            vm.reload();
+                            layer.close(index1);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
+
+                        }else{
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
-                    });
-                })
-            }
-
+                    }
+                });
+            });
+        },
+        // 下载
+        down:function (name) {
+            window.location.href = baseURL + "xj/xjktr/downTemplate?ktrName="+name
 
         },
-        // 禁用
-        closeC:function () {
-            if(vm.checkIdList.length == 0){
-                this.$message({
-                    message: '请选择一条记录',
-                    type: 'warning'
-                });
-            }else {
-                layer.confirm('确定要禁用选中的分类？', function(index32){
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/updateDisabledState',
-                        contentType: "application/json",
-                        // dataType: 'json',
-                        data: JSON.stringify(vm.checkIdList),
-                        success: function(r){
-                            if(r.code == 0){
-                                layer.close(index32);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                                vm.getTableList();
-                            }else {
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
-                            }
-                        }
-                    });
-                })
-            }
-
-        }
+        // 获取数据源表格列表
+        getShujuyuanList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjdatasource/list2',
+                // contentType: "application/json",
+                dataType: 'json',
+                success: function(r){
+                    if(r.code === 0){
+                        vm.dataSourceList = r.list;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 数据源改变
+        dsChange:function (opt) {
+            vm.dataSourceList.forEach(function (item) {
+                if(item.dsId == opt){
+                    vm.meteCategory.ktrDsname = item.dsName
+                }
+            })
+        },
 	},
 	created:function () {
 	    this.getTableList();
-        // $.get(baseURL + "resource/metecategory/list", function(r){
-        // });
+	    this.getBumen();
+	    this.getShujuyuanList()
+    },
+    mounted:function() {
+        this.restaurants = this.loadAll();
     }
 });
 

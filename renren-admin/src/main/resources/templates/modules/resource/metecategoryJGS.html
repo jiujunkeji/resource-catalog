@@ -235,13 +235,12 @@
                             label="操作"
                             align="center"
                             header-align="center"
-                            v-if="tab == 1 || tab == 3"
-                            width="200">
+                            width="220">
                         <template slot-scope="scope">
                             <!--<i v-if="scope.row.reviewState" class="el-icon-edit" @click="update(scope.row.meteSetId)" title="修改"></i>-->
                             <!--<span style="color: #ccc;display: inline-block;margin: 0 6px">|</span>-->
                             <!--<i class="el-icon-delete" @click="del(scope.row.meteSetId)" title="删除"></i>-->
-                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)" v-if="tab == 3" title="编辑"></i>
+                            <i class="el-icon-edit" @click="update(scope.row.meteSetId)" v-if="tab == 3 || tab == 0" title="编辑"></i>
                             <el-button v-if="tab == 1" type="text" @click="agree(scope.row.meteSetId)">通过</el-button>
                             <span v-if="tab == 1 || tab == 3" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
                             <el-button v-if="tab == 1" type="text" @click="refuse(scope.row.meteSetId)">拒绝</el-button>
@@ -250,6 +249,8 @@
                             <i class="el-icon-document" @click="getoptionList(scope.row.meteSetId)" v-if="tab == 3" title="审核记录"></i>
                             <span v-if="tab == 1" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
                             <el-button v-if="tab == 1" type="text" @click="revoke(scope.row.meteSetId)">撤回</el-button>
+                            <span v-if="tab == 1 " style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                            <el-button v-if="tab == 1 || tab == 2" type="text" @click="lookC(scope.row.meteSetId)">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -285,13 +286,13 @@
                 <div class="item">
                     <label>编号</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.meteSetNumber" placeholder="编号" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>分类名称</label>
                     <div class="inp">
-                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择">
+                        <el-select v-model="resourceMeteData.meteCategorySetId" placeholder="请选择" :disabled="look">
                             <el-option
                                     v-for="item in fenlSelect"
                                     :key="item.id"
@@ -304,21 +305,22 @@
                 <div class="item">
                     <label>中文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称" :readonly="look"/>
                     </div>
                 </div>
+
             </div>
             <div class="line">
                 <div class="item">
                     <label>英文名称</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item">
                     <label>英文短名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item"></div>
@@ -331,8 +333,8 @@
                     元数据元素或实体列表
                 </span>
                 <div class="right">
-                    <el-button size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
-                    <el-button size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
+                    <el-button v-if="!look" size="medium" type="primary" @click="addUp">新增</el-button>&nbsp;&nbsp;
+                    <el-button v-if="!look" size="medium" type="primary" @click="delUp">删除</el-button>&nbsp;&nbsp;
 
 
                 </div>
@@ -406,7 +408,32 @@
             <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
             <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->
             <!--<button :class="tab == 2 ? 'el-button active' : 'el-button'" @click="tabClick(2)">审核通过</button>-->
-            <div class="divBox" style="margin-bottom: 0;height: calc(100% - 10px);">
+            <div :class="open1 ? 'divBox open' : 'divBox'" :style="open1 ? 'height:45px' : 'height:'+h1+'px'">
+                <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
+                <span class="title">
+                    <i class="el-icon-search"></i>
+                    筛选查询
+                </span>
+                    <div class="right">
+                        <el-button size="medium" type="primary" @click="openSwitch1" :data-open="open1">{{openText1}}</el-button>
+                    </div>
+
+                </div>
+                <div class="switchIn up">
+                    <span>
+                        <label>编号：</label>
+                        <input class="el-input__inner" type="text" placeholder="编号" v-model="q1.meteNumber" >
+                    </span>
+                    <span>
+                        <label>中文名称：</label>
+                        <input class="el-input__inner" type="text" placeholder="中文名称" v-model="q1.cnName" >
+                    </span>
+                </div>
+                <button class="clean" @click="clean1">重置</button>
+                <button class="look" @click="query1">查询</button>
+            </div>
+
+            <div class="divBox" :style="open1 ? 'height:calc(100% - 65px)' : 'height:calc(100% - '+(h1+20)+'px)'">
 
                 <div class="grid-btn">
                     <span class="title">
@@ -422,7 +449,7 @@
                         :data="tableList1"
                         border
                         stripe
-                        @selection-change="toggleSelection2"
+                        @select="toggleSelection2"
                         style="width: 100%">
                     <el-table-column
                             type="selection"
@@ -453,26 +480,6 @@
                             label="更新时间"
                             width="110">
                     </el-table-column>
-                    <el-table-column
-                            label="是否禁用"
-                            width="90">
-                        <template slot-scope="scope">
-                            <el-tag
-                                    v-if="scope.row.isDisabled == 0"
-                                    size="small"
-                                    type="success"
-                                    effect="dark">
-                                否
-                            </el-tag>
-                            <el-tag
-                                    v-if="scope.row.isDisabled == 1"
-                                    size="small"
-                                    type="danger"
-                                    effect="dark">
-                                是
-                            </el-tag>
-                        </template>
-                    </el-table-column>
                 </el-table>
                 <br>
                 <el-pagination
@@ -480,7 +487,7 @@
                         pager-count="1"
                         :current-page="page1"
                         layout="prev, pager, next, jumper,total,->,slot"
-                        @current-change="layerPage"
+                        @current-change="layerPage1"
                         :total="totalPage1">
                 </el-pagination>
 
