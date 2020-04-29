@@ -115,11 +115,14 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '560px'],
+                area: ['562px', '700px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
+                    console.log($('.cronDiv>.input-group>input').val());
+                    vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
+
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjschedulejob/save',
@@ -128,6 +131,7 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code === 0){
                                 vm.reload();
+                                $('.col-sm-10.cronDiv .input-group').remove();
                                 layer.close(index);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
@@ -160,11 +164,13 @@ var vm = new Vue({
                 title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '560px'],
+                area: ['562px', '700px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
+                    vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
+
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjschedulejob/update',
@@ -173,6 +179,7 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code === 0){
                                 vm.reload();
+                                $('.col-sm-10.cronDiv .input-group').remove();
                                 layer.close(index);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
@@ -190,6 +197,9 @@ var vm = new Vue({
             vm.title = "修改";
             
             vm.getInfo(id);
+            $("#cron").cronGen({
+                direction : 'bottom'
+            });
             // vm.getMenu();
 		},
         // 查看
@@ -270,6 +280,7 @@ var vm = new Vue({
 		getInfo: function(meteCategoryId){
 			$.get(baseURL + "xj/xjschedulejob/info/"+meteCategoryId, function(r){
                 vm.meteCategory = r.xjScheduleJob;
+                $('.cronDiv>.input-group>input').val(vm.meteCategory.triggerCron)
             });
 		},
 		reload: function (event) {
@@ -380,7 +391,7 @@ var vm = new Vue({
                     // contentType: "application/json",
                     dataType: 'json',
                     data:{
-                        ktrId:id
+                        triggerId:id
                     },
                     // data:JSON.stringify(id),
                     success: function(r){
@@ -446,8 +457,9 @@ var vm = new Vue({
         },
         // 数据源改变
         dsChange:function (opt) {
+		    console.log(opt)
             vm.kettleList.forEach(function (item) {
-                if(item.dsId == opt){
+                if(item.ktrId == opt){
                     vm.meteCategory.ktrName = item.ktrName
                 }
             })
@@ -463,7 +475,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['确定','取消'],
                 btn1:function (index) {
-                    console.log(vm.cronValue);
+
 
                 },
                 btn2:function () {
@@ -474,6 +486,9 @@ var vm = new Vue({
             $("#cron").cronGen({
                 direction : 'right'
             });
+        },
+        test:function (val) {
+            console.log(val)
         }
 	},
 	created:function () {

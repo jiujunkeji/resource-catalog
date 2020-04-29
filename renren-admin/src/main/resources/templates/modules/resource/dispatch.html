@@ -46,6 +46,13 @@
             .switchIn .el-select{
                 width: calc(100% - 116px);
             }
+            .imp input{
+                margin-left: 10px!important;
+            }
+            #CronGenMainDiv{
+                width: 100% !important;
+                height: auto!important;
+            }
         </style>
         </head>
 <body>
@@ -139,12 +146,19 @@
                     <el-tag
                             v-if="scope.row.status == 2"
                             size="small"
+                            type=""
+                            effect="dark">
+                        暂停
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.status == 3"
+                            size="small"
                             type="success"
                             effect="dark">
                         已执行
                     </el-tag>
                     <el-tag
-                            v-if="scope.row.status == 3"
+                            v-if="scope.row.status == 4"
                             size="small"
                             type="success"
                             effect="dark">
@@ -174,9 +188,12 @@
                     width="120">
                 <template slot-scope="scope">
                     <!--<el-button v-if="scope.row.status == 0" type="text" @click="lookC(scope.row.triggerId)">查看</el-button>-->
-                    <i class="el-icon-edit" v-if="scope.row.status == 0" @click="update(scope.row.triggerId)"></i>
-                    <span v-if="scope.row.status == 0" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
-                    <el-button v-if="scope.row.status == 0" type="text" @click="implement(scope.row.triggerId)">执行</el-button>
+                    <i class="el-icon-edit" v-if="scope.row.status == 0 || scope.row.status == 4" @click="update(scope.row.triggerId)"></i>
+                    <span v-if="scope.row.status == 0 || scope.row.status == 4" style="color: #ccc;display: inline-block;margin: 0 6px">|</span>
+                    <el-button v-if="scope.row.status == 0 || scope.row.status == 4" type="text" @click="implement(scope.row.triggerId)">执行</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" @click="implement1(scope.row.triggerId)">暂停</el-button>
+                    <el-button v-if="scope.row.status == 2" type="text" @click="implement2(scope.row.triggerId)">恢复</el-button>
+                    <el-button v-if="scope.row.status == 3" type="text" @click="lookC(scope.row.triggerId)">查看</el-button>
 
                 </template>
             </el-table-column>
@@ -223,8 +240,9 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">cron表达式</div>
-                <div class="col-sm-10">
-                    <input type="text" id="cron" onchange="test()" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式" :readonly="look"/>
+                <div class="col-sm-10 cronDiv">
+                    <input v-if="!look" type="text" id="cron" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式"/>
+                    <input v-if="look" type="text" class="form-control" v-model="meteCategory.triggerCron" placeholder="cron表达式"/>
                 </div>
             </div>
 
