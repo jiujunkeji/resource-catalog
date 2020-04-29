@@ -118,7 +118,10 @@ public class XjScheduleJobController {
     //@RequiresPermissions("sys:schedule:run")
     public R run(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
+        xe.setStatus(1);
+        xjScheduleJobService.updateById(xe);
         scheduleJobService.run(xe.getScheduleId());
+
         return R.ok();
     }
 
@@ -129,8 +132,10 @@ public class XjScheduleJobController {
     //@RequiresPermissions("sys:schedule:pause")
     public R pause(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
-        xe.setStatus(scheduleJobService.pause(xe.getScheduleId()));
+        xe.setStatus(2);
         xjScheduleJobService.updateById(xe);
+        scheduleJobService.pause(xe.getScheduleId());
+
 
         return R.ok();
     }
@@ -142,8 +147,9 @@ public class XjScheduleJobController {
     //@RequiresPermissions("sys:schedule:resume")
     public R resume(@RequestParam int triggerId){
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
-        xe.setStatus(scheduleJobService.resume(xe.getScheduleId()));
+        xe.setStatus(1);
         xjScheduleJobService.updateById(xe);
+        scheduleJobService.resume(xe.getScheduleId());
 
         return R.ok();
     }
