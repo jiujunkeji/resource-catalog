@@ -213,6 +213,12 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteSetId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -222,8 +228,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
                     }else{
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -232,8 +240,14 @@ var vm = new Vue({
         del: function (id) {
             var list = [];
             list.push(id)
-
+            var that = this;
             layer.confirm('确定要删除选中的记录？', function(index){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 $.ajax({
                     type: "POST",
                     url: baseURL + "xj/xjmetadataset/delete",
@@ -243,8 +257,10 @@ var vm = new Vue({
                         if(r.code == 0){
                             layer.close(index);
                             vm.reload();
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:1000});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
@@ -400,7 +416,8 @@ var vm = new Vue({
         },
         // 提交
         subMit:function () {
-            var list = []
+            var that = this;
+            var list = [];
             vm.checkIdList.forEach(function (item) {
                 list.push(item.meteSetId)
             })
@@ -410,6 +427,12 @@ var vm = new Vue({
                     type: 'warning'
                 });
             }else {
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 $.ajax({
                     type: "post",
                     url: baseURL + 'xj/xjmetesetaudit/submit',
@@ -420,9 +443,11 @@ var vm = new Vue({
                         if(r.code === 0){
                             vm.tab = 1;
                             vm.page = 1;
+                            loading.close();
                             vm.getTableList();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
@@ -432,8 +457,14 @@ var vm = new Vue({
         },
         // 撤回
         revoke:function (id) {
-
+            var that = this;
             layer.confirm('确定要撤回该条记录？', function(index){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 $.ajax({
                     type: "get",
                     url: baseURL + 'xj/xjmetesetaudit/revoke',
@@ -447,8 +478,10 @@ var vm = new Vue({
                             vm.tab = 0;
                             vm.page = 1;
                             vm.getTableList();
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
@@ -459,6 +492,12 @@ var vm = new Vue({
         },
         // 通过方法
         agree:function (id) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetesetaudit/agree',
@@ -473,8 +512,10 @@ var vm = new Vue({
                         vm.tab = 2;
                         vm.page = 1;
                         vm.getTableList();
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -482,6 +523,7 @@ var vm = new Vue({
         },
         // 拒绝
         refuse:function (id) {
+            var that = this;
             layer.open({
                 type: 1,
                 title: '审核意见',
@@ -492,6 +534,12 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['确定','取消'],
                 btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "post",
                         url: baseURL + 'xj/xjmetesetaudit/refuse',
@@ -507,8 +555,10 @@ var vm = new Vue({
                                 vm.page = 1;
                                 vm.getTableList();
                                 layer.close(index);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }else{
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }
                         }
@@ -525,6 +575,12 @@ var vm = new Vue({
         },
         // 发布
         push:function (id) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetesetaudit/push',
@@ -538,8 +594,10 @@ var vm = new Vue({
                         vm.tab = 4;
                         vm.page = 1;
                         vm.getTableList();
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -547,7 +605,14 @@ var vm = new Vue({
         },
         // 停止发布
         stopPush:function (id) {
+            var that = this;
             layer.confirm('确定要停止发布该条记录？', function(index){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 $.ajax({
                     type: "get",
                     url: baseURL + 'xj/xjmetesetaudit/stopPush',
@@ -561,8 +626,10 @@ var vm = new Vue({
                             vm.tab = 2;
                             vm.page = 1;
                             vm.getTableList();
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }

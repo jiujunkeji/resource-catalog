@@ -106,6 +106,12 @@ var vm = new Vue({
 		},
 		saveOrUpdate: function (event) {
 			var url = vm.organisationInfo.organisationId == null ? "resource/organisationinfo/save" : "resource/organisationinfo/update";
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -114,6 +120,7 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
 						vm.getTableList();
+						loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -126,6 +133,7 @@ var vm = new Vue({
             vm.checkIdList.forEach(function (item) {
                 organisationIds.push(item.organisationId);
             })
+            var that = this;
 			// var organisationIds = getSelectedRows();
 			if(organisationIds == null){
                 this.$message({
@@ -133,7 +141,13 @@ var vm = new Vue({
                     type: 'warning'
                 });
 			}else {
-                confirm('确定要删除选中的记录？', function(){
+                layer.confirm('确定要删除选中的记录？', function(index){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + "resource/organisationinfo/delete",
@@ -143,6 +157,8 @@ var vm = new Vue({
                             if(r.code == 0){
                                 vm.tab = 1;
                                 vm.page = 1;
+                                layer.close(index);
+                                loading.close();
                                 vm.getTableList();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }else{

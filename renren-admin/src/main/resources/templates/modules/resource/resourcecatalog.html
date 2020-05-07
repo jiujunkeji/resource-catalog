@@ -79,26 +79,26 @@
 <body>
 <div id="rrapp" v-cloak>
 
-    <div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">
-        <div class="grid-btn" style="border-bottom: 1px solid #e7eaec">
-            <span class="title">
-                <i class="el-icon-search"></i>
-                筛选查询
-            </span>
-            <div class="right">
-                <el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>
-            </div>
+    <!--<div :class="open ? 'divBox open' : 'divBox'" :style="open ? 'height:45px' : 'height:'+h+'px'">-->
+        <!--<div class="grid-btn" style="border-bottom: 1px solid #e7eaec">-->
+            <!--<span class="title">-->
+                <!--<i class="el-icon-search"></i>-->
+                <!--筛选查询-->
+            <!--</span>-->
+            <!--<div class="right">-->
+                <!--<el-button size="medium" type="primary" @click="openSwitch" :data-open="open">{{openText}}</el-button>-->
+            <!--</div>-->
 
-        </div>
-        <div class="switchIn">
-            <span>
-                <label>目录名称：</label>
-                <input class="el-input__inner" type="text" placeholder="目录名称" v-model="q.name" >
-            </span>
-        </div>
-        <button class="clean" @click="clean">重置</button>
-        <button class="look" @click="query">查询</button>
-    </div>
+        <!--</div>-->
+        <!--<div class="switchIn">-->
+            <!--<span>-->
+                <!--<label>目录名称：</label>-->
+                <!--<input class="el-input__inner" type="text" placeholder="目录名称" v-model="q.name" >-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<button class="clean" @click="clean">重置</button>-->
+        <!--<button class="look" @click="query">查询</button>-->
+    <!--</div>-->
 
     <div class="divBox table">
         <div class="grid-btn">
@@ -106,36 +106,23 @@
                 <i class="el-icon-s-operation"></i>
                 数据列表
             </span>
-            <!--<div class="form-group col-sm-2">-->
-                <!--<el-input-->
-                        <!--placeholder="目录名称"-->
-                        <!--v-model="q.name"-->
-                        <!--clearable-->
-                        <!--@keyup.enter="query">-->
-                <!--</el-input>-->
-                <!--&lt;!&ndash;<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="目录名称">&ndash;&gt;-->
-            <!--</div>-->
-            <!--<el-button size="medium" type="primary" @click="query">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
             <div class="right">
-                <el-button size="medium" type="primary" @click="getOutGrant">外部授权</el-button>&nbsp;&nbsp;
-                <el-button size="medium" type="primary" @click="getGrant">授权</el-button>&nbsp;&nbsp;
-                <el-button size="medium" type="primary" @click="downTemplate">下载目录模板</el-button>&nbsp;&nbsp;
                 <el-button size="medium" type="primary" @click="add">新增</el-button>&nbsp;&nbsp;
-                <!--<el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;-->
-                <!--<el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;-->
-                <el-button size="medium" type="primary" @click="downCatalog">导出</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="update">修改</el-button>&nbsp;&nbsp;
+                <el-button size="medium" type="primary" @click="del">删除</el-button>&nbsp;&nbsp;
+                <!--<el-button size="medium" type="primary" @click="downCatalog">导出</el-button>&nbsp;&nbsp;-->
 
-                <div style="display: inline-block">
-                    <el-upload
-                            class="avatar-uploader"
-                            action='${request.contextPath}/resource/resourcecatalog/importCatalog'
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <el-button size="medium" type="primary">导入</el-button>
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </div>
+                <!--<div style="display: inline-block">-->
+                    <!--<el-upload-->
+                            <!--class="avatar-uploader"-->
+                            <!--action='${request.contextPath}/resource/resourcecatalog/importCatalog'-->
+                            <!--:show-file-list="false"-->
+                            <!--:on-success="handleAvatarSuccess"-->
+                            <!--:before-upload="beforeAvatarUpload">-->
+                        <!--<el-button size="medium" type="primary">导入</el-button>-->
+                        <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                    <!--</el-upload>-->
+                <!--</div>-->
             </div>
         </div>
         <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
@@ -151,134 +138,39 @@
     </div>
 
     <div id="addUp" class="panel panel-default" style="display: none">
-        <!--<div class="panel-heading">-->
-
-            <!--{{title}}-->
-        <!--</div>-->
         <form class="form-horizontal">
-														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">目录名称</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.name" placeholder="目录名称"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">上级目录</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" @click="menuTree" readonly="readonly" placeholder="上级目录"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">目录类型</div>
-                        <div class="col-sm-10">
-                            <el-select v-model="resourceCatalog.type" placeholder="请选择">
-                                <el-option
-                                        :key="0"
-                                        label="资源类型"
-                                        :value="0">
-                                </el-option>
-                                <el-option
-                                        :key="1"
-                                        label="服务类型"
-                                        :value="1">
-                                </el-option>
-                            </el-select>
-                            <!--<input type="text" class="form-control" v-model="resourceCatalog.type" placeholder="目录类型"/>-->
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">描述</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="resourceCatalog.remark" placeholder="描述"/>
-                        </div>
-                    </div>
-											                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-2 control-label">创建时间</div>-->
-                        <!--<div class="col-sm-10">-->
-                            <!--<input type="text" class="form-control" v-model="resourceCatalog.createTime" placeholder="创建时间"/>-->
-                        <!--</div>-->
-                    <!--</div>-->
-											                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-2 control-label">修改时间</div>-->
-                        <!--<div class="col-sm-10">-->
-                            <!--<input type="text" class="form-control" v-model="resourceCatalog.updateTime" placeholder="修改时间"/>-->
-                        <!--</div>-->
-                    <!--</div>-->
-											                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-2 control-label">是否使用</div>-->
-                        <!--<div class="col-sm-10">-->
-                            <!--<input type="text" class="form-control" v-model="resourceCatalog.isUsed" placeholder="是否使用（0：停用；1：使用）"/>-->
-                        <!--</div>-->
-                    <!--</div>-->
-											                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-2 control-label">是否删除</div>-->
-                        <!--<div class="col-sm-10">-->
-                            <!--<input type="text" class="form-control" v-model="resourceCatalog.isDeleted" placeholder="是否删除（0：未删除；1：已删除）"/>-->
-                        <!--</div>-->
-                    <!--</div>-->
-							            <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label"></div>-->
-                <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>-->
-                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>-->
-            <!--</div>-->
-        </form>
-    </div>
-
-    <div id="grant" class="panel panel-default" style="display: none">
-        <form class="form-horizontal">
-
             <div class="form-group">
-                <div class="col-sm-2 control-label">用户名称</div>
+                <div class="col-sm-2 control-label">分类名称</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.userId" placeholder="请选择" @change="userChange">
-                        <el-option
-                                v-for="item in user"
-                                :key="item.userId"
-                                :label="item.name"
-                                :value="item.userId">
-                        </el-option>
-                    </el-select>
-
+                    <input type="text" class="form-control" v-model="resourceCatalog.name" placeholder="分类名称"/>
                 </div>
             </div>
-        </form>
-        <el-tree
-                :data="menuList"
-                show-checkbox
-                :default-expand-all="true"
-                node-key="id"
-                ref="tree"
-                highlight-current
-                :props="props">
-        </el-tree>
-    </div>
-    <div id="grantOut" class="panel panel-default" style="display: none">
-        <form class="form-horizontal">
-
             <div class="form-group">
-                <div class="col-sm-2 control-label">机构名称</div>
+                <div class="col-sm-2 control-label">分类代码</div>
                 <div class="col-sm-10">
-                    <el-select v-model="gatntObj.deptId" placeholder="请选择" @change="deptChange">
-                        <el-option
-                                v-for="item in dept"
-                                :key="item.organisationId"
-                                :label="item.organisationName"
-                                :value="item.organisationId">
-                        </el-option>
-                    </el-select>
-
+                    <input type="text" class="form-control" v-model="resourceCatalog.code" placeholder="分类名称"/>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">上级分类</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" style="cursor:pointer;" v-model="resourceCatalog.parentName" placeholder="上级分类" @click="menuTree" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <el-input
+                            type="textarea"
+                            :rows="2"
+                            placeholder="描述"
+                            v-model="resourceCatalog.remark">
+                    </el-input>
+                </div>
+            </div>
+
+
         </form>
-        <el-tree
-                :data="menuListOut"
-                show-checkbox
-                :default-expand-all="true"
-                node-key="id"
-                ref="tree1"
-                highlight-current
-                :props="propsOut">
-        </el-tree>
     </div>
 
     <!-- 选择上级菜单 -->

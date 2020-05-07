@@ -101,6 +101,7 @@ var vm = new Vue({
             });
         },
 		add: function(){
+            var that = this;
             layer.open({
                 type: 1,
                 title: '新增',
@@ -111,6 +112,12 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjdatasource/save',
@@ -120,6 +127,7 @@ var vm = new Vue({
                             if(r.code === 0){
                                 vm.reload();
                                 layer.close(index);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -142,6 +150,7 @@ var vm = new Vue({
             // vm.getMenu();
 		},
 		update: function (id) {
+		    var that = this;
             layer.open({
                 type: 1,
                 title: '新增',
@@ -152,6 +161,12 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjdatasource/update',
@@ -161,6 +176,7 @@ var vm = new Vue({
                             if(r.code === 0){
                                 vm.reload();
                                 layer.close(index);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -199,6 +215,7 @@ var vm = new Vue({
 		},
 		del: function (event) {
 			// var meteCategoryIds = getMeteCategoryId();
+            var that = this;
             if(vm.checkIdList.length == 0){
                 this.$message({
                     message: '请选择一条记录',
@@ -206,6 +223,12 @@ var vm = new Vue({
                 });
             }else{
                 layer.confirm('确定要删除选中的记录？', function(index1){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + "xj/xjdatasource/delete",
@@ -215,6 +238,7 @@ var vm = new Vue({
                             if(r.code == 0){
                                 vm.reload();
                                 layer.close(index1);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
 

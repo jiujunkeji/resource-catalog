@@ -52,6 +52,10 @@ var vm = new Vue({
         open:true,
         openText:'展开筛选',
         h:0,
+        tableList:[],
+        totalPage:0,
+		page:1,
+        checkIdList:[]
 	},
 	methods: {
 		query: function () {
@@ -61,6 +65,7 @@ var vm = new Vue({
             vm.q = {
                 name: null
             };
+            vm.getList();
         },
         // 收缩展开搜索
         openSwitch:function () {
@@ -74,17 +79,93 @@ var vm = new Vue({
             }
         },
 		add: function(){
-			vm.showList = false;
-			vm.title = "新增";
+			// vm.showList = false;
+			var that = this;
 			vm.dict = {};
+            layer.open({
+                type: 1,
+                title: '新增',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '460px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['新增','取消'],
+                btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'sys/dict/save',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.dict),
+                        success: function(r){
+                            if(r.code === 0){
+                                layer.close(index);
+                                loading.close();
+                                vm.getList();
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+
+                    // layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
 		},
-		update: function (event) {
-			var id = getSelectedRow();
-			if(id == null){
-				return ;
-			}
-			vm.showList = false;
-            vm.title = "修改";
+		update: function (id) {
+			var id = id;
+            var that = this;
+            layer.open({
+                type: 1,
+                title: '修改',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['562px', '460px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['修改','取消'],
+                btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + 'sys/dict/update',
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.dict),
+                        success: function(r){
+                            if(r.code === 0){
+                                vm.getList();
+                                layer.close(index);
+                                loading.close();
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                            }else{
+                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                            }
+                        }
+                    });
+
+                    // layer.close(index);
+                },
+                btn2:function () {
+                    vm.reload();
+                }
+
+            })
             
             vm.getInfo(id)
 		},
@@ -107,12 +188,18 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var ids = getSelectedRows();
+			var ids = vm.checkIdList;
 			if(ids == null){
 				return ;
 			}
-			
+            var that = this;
 			confirm('确定要删除选中的记录？', function(){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
 				$.ajax({
 					type: "POST",
 				    url: baseURL + "sys/dict/delete",
@@ -120,11 +207,10 @@ var vm = new Vue({
 				    data: JSON.stringify(ids),
 				    success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								$("#jqGrid").trigger("reloadGrid");
-							});
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
 						}else{
-							alert(r.msg);
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
 						}
 					}
 				});
@@ -142,6 +228,45 @@ var vm = new Vue({
                 postData:{'name': vm.q.name},
                 page:page
             }).trigger("reloadGrid");
-		}
-	}
+		},
+		getList:function () {
+            $.ajax({
+                type: "get",
+                url: baseURL + 'sys/dict/list',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                	page:this.page,
+                    name:this.q.name,
+                },
+                success: function(r){
+                	console.log(r);
+                    // vm.tableList = r
+                    if(r.code === 0){
+                        vm.tableList = r.page.list;
+                        vm.totalPage = r.page.totalCount;
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        toggleSelection:function (selection) {
+			console.log(selection);
+            vm.checkIdList = [];
+            selection.forEach(function (item) {
+                vm.checkIdList.push(item.id)
+            })
+        },
+        // 分页
+        layerPage:function (currentPage) {
+            vm.page = currentPage;
+            vm.getList();
+        },
+	},
+    created:function () {
+        this.getList();
+
+        // this.h = height
+    }
 });

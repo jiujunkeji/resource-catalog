@@ -51,7 +51,7 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "catalogId",
+            idKey: "meteCategoryId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -117,17 +117,15 @@ var vm = new Vue({
 		},
         getMenu: function(menuId){
             //加载菜单树
-            $.get(baseURL + "resource/resourcecatalog/list", function(r){
-                console.log(r);
+            $.get(baseURL + "resource/metecategory/list", function(r){
                 // r.push({
                 //     parentId:-1,
-                //     catalogId:0,
+                //     meteCategoryId:0,
                 //     name:'一级目录'
                 // })
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r);
-                var node = ztree.getNodeByParam("catalogId", vm.resourceCatalog.parentId);
+                var node = ztree.getNodeByParam("meteCategoryId", vm.resourceCatalog.parentId);
                 ztree.selectNode(node);
-                console.log(node);
                 // vm.menu.parentName = node.name;
             })
         },
@@ -146,7 +144,7 @@ var vm = new Vue({
                     var node = ztree.getSelectedNodes();
                     console.log(node);
                     //选择上级菜单
-                    vm.resourceCatalog.parentId = node[0].catalogId;
+                    vm.resourceCatalog.parentId = node[0].meteCategoryId;
                     vm.resourceCatalog.parentName = node[0].name;
                     layer.close(index);
                 }
@@ -179,8 +177,8 @@ var vm = new Vue({
             };
             vm.getMenu();
 		},
-		update: function (id) {
-			var catalogId = id;
+		update: function () {
+			var catalogId = getMeteCategoryId();
 			if(catalogId == null){
 				return ;
 			}
@@ -213,7 +211,13 @@ var vm = new Vue({
             if(vm.validator()){
                 return ;
             }
-			var url = vm.resourceCatalog.catalogId == null ? "resource/resourcecatalog/save" : "resource/resourcecatalog/update";
+			var url = vm.resourceCatalog.catalogId == null ? "resource/metecategory/save" : "resource/metecategory/update";
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -222,6 +226,7 @@ var vm = new Vue({
 			    success: function(r){
 			    	if(r.code === 0){
                         vm.reload();
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 					}else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
@@ -229,23 +234,30 @@ var vm = new Vue({
 				}
 			});
 		},
-		del: function (id) {
-			var catalogIds = id;
+		del: function () {
+			var catalogIds = getMeteCategoryId();
             console.log(catalogIds);
 			if(catalogIds == null){
 				return ;
 			}
-			
+			var that = this;
 			layer.confirm('确定要删除选中的记录？', function(index){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "resource/resourcecatalog/delete",
+				    url: baseURL + "resource/metecategory/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(catalogIds),
 				    success: function(r){
 						if(r.code == 0){
                             layer.close(index);
                             vm.reload();
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
 
 						}else{
@@ -259,8 +271,8 @@ var vm = new Vue({
             vm.q.name = null
         },
 		getInfo: function(catalogId){
-            $.get(baseURL + "resource/resourcecatalog/info/"+catalogId, function(r){
-                vm.resourceCatalog = r.resourceCatalog;
+            $.get(baseURL + "resource/metecategory/info/"+catalogId, function(r){
+                vm.resourceCatalog = r.meteCategory;
                 console.log('修改');
                 console.log(vm.resourceCatalog);
             });
@@ -505,145 +517,13 @@ var vm = new Vue({
             })
 
         },
-        // 树结构目录获取
-        getMenuList: function (event) {
-            $.getJSON(baseURL + "resource/resourcecatalog/list", function(r){
-                console.log(r);
-                var _len=0;
-                for(var i = 1;i<100;i++){
-                    if(i == 1){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        r.forEach(function (item) {
-                            if(item.parentId == 0){
-                                vm.menuList.push({
-                                    name:item.name,
-                                    id:item.catalogId,
-                                    list:[]
-                                })
-                                _len++;
-                            }
-                        })
-                    }else if(i == 2){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        vm.menuList.forEach(function (item) {
-                            r.forEach(function (n) {
-                                if(n.parentId == item.id){
-                                    item.list.push({
-                                        name:n.name,
-                                        id:n.catalogId,
-                                        list:[]
-                                    })
-                                    _len++;
-                                }
-                            })
-                        })
-                    }else if(i == 3){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        vm.menuList.forEach(function (item) {
-                            item.list.forEach(function (i) {
-                                r.forEach(function (n) {
-                                    if(n.parentId == i.id){
-                                        i.list.push({
-                                            name:n.name,
-                                            id:n.catalogId,
-                                            list:[]
-                                        })
-                                    }
-                                    _len++;
-                                })
-                            })
-
-                        })
-                    }else if(i == 4){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        vm.menuList.forEach(function (item) {
-                            item.list.forEach(function (i) {
-                                i.list.forEach(function (j) {
-                                    r.forEach(function (n) {
-                                        if(n.parentId == j.id){
-                                            j.list.push({
-                                                name:n.name,
-                                                id:n.catalogId,
-                                                list:[]
-                                            })
-                                        }
-                                        _len++;
-                                    })
-                                })
-                            })
-
-                        })
-                    }else if(i == 5){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        vm.menuList.forEach(function (item) {
-                            item.list.forEach(function (i) {
-                                i.list.forEach(function (j) {
-                                    j.list.forEach(function (m) {
-                                        r.forEach(function (n) {
-                                            if(n.parentId == m.id){
-                                                m.list.push({
-                                                    name:n.name,
-                                                    id:n.catalogId,
-                                                    list:[]
-                                                })
-                                            }
-                                            _len++;
-                                        })
-                                    })
-                                })
-                            })
-
-                        })
-                    }else if(i == 6){
-                        if(_len == r.length){
-                            return ;
-                        }
-                        vm.menuList.forEach(function (item) {
-                            item.list.forEach(function (i) {
-                                i.list.forEach(function (j) {
-                                    j.list.forEach(function (m) {
-                                        m.list.forEach(function (x) {
-                                            r.forEach(function (n) {
-                                                if(n.parentId == x.id){
-                                                    x.list.push({
-                                                        name:n.name,
-                                                        id:n.catalogId,
-                                                        list:[]
-                                                    })
-                                                }
-                                                _len++;
-                                            })
-                                        })
-                                    })
-                                })
-                            })
-
-                        })
-                    }
-
-                }
-
-
-                console.log(vm.menuList);
-            });
-        },
 	},
 	created:function () {
         // this.h = height
         // this.getDept();
-        this.getUser();
-        this.getDept();
-        this.getMenuList();
+        // this.getUser();
+        // this.getDept();
+        // this.getMenuList();
         // this.getUser();
     }
 });
@@ -653,58 +533,23 @@ var Menu = {
     table: null,
     layerIndex: -1
 };
-
 /**
  * 初始化表格的列
  */
 Menu.initColumn = function () {
     var columns = [
-        // {field: 'selectItem', radio: true},
-        {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '260px'},
-        // {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
-        //     if(item.type == 0){
-        //         return '资源';
-        //     }
-        //     if(item.isUsed == 1){
-        //         return '服务';
-        //     }
-        // }},
+        {field: 'selectItem', radio: true},
+        {title: '分类名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '260px'},
+        {title: '分类类型', field: 'categoryType', align: 'center', valign: 'middle', sortable: true, width: '180px'},
         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: ''},
-        {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '200px',},
-        {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-        	if(item.isUsed == 0){
-                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
-			}
-			if(item.isUsed == 1){
-                return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
-			}
-        }},
-        {title: '操作', field: '', align: 'left', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            return '<i class="el-icon-edit" style="margin-left: 10px" onclick="updateT('+item.catalogId+')"></i> <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" onclick="delT('+item.catalogId+')"></i>'
-        }}]
+        {title: '分类代码', field: 'code', align: 'center', valign: 'middle', sortable: true, width: '100px',}]
     return columns;
 };
 
-function ss(num,id) {
-	if(num == 0){
-        layer.confirm('确定使用吗？',function (index1) {
-            $.get(baseURL + "resource/resourcecatalog/start?catalogId="+id, function(r){
-                Menu.table.refresh();
-                layer.close(index1)
-            });
-		})
 
-	}else {
-        layer.confirm('确定停用吗？',function (index1) {
-            $.get(baseURL + "resource/resourcecatalog/stop?catalogId="+id, function(r){
-                Menu.table.refresh();
-                layer.close(index1)
-            });
-        })
-	}
-}
-function getCatalogId () {
+function getMeteCategoryId () {
     var selected = $('#menuTable').bootstrapTreeTable('getSelections');
+    console.log(selected);
     if (selected.length == 0) {
         alert("请选择一条记录");
         return null;
@@ -713,25 +558,104 @@ function getCatalogId () {
     }
 }
 
-function updateT(id) {
-    vm.update(id);
-}
-function delT(id) {
-    vm.del(id);
-}
-
 
 $(function () {
     var colunms = Menu.initColumn();
-    var table = new TreeTable(Menu.id, baseURL + "xj/xjcatalog/list", colunms);
-    table.setExpandColumn(0);
-    table.setIdField("catalogId");
-    table.setCodeField("catalogId");
+    var table = new TreeTable(Menu.id, baseURL + "resource/metecategory/list", colunms);
+    table.setExpandColumn(1);
+    table.setIdField("meteCategoryId");
+    table.setCodeField("meteCategoryId");
     table.setParentCodeField("parentId");
     table.setExpandAll(false);
-    table.setData(vm.q);
     table.init();
     Menu.table = table;
 
+})
 
-});
+// var Menu = {
+//     id: "menuTable",
+//     table: null,
+//     layerIndex: -1
+// };
+//
+// /**
+//  * 初始化表格的列
+//  */
+// Menu.initColumn = function () {
+//     var columns = [
+//         // {field: 'selectItem', radio: true},
+//         {title: '目录名称', field: 'name', visible: false, align: 'center', valign: 'middle', width: '260px'},
+//         // {title: '目录类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '180px',formatter: function(item, index){
+//         //     if(item.type == 0){
+//         //         return '资源';
+//         //     }
+//         //     if(item.isUsed == 1){
+//         //         return '服务';
+//         //     }
+//         // }},
+//         {title: '描述', field: 'remark', align: 'center', valign: 'middle', sortable: true, width: ''},
+//         {title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, width: '200px',},
+//         {title: '使用情况', field: 'isUsed', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+//         	if(item.isUsed == 0){
+//                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>停用</em><i></i></div>';
+// 			}
+// 			if(item.isUsed == 1){
+//                 return '<div style="margin-left: 6px" class="layui-unselect layui-form-switch layui-form-onswitch" onClick="ss('+item.isUsed+','+item.catalogId+')"><em>使用</em><i></i></div>';
+// 			}
+//         }},
+//         {title: '操作', field: '', align: 'left', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+//             return '<i class="el-icon-edit" style="margin-left: 10px" onclick="updateT('+item.catalogId+')"></i> <span style="color: #ccc;display: inline-block;margin: 0 6px">|</span> <i class="el-icon-delete" onclick="delT('+item.catalogId+')"></i>'
+//         }}]
+//     return columns;
+// };
+//
+// function ss(num,id) {
+// 	if(num == 0){
+//         layer.confirm('确定使用吗？',function (index1) {
+//             $.get(baseURL + "resource/resourcecatalog/start?catalogId="+id, function(r){
+//                 Menu.table.refresh();
+//                 layer.close(index1)
+//             });
+// 		})
+//
+// 	}else {
+//         layer.confirm('确定停用吗？',function (index1) {
+//             $.get(baseURL + "resource/resourcecatalog/stop?catalogId="+id, function(r){
+//                 Menu.table.refresh();
+//                 layer.close(index1)
+//             });
+//         })
+// 	}
+// }
+// function getCatalogId () {
+//     var selected = $('#menuTable').bootstrapTreeTable('getSelections');
+//     if (selected.length == 0) {
+//         alert("请选择一条记录");
+//         return null;
+//     } else {
+//         return selected[0].id;
+//     }
+// }
+//
+// function updateT(id) {
+//     vm.update(id);
+// }
+// function delT(id) {
+//     vm.del(id);
+// }
+//
+//
+// $(function () {
+//     var colunms = Menu.initColumn();
+//     var table = new TreeTable(Menu.id, baseURL + "xj/xjcatalog/list", colunms);
+//     table.setExpandColumn(0);
+//     table.setIdField("catalogId");
+//     table.setCodeField("catalogId");
+//     table.setParentCodeField("parentId");
+//     table.setExpandAll(false);
+//     table.setData(vm.q);
+//     table.init();
+//     Menu.table = table;
+//
+//
+// });

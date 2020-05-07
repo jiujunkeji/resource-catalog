@@ -389,6 +389,9 @@ body {
     margin-right: 12px;
     border-radius: 4px;
 }
+.el-loading-mask{
+    z-index: 999999999999!important;
+}
 
 
 

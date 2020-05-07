@@ -204,6 +204,12 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteSetId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -212,9 +218,11 @@ var vm = new Vue({
                 success: function(r){
                     if(r.code === 0){
                         vm.page = 1;
+                        loading.close();
                         vm.reload();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
                     }else{
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -223,8 +231,14 @@ var vm = new Vue({
         del: function (id) {
             var list = [];
             list.push(id)
-
+            var that = this;
             layer.confirm('确定要删除选中的记录？', function(index){
+                const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                 $.ajax({
                     type: "POST",
                     url: baseURL + "xj/xjmetadataset/delete",
@@ -233,9 +247,11 @@ var vm = new Vue({
                     success: function(r){
                         if(r.code == 0){
                             layer.close(index);
+                            loading.close();
                             vm.reload();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:1000});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }

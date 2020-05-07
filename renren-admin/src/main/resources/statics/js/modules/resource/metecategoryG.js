@@ -199,6 +199,12 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteId == null ? "xj/xjmetadata/save" : "xj/xjmetadata/update";
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -208,8 +214,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.page = 1;
                         vm.reload();
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }else{
+                        loading.close();
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
@@ -218,8 +226,14 @@ var vm = new Vue({
         del: function (id) {
             var list = [];
             list.push(id)
-
+            var that = this;
             layer.confirm('确定要删除选中的记录？', function(index){
+                const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 $.ajax({
                     type: "POST",
                     url: baseURL + "xj/xjmetadata/delete",
@@ -229,8 +243,10 @@ var vm = new Vue({
                         if(r.code == 0){
                             layer.close(index);
                             vm.reload();
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:1000});
                         }else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                         }
                     }
@@ -664,6 +680,7 @@ var vm = new Vue({
         },
         // 禁用
         closeC:function () {
+            var that = this;
             var list = []
             vm.checkIdList.forEach(function (item) {
                 list.push(item.meteId)
@@ -675,6 +692,12 @@ var vm = new Vue({
                 });
             }else {
                 layer.confirm('确定要禁用选中的元数据？', function(index32){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjmetadata/updateDisabledState',
@@ -684,6 +707,7 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code == 0){
                                 layer.close(index32);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                                 vm.getTableList();
                             }else {
@@ -697,6 +721,7 @@ var vm = new Vue({
         },
         // 启用
         openC:function () {
+            var that = this;
             var list = []
             vm.checkIdList.forEach(function (item) {
                 list.push(item.meteId)
@@ -708,6 +733,12 @@ var vm = new Vue({
                 });
             }else {
                 layer.confirm('确定要启动选中的元数据？', function(index31){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjmetadata/updateEnabledState',
@@ -717,6 +748,7 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code == 0){
                                 layer.close(index31);
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
                                 vm.getTableList();
                             }else {
