@@ -55,6 +55,7 @@
             </div>
         </div>
         <el-table
+                v-loading="loading"
                 :data="tableList"
                 border
                 stripe
@@ -63,90 +64,89 @@
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-table
-                            :data="props.row.list"
+                            :data="props.row.childMonitorList"
                             border
                             stripe
                             style="width: 100%">
                         <el-table-column
-                                prop="dsNam"
+                                prop="childJobId"
+                                label="ID"
+                                width="">
+                        </el-table-column>
+                        <el-table-column
+                                prop="childJobName"
                                 label="任务名称"
                                 width="">
                         </el-table-column>
                         <el-table-column
-                                prop="dsType"
-                                label="执行开始时间"
-                                width="">
-                        </el-table-column>
-                        <el-table-column
-                                prop="dsDepartment"
-                                label="部门"
-                                width="130">
-                        </el-table-column>
-                        <el-table-column
-                                prop="dsLinetype"
-                                label="连接类型"
-                                width="130">
-                        </el-table-column>
-                        <el-table-column
-                                prop="dsIpname"
-                                label="主机名"
-                                width="130">
-                        </el-table-column>
-                        <el-table-column
-                                prop="dsPort"
-                                label="端口号"
-                                width="130">
+                                label="状态"
+                                width="90">
+                            <template slot-scope="scope">
+                                <el-tag
+                                        v-if="scope.row.status == 1"
+                                        size="small"
+                                        type="warning"
+                                        effect="dark">
+                                    正在执行
+                                </el-tag>
+                                <el-tag
+                                        v-if="scope.row.status == 2"
+                                        size="small"
+                                        type="success"
+                                        effect="dark">
+                                    执行成功
+                                </el-tag>
+                                <el-tag
+                                        v-if="scope.row.isDisabled == 3"
+                                        size="small"
+                                        type="danger"
+                                        effect="dark">
+                                    执行失败
+                                </el-tag>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="dsNam"
-                    label="数据源名称"
+                    prop="jobName"
+                    label="任务名称"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="dsType"
-                    label="数据源类型"
+                    prop="startTime"
+                    label="执行开始时间"
                     width="">
             </el-table-column>
             <el-table-column
-                    prop="dsDepartment"
-                    label="部门"
+                    prop="endTime"
+                    label="执行结束时间"
                     width="130">
             </el-table-column>
             <el-table-column
-                    prop="dsLinetype"
-                    label="连接类型"
-                    width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="dsIpname"
-                    label="主机名"
-                    width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="dsPort"
-                    label="端口号"
-                    width="130">
-            </el-table-column>
-            <el-table-column
-                    label="是否禁用"
+                    label="状态"
                     width="90">
                 <template slot-scope="scope">
                     <el-tag
-                            v-if="scope.row.isDisabled == 0"
+                            v-if="scope.row.status == 1"
+                            size="small"
+                            type="warning"
+                            effect="dark">
+                        正在执行
+                    </el-tag>
+                    <el-tag
+                            v-if="scope.row.status == 2"
                             size="small"
                             type="success"
                             effect="dark">
-                        否
+                        执行成功
                     </el-tag>
                     <el-tag
-                            v-if="scope.row.isDisabled == 1"
+                            v-if="scope.row.status == 3"
                             size="small"
                             type="danger"
                             effect="dark">
-                        是
+                        执行失败
                     </el-tag>
                 </template>
             </el-table-column>
@@ -156,7 +156,7 @@
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="lookC(scope.row.meteSetId)">查看</el-button>
+                    <el-button v-if="scope.row.status == 2" type="text" @click="lookC(scope.row.monitorId)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -187,22 +187,67 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>编号</label>
+                    <label>任务名</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.meteNumber" placeholder="编号"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.jobName" placeholder="任务名" readonly/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>中文名称</label>
+                    <label>执行开始时间</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.startTime" placeholder="执行开始时间"readonly/>
                     </div>
                 </div>
-
-
+                <div class="item">
+                    <label>执行结束时间</label>
+                    <div class="inp">
+                        <input type="text" class="form-control" v-model="resourceMeteData.endTime" placeholder="执行结束时间"readonly/>
+                    </div>
+                </div>
             </div>
 
+            <el-table
+                    :data="resourceMeteData.logList"
+                    border
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="assemblyName"
+                        label="组件名"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="in"
+                        label="输入"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="out"
+                        label="输出"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="组建名"
+                        label="读"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="assemblyName"
+                        label="写"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="update"
+                        label="更新"
+                        width="">
+                </el-table-column>
+                <el-table-column
+                        prop="error"
+                        label="错误"
+                        width="">
+                </el-table-column>
 
+            </el-table>
         </div>
     </div>
 

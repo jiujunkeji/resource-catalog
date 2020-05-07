@@ -41,7 +41,8 @@ var vm = new Vue({
         comList:[],
         restaurants: [],
         showList:true,
-        resourceMeteData:{}
+        resourceMeteData:{},
+        loading:true
 	},
 	methods: {
 		query: function () {
@@ -96,8 +97,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
                     }else{
                         alert(r.msg);
+                        vm.loading = false;
                     }
                 }
             });
@@ -110,8 +113,13 @@ var vm = new Vue({
         openToggleRowExpansion:function (row) {
             console.log(row);
         },
-        lookC:function(){
+        lookC:function(id){
 		    vm.showList = false;
+            $.get(baseURL + "xj/xjmonitor/info/"+id, function(r){
+                vm.resourceMeteData = r.xjMonitor;
+                console.log('修改');
+                console.log(r);
+            });
         },
         reload:function(){
             vm.showList = true;
