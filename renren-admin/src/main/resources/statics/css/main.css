@@ -392,6 +392,9 @@ body {
 .el-loading-mask{
     z-index: 999999999999!important;
 }
+.el-message{
+    z-index: 9999999999999!important;
+}
 
 
 

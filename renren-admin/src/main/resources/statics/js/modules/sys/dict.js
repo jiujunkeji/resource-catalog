@@ -81,7 +81,12 @@ var vm = new Vue({
 		add: function(){
 			// vm.showList = false;
 			var that = this;
-			vm.dict = {};
+			vm.dict = {
+			    name:'',
+                type:'',
+                code:'',
+                value:''
+            };
             layer.open({
                 type: 1,
                 title: '新增',
@@ -92,28 +97,37 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    const loading = that.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'sys/dict/save',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.dict),
-                        success: function(r){
-                            if(r.code === 0){
-                                layer.close(index);
-                                loading.close();
-                                vm.getList();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(JSON.stringify(vm.dict) == '{}' || vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else {
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'sys/dict/save',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.dict),
+                            success: function(r){
+                                if(r.code === 0){
+                                    layer.close(index);
+                                    loading.close();
+                                    vm.getList();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
 
                     // layer.close(index);
                 },
@@ -136,30 +150,36 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    const loading = that.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'sys/dict/update',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.dict),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.getList();
-                                layer.close(index);
-                                loading.close();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(JSON.stringify(vm.dict) == '{}' || vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else {
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'sys/dict/update',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.dict),
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.getList();
+                                    layer.close(index);
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
-
-                    // layer.close(index);
+                        });
+                    }
                 },
                 btn2:function () {
                     vm.reload();
@@ -210,6 +230,7 @@ var vm = new Vue({
                             loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
 						}else{
+                            loading.close();
                             layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
 						}
 					}
