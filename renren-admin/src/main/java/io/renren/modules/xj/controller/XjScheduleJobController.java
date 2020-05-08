@@ -106,6 +106,8 @@ public class XjScheduleJobController {
             XjScheduleJobEntity xe = xjScheduleJobService.selectById(id);
             xe.setIsDelete(1);
             xjScheduleJobService.updateById(xe);
+            Long[] ids = {xe.getScheduleId()};
+            scheduleJobService.deleteBatch(ids);
         }
 
         return R.ok();
