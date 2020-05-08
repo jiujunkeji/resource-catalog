@@ -40,6 +40,11 @@
             .el-autocomplete-suggestion{
                 z-index:100000000!important;
             }
+            .inp input{
+                background: #f1f4fb!important;
+                color: #555!important;
+                border-color: #f1f4fb!important;
+            }
         </style>
         </head>
 <body>
@@ -83,25 +88,39 @@
                                 width="90">
                             <template slot-scope="scope">
                                 <el-tag
-                                        v-if="scope.row.status == 1"
+                                        v-if="scope.row.status == 0"
                                         size="small"
                                         type="warning"
                                         effect="dark">
-                                    正在执行
+                                    开始加载作业
+                                </el-tag>
+                                <el-tag
+                                        v-if="scope.row.status == 1"
+                                        size="small"
+                                        type="success"
+                                        effect="dark">
+                                    加载作业完成
                                 </el-tag>
                                 <el-tag
                                         v-if="scope.row.status == 2"
                                         size="small"
-                                        type="success"
+                                        type="danger"
                                         effect="dark">
-                                    执行成功
+                                    开始执行作业
                                 </el-tag>
                                 <el-tag
-                                        v-if="scope.row.isDisabled == 3"
+                                        v-if="scope.row.status == 3"
+                                        size="small"
+                                        type="success"
+                                        effect="dark">
+                                    成功执行作业
+                                </el-tag>
+                                <el-tag
+                                        v-if="scope.row.status == 4"
                                         size="small"
                                         type="danger"
                                         effect="dark">
-                                    执行失败
+                                    执行作业失败
                                 </el-tag>
                             </template>
                         </el-table-column>
@@ -128,21 +147,21 @@
                     width="90">
                 <template slot-scope="scope">
                     <el-tag
-                            v-if="scope.row.status == 1"
+                            v-if="scope.row.status == 0"
                             size="small"
                             type="warning"
                             effect="dark">
                         正在执行
                     </el-tag>
                     <el-tag
-                            v-if="scope.row.status == 2"
+                            v-if="scope.row.status == 1"
                             size="small"
                             type="success"
                             effect="dark">
                         执行成功
                     </el-tag>
                     <el-tag
-                            v-if="scope.row.status == 3"
+                            v-if="scope.row.status == 2"
                             size="small"
                             type="danger"
                             effect="dark">
@@ -156,7 +175,7 @@
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status == 2" type="text" @click="lookC(scope.row.monitorId)">查看</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" @click="lookC(scope.row)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -217,32 +236,32 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="in"
+                        prop="xjIn"
                         label="输入"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="out"
+                        prop="xjOut"
                         label="输出"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="组建名"
+                        prop="xjRead"
                         label="读"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="assemblyName"
+                        prop="xjWrite"
                         label="写"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="update"
+                        prop="xjUpdate"
                         label="更新"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="error"
+                        prop="xjError"
                         label="错误"
                         width="">
                 </el-table-column>
