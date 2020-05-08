@@ -84,6 +84,7 @@ var vm = new Vue({
 		},
         // 获取表格列表
         getTableList:function () {
+            this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmonitor/list',
@@ -113,13 +114,9 @@ var vm = new Vue({
         openToggleRowExpansion:function (row) {
             console.log(row);
         },
-        lookC:function(id){
+        lookC:function(row){
 		    vm.showList = false;
-            $.get(baseURL + "xj/xjmonitor/info/"+id, function(r){
-                vm.resourceMeteData = r.xjMonitor;
-                console.log('修改');
-                console.log(r);
-            });
+            vm.resourceMeteData = row;
         },
         reload:function(){
             vm.showList = true;

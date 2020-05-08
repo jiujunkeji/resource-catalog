@@ -175,7 +175,7 @@
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status == 1" type="text" @click="lookC(scope.row.monitorId)">查看</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" @click="lookC(scope.row)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -236,32 +236,32 @@
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="in"
+                        prop="xjIn"
                         label="输入"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="out"
+                        prop="xjOut"
                         label="输出"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="组建名"
+                        prop="xjRead"
                         label="读"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="assemblyName"
+                        prop="xjWrite"
                         label="写"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="update"
+                        prop="xjUpdate"
                         label="更新"
                         width="">
                 </el-table-column>
                 <el-table-column
-                        prop="error"
+                        prop="xjError"
                         label="错误"
                         width="">
                 </el-table-column>
