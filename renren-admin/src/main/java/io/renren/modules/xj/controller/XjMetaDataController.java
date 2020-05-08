@@ -194,7 +194,7 @@ public class XjMetaDataController extends AbstractController {
         xjMetaDataEntity.setDataType(xjMetaData.getDataType());
         xjMetaDataEntity.setControlType(xjMetaData.getControlType());
         xjMetaDataEntity.setEuShortName(xjMetaData.getEuShortName());
-//        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
+        xjMetaDataEntity.setMeteNumber(xjMetaData.getMeteNumber());
         xjMetaDataEntity.setDefinition(xjMetaData.getDefinition());
         xjMetaDataEntity.setRange(xjMetaData.getRange());
         xjMetaDataEntity.setRangeDescription(xjMetaData.getRangeDescription());
