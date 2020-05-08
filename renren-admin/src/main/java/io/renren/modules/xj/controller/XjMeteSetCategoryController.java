@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjMetaDataEntity;
 import io.renren.modules.xj.entity.XjMetaDataSetEntity;
@@ -120,7 +121,9 @@ public class XjMeteSetCategoryController {
     //@RequiresPermissions("xj:xjmetesetcategory:save")
     public R save(@RequestBody XjMeteSetCategoryEntity xjMeteSetCategory){
         try{
-        xjMeteSetCategoryService.insert(xjMeteSetCategory);
+        int count=xjMeteSetCategoryService.selectCount(new EntityWrapper<XjMeteSetCategoryEntity>(null));
+        xjMeteSetCategory.setSortSetCode(count+1);
+        xjMeteSetCategoryService.insertOrUpdate(xjMeteSetCategory);
         }catch (Exception e){
             return R.error("元数据集的分类编号或者排序码不允许重复！");
         }
