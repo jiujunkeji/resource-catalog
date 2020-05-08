@@ -53,7 +53,7 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 校验类型（0-不验证，1-验证）
 	 */
-	private Integer checkType;
+	private Integer checkType=0;
 	/**
 	 * 数据长度
 	 */
@@ -69,7 +69,7 @@ public class XjMetaDataEntity implements Serializable {
 	/**
 	 * 是否必选还是非必选
 	 */
-	private Integer judgeMandatory;
+	private Integer judgeMandatory=0;
 	/**
 	 * 定义
 	 */
