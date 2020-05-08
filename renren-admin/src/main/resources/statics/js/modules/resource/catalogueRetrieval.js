@@ -44,7 +44,8 @@ var vm = new Vue({
         pageSize:10,
         tab:0,
         catalogId:null,
-        headerList:[]
+        headerList:[],
+        loading:false
     },
     watch: {
         filterText:function(val) {
@@ -205,12 +206,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
+            this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjcatalog/selectDataList',
@@ -222,12 +218,12 @@ var vm = new Vue({
                 },
                 success: function(r){
                     if(r.code === 0){
-                        loading.close();
+                        vm.loading = false;
                         vm.tableList = r.page.dataList;
                         vm.totalPage = r.page.totalCount;
                         vm.headerList = r.page.headerList
                     }else{
-                        loading.close();
+                        vm.loading = false;
                         alert(r.msg);
                     }
                 }

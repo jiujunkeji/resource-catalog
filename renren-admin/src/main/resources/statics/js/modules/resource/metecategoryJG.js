@@ -72,6 +72,7 @@ var vm = new Vue({
         count: 1,
         id:0,
         filterText:'',
+        filterText1:'',
         menuList:[],
         menuList1:[],
         tableList:[],
@@ -96,6 +97,9 @@ var vm = new Vue({
     watch: {
         filterText:function(val) {
             this.$refs.tree.filter(val);
+        },
+        filterText1:function(val) {
+            this.$refs.tree1.filter(val);
         }
     },
     methods: {

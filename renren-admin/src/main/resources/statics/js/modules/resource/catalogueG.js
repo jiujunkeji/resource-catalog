@@ -42,9 +42,7 @@ var vm = new Vue({
     data:{
         q: {
             name:'',
-            safeTypeCode:'',
-            safe:'',
-            encryptCode:''
+            dataSourceId:''
         },
         q1: {
             name:'',
@@ -105,7 +103,8 @@ var vm = new Vue({
         safeLevelList:[],
         encryptMethodList:[],
         safeTypeList:[],
-        dataSourceList:[]
+        dataSourceList:[],
+        loading:true
 
     },
     watch: {
@@ -120,15 +119,13 @@ var vm = new Vue({
         clean:function () {
             vm.q = {
                 name:'',
-                safeTypeCode:'',
-                safe:'',
-                encryptCode:''
+                dataSourceId:''
             };
             vm.getTableList();
         },
         getMenu: function(menuId){
             //加载菜单树
-            $.get(baseURL + "/xj/xjcatalog/list", function(r){
+            $.get(baseURL + "xj/xjcatalog/list", function(r){
                 // r.push({
                 //     parentId:-1,
                 //     catalogId:0,
@@ -482,6 +479,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjcataloglinkdata/list',
@@ -489,7 +487,7 @@ var vm = new Vue({
                 dataType: 'json',
                 data: {
                     page:this.page,
-                    name:this.q.name,
+                    catalogName:this.q.name,
                     safeTypeCode:this.q.safeTypeCode,
                     safeCode:this.q.safeCode,
                     encryptCode:this.q.encryptCode,
@@ -500,7 +498,9 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
                     }else{
+                        vm.loading = false;
                         alert(r.msg);
                     }
                 }

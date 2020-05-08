@@ -407,6 +407,7 @@
                 </div>
             </div>
             <el-table
+                    v-loading="loading"
                     :data="resourceMeteData.meteDataList"
                     border
                     stripe
@@ -457,22 +458,22 @@
     </div>
 
     <div id="addUp" class="panel panel-default" style="display: none;height: calc(100% - 20px);">
-        <div class="objectList" style="height: calc(100% - 10px);">
-            <div class="grid-btn">
-                <span class="title">
-                    <i class="el-icon-edit-outline"></i>
-                    对象列表
-                </span>
-            </div>
+        <!--<div class="objectList" style="height: calc(100% - 10px);">-->
+            <!--<div class="grid-btn">-->
+                <!--<span class="title">-->
+                    <!--<i class="el-icon-edit-outline"></i>-->
+                    <!--对象列表-->
+                <!--</span>-->
+            <!--</div>-->
 
-            <el-input
-                    placeholder="输入关键字进行过滤"
-                    v-model="filterText">
-            </el-input>
-            <el-tree class="filter-tree" :data="menuList1" :props="props"
-                     :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
-            </el-tree>
-        </div>
+            <!--<el-input-->
+                    <!--placeholder="输入关键字进行过滤"-->
+                    <!--v-model="filterText">-->
+            <!--</el-input>-->
+            <!--<el-tree class="filter-tree" :data="menuList1" :props="props"-->
+                     <!--:filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">-->
+            <!--</el-tree>-->
+        <!--</div>-->
         <div class="listCon" style="">
             <!--<button :class="tab == 0 ? 'el-button active' : 'el-button'" @click="tabClick(0)">待提交</button>-->
             <!--<button :class="tab == 1 ? 'el-button active' : 'el-button'" @click="tabClick(1)">审核中</button>-->

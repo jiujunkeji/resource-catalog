@@ -104,7 +104,8 @@ var vm = new Vue({
         comList:[],
         safeLevelList:[],
         encryptMethodList:[],
-        safeTypeList:[]
+        safeTypeList:[],
+        loading:true
 
     },
     watch: {
@@ -480,6 +481,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjsafe/list',
@@ -498,8 +500,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
                     }else{
                         alert(r.msg);
+                        vm.loading = false;
                     }
                 }
             });

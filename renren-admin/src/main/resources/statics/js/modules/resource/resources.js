@@ -64,6 +64,6 @@ var vm = new Vue({
     created:function(){
         this.resourcemetedata();
         this.catalogsearch();
-        this.resourcecatalog();
+        // this.resourcecatalog();
     }
 })

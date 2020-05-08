@@ -383,14 +383,14 @@
                         width="110">
                 </el-table-column>
             </el-table>
-            <br>
-            <el-pagination
-                    background
-                    :current-page="page1"
-                    layout="prev, pager, next, jumper"
-                    @current-change="layerPage1"
-                    :total="totalPage1">
-            </el-pagination>
+            <!--<br>-->
+            <!--<el-pagination-->
+                    <!--background-->
+                    <!--:current-page="page1"-->
+                    <!--layout="prev, pager, next, jumper"-->
+                    <!--@current-change="layerPage1"-->
+                    <!--:total="totalPage1">-->
+            <!--</el-pagination>-->
         </div>
     </div>
     <div id="addUp" class="panel panel-default" style="display: none;height: calc(100% - 20px);">
@@ -404,10 +404,10 @@
 
             <el-input
                     placeholder="输入关键字进行过滤"
-                    v-model="filterText">
+                    v-model="filterText1">
             </el-input>
             <el-tree class="filter-tree" :data="menuList1" :props="props"
-                     :filter-node-method="filterNode1" ref="tree" accordion @node-click="handleNodeClick1">
+                     :filter-node-method="filterNode1" ref="tree1" accordion @node-click="handleNodeClick1">
             </el-tree>
         </div>
         <div class="listCon" style="">

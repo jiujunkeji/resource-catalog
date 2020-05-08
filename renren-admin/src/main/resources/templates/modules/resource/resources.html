@@ -7,7 +7,7 @@
         <style>
             .chart{
                 display: inline-block;
-                width: calc(50% - 10px);
+                width: 100%;
                 margin-right: 10px;
             }
             #statistics{
@@ -34,7 +34,7 @@
                 position: absolute;
                 display: inline-block;
                 left: 0px;
-                top: 10px;
+                top: 4px;
                 width: 12px;
                 height: 12px;
                 background: #fff;
@@ -53,14 +53,40 @@
             .yuanshuju span.title{
                 display: inline-block;
                 font-size: 26px;
-                font-weight: bold;
-                color: #404040;
-                margin-bottom: 10px;
-                letter-spacing: 1px;
+                /*font-weight: bold;*/
+                color: #222;
+                margin: 10px 0 6px 0;
+                letter-spacing: 2px;
             }
             .yuanshuju span.dec{
-                font-size: 16px;
-                color: #404040;
+                font-size: 14px;
+                color: #aaa;
+            }
+            .yuanshuju span.dec1{
+                position: relative;
+                font-size: 14px;
+                color: #999;
+            }
+            .yuanshuju span.dec1 .num{
+                color: #444!important;
+                margin-left: 6px;
+                padding-right: 15px;
+            }
+            .yuanshuju span.dec1 .add:after{
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 4px;
+                border: 4px solid transparent;
+                border-bottom-color: #f00;
+            }
+            .yuanshuju span.dec1 .del:after{
+                content: '';
+                position: absolute;
+                right: 0;
+                top:7px;
+                border: 4px solid transparent;
+                border-top-color: green;
             }
         </style>
 
@@ -77,20 +103,31 @@
         </div>
         <div class="yuanshuju">
             <div class="item">
-                <span class="title">{{resourcemeteData.meteAll}}</span><br>
-                <span class="dec">采集元数据数</span>
+                <span class="dec">元数据数</span><br>
+                <span class="title">4567893243</span><br>
+                <hr>
+                <span class="dec1">元数据分类数<span class="num">234</span></span>
+                <!--<span class="title">{{resourcemeteData.meteAll}}</span><br>-->
+
             </div>
             <div class="item">
-                <span class="title">{{resourcemeteData.meteNew}}</span><br>
-                <span class="dec">新增采集元数据数</span>
+                <!--<span class="title">{{resourcemeteData.meteNew}}</span><br>-->
+                <span class="dec">目录数</span><br>
+                <span class="title">45767</span><br>
+                <hr>
+                <div style="overflow: hidden">
+                    <span style="float: left" class="dec1">日变化量<span class="num add">234</span></span>
+                    <span style="float: right" class="dec1">月变化量<span class="num del">234</span></span>
+                </div>
+
             </div>
             <div class="item">
-                <span class="title">{{resourcemeteData.meteShare}}</span><br>
-                <span class="dec">共享元数据数</span>
+                <span class="dec">交换任务量</span><br>
+                <span class="title">45767</span><br>
             </div>
             <div class="item" style="border: 0">
-                <span class="title">{{resourcemeteData.pushNew}}</span><br>
-                <span class="dec">新增共享元数据数</span>
+                <span class="dec">交换记录数</span><br>
+                <span class="title">45767</span><br>
             </div>
         </div>
     </div>
@@ -103,15 +140,15 @@
         </div>
         <div id="statistics"></div>
     </div>
-    <div class="divBox chart" style="margin-right: 0px">
-        <div class="grid-btn" style="border-bottom: 1px solid #eee">
-            <span class="title">
-                <i class="el-icon-s-help"></i>
-                目录数统计
-            </span>
-        </div>
-        <div id="statistics1"></div>
-    </div>
+    <!--<div class="divBox chart" style="margin-right: 0px">-->
+        <!--<div class="grid-btn" style="border-bottom: 1px solid #eee">-->
+            <!--<span class="title">-->
+                <!--<i class="el-icon-s-help"></i>-->
+                <!--目录数统计-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<div id="statistics1"></div>-->
+    <!--</div>-->
 
 </div>
 

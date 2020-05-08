@@ -38,6 +38,12 @@ var ztree1;
 var vm = new Vue({
     el:'#rrapp',
     data:{
+        q1: {
+            cnName:'',
+            meteSetNumber:'',
+            meteCategorySetId:'',
+
+        },
         nameS:'',
         showList: true,
         title: null,
@@ -53,8 +59,11 @@ var vm = new Vue({
         fileData:null,
         name:null,
         open:true,
+        open1:true,
         openText:'展开筛选',
+        openText1:'展开筛选',
         h:0,
+        h1:0,
         props: {
             label: 'name',
             children: 'list',
@@ -62,10 +71,15 @@ var vm = new Vue({
         count: 1,
         id:0,
         filterText:'',
+        filterText1:'',
         menuList:[],
+        menuList1:[],
         tableList:[],
+        tableList1:[],
         totalPage:0,
+        totalPage1:0,
         page:1,
+        page1:1,
         pageSize:10,
         tab:0,
         catalogId:null,
@@ -73,18 +87,40 @@ var vm = new Vue({
         auditOpinion:'',
         optionList:[],
         resourceMeteData:{},
-        comList:[]
+        comList:[],
+        look:false,
+        yuanshujuList:[],
+        ysjjList:[],
+        fenlSelect1:[],
+        selectMeteSetRow:null,
+        loading:true
     },
     watch: {
         filterText:function(val) {
             this.$refs.tree.filter(val);
+        },
+        filterText1:function(val) {
+            this.$refs.tree1.filter(val);
         }
     },
     methods: {
+        query1: function () {
+            vm.getTableList1();
+        },
+        clean1:function () {
+            vm.q1 = {
+                cnName:'',
+                meteSetNumber:'',
+                meteCategorySetId:'',
+
+            };
+            vm.getTableList1();
+        },
         reload: function (event) {
             vm.showList = true;
             vm.getTableList();
             vm.getMenuList();
+            vm.look = false;
         },
         getMenu: function(menuId){
             //加载菜单树
@@ -191,6 +227,16 @@ var vm = new Vue({
             }else {
                 vm.open = true;
                 vm.openText = '展开筛选'
+            }
+        },
+        openSwitch1:function () {
+            if(vm.open1){
+                vm.open1 = false;
+                vm.openText1 = '收起筛选'
+
+            }else {
+                vm.open1 = true;
+                vm.openText1 = '展开筛选'
             }
         },
         getInfo: function(catalogId){
@@ -374,6 +420,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            this.loading = true;
             var obj = {
                 page:this.page,
                 reviewState:null,
@@ -408,8 +455,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
                     }else{
                         alert(r.msg);
+                        vm.loading = false;
                     }
                 }
             });
@@ -419,6 +468,11 @@ var vm = new Vue({
         layerPage:function (currentPage) {
             vm.page = currentPage;
             vm.getTableList();
+        },
+        // 编辑分页
+        layerPage1:function (currentPage) {
+            vm.page1 = currentPage;
+            vm.getTableList1();
         },
         // 树目录点击事件
         handleNodeClick:function(data) {
@@ -446,6 +500,17 @@ var vm = new Vue({
         // 表格选中方法
         toggleSelection:function(selection) {
             vm.checkIdList = selection;
+        },
+        // 查看
+        lookC:function (id) {
+            vm.look = true;
+            vm.showList = false;
+            vm.title = "目录详情";
+
+            vm.getMenu();
+            vm.getMenu1();
+            vm.getComList();
+            vm.getInfo(id);
         },
         // 提交
         subMit:function () {
@@ -699,7 +764,121 @@ var vm = new Vue({
                     })
                 }
             });
-        }
+        },
+
+        // 获取元数据列表
+        getyuanshujuList:function(id){
+            $.get(baseURL + "xj/xjmetadataset/info/"+id, function(r){
+                vm.resourceMeteData.meteDataList = [];
+                r.xjMetaDataSet.meteDataList.forEach(function (t) {
+                    vm.resourceMeteData.meteDataList.push({
+                        meteNumber:t.meteNumber,
+                        meteCname:t.cnName,
+                        meteEname:t.euName,
+                        meteEuShortName:t.euShortName,
+                        updateTime:t.updateTime
+                    })
+                })
+                // vm.tableListUp = r.resourceMeteData.list;
+            });
+        },
+        // 打开选择元数据集
+        getYsj:function () {
+            vm.getMenuList1();
+            vm.getTableList1();
+
+            layer.open({
+                type: 1,
+                title: '选择元数据集',
+                content: $('#addUp'), //这里content是一个普通的String
+                skin: 'openClass',
+                area: ['1000px', '700px'],
+                shadeClose: true,
+                closeBtn:0,
+                btn: ['确定','取消'],
+                btn1:function (index) {
+                    vm.resourceMeteData.meteSetId = vm.selectMeteSetRow.meteSetId;
+                    vm.resourceMeteData.meteSetName = vm.selectMeteSetRow.cnName;
+                    layer.close(index);
+                    vm.page1 = 1;
+                    vm.getyuanshujuList(vm.selectMeteSetRow.meteSetId);
+                },
+                btn2:function () {
+                    vm.page1 = 1;
+                }
+
+            })
+            var _height = $('.switchIn.up').height();
+            var height = _height + 45 + 70;
+            vm.h1 = height;
+        },
+        // 表格单选
+        handleCurrentChange:function (row) {
+            vm.selectMeteSetRow = row;
+        },
+        // 元数据集分类数目录
+        getMenuList1: function (event) {
+            $.getJSON(baseURL + "xj/xjmetesetcategory/list", function(r){
+                r.forEach(function(item,i){
+                    vm.fenlSelect1.push({
+                        name:item.name,
+                        id:item.meteCategorySetId,
+                        list:[]
+                    })
+                })
+
+                var _list = [{
+                    name:'元数据分类',
+                    id:null,
+                    list:[]
+                }]
+                _list[0].list = vm.fenlSelect1;
+                vm.menuList1 = _list;
+            });
+        },
+        // 获取元数据表格列表
+        getTableList1:function () {
+            var _this = this;
+            $.ajax({
+                type: "get",
+                url: baseURL + 'xj/xjmetadataset/queryList',
+                // contentType: "application/json",
+                dataType: 'json',
+                data: {
+                    page:this.page1,
+                    meteCategorySetId:this.q1.meteCategorySetId,
+                    meteSetNumber:this.q1.meteSetNumber,
+                    cnName:this.q1.cnName,
+                    reviewState:2
+                },
+                success: function(r){
+                    if(r.code === 0){
+                        vm.tableList1 = r.page.list;
+                        vm.totalPage1 = r.page.totalCount;
+                        vm.tableList1.forEach(function (t,i) {
+                            if(t.meteSetId == vm.resourceMeteData.meteSetId){
+                                _this.$refs.multipleTable.setCurrentRow(vm.tableList1[i]);
+                            }
+                        })
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        // 元数据集分类树目录点击事件
+        handleNodeClick1:function(data) {
+            if(data.list.length == 0 || JSON.stringify(data.id) == 'null'){
+                // vm.meteCategorySetId = data.id;
+                vm.q1.meteCategorySetId = data.id;
+                vm.getTableList1();
+            }
+
+        },
+        filterNode1:function(value, data) {
+            if (!value) return true;
+            return data.name.indexOf(value) !== -1;
+        },
     },
     created:function () {
         this.getMenuList();
