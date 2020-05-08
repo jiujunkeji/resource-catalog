@@ -175,7 +175,7 @@
                     header-align="center"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status == 2" type="text" @click="lookC(scope.row.monitorId)">查看</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" @click="lookC(scope.row.monitorId)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
