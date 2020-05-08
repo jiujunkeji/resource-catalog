@@ -1,11 +1,15 @@
 package io.renren.modules.xj.service.impl;
 
-import io.renren.modules.xj.entity.XjDataSourceEntity;
+import io.renren.modules.xj.entity.*;
 
+import io.renren.modules.xj.service.XjChildMonitorService;
+import io.renren.modules.xj.service.XjKlogService;
+import io.renren.modules.xj.service.XjMonitorService;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.ObjectLocationSpecificationMethod;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.logging.KettleLogStore;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobHopMeta;
 import org.pentaho.di.job.JobMeta;
@@ -17,13 +21,15 @@ import org.pentaho.di.repository.RepositoryDirectoryInterface;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.sql.Time;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -31,12 +37,18 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.xj.dao.XjKtrDao;
-import io.renren.modules.xj.entity.XjKtrEntity;
 import io.renren.modules.xj.service.XjKtrService;
 
 
 @Service("xjKtrService")
 public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> implements XjKtrService {
+
+    @Autowired
+    private XjMonitorService xjMonitorService;
+    @Autowired
+    private XjChildMonitorService xjChildMonitorService;
+    @Autowired
+    private XjKlogService xjKlogService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -65,22 +77,124 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
 
     @Override
     @Async("taskExecutor")
-    public void kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds) throws Exception {
+    public void kettleJob(XjKtrEntity xjKtr, XjDataSourceEntity ds)  {
 
-        KettleEnvironment.init();
-        KettleDatabaseRepository kettleDatabaseRepository = repositoryCon(ds);
-        //createAndSaveTrans(kettleDatabaseRepository);
-        JobMeta jobMeta = generateJob(kettleDatabaseRepository,xjKtr,ds);
-        saveJob(kettleDatabaseRepository, jobMeta);
-        Job job = setSql(ds,xjKtr);
-        job.start();
-        job.waitUntilFinished();
-        if (job.getErrors() > 0) {
+        //生成监控主任务
+        XjMonitorEntity xjMonitorEntity = new XjMonitorEntity();
+        xjMonitorEntity.setJobName(xjKtr.getKtrName());
+        xjMonitorEntity.setCreateTime(new Date());
+        xjMonitorEntity.setStartTime(new Date());
+        xjMonitorEntity.setStatus(0);
+        xjMonitorService.insert(xjMonitorEntity);
+
+        //生成子任务
+        XjChildMonitorEntity xjChildMonitorEntity = new XjChildMonitorEntity();
+        xjChildMonitorEntity.setMonitorId(xjMonitorEntity.getMonitorId());
+        xjChildMonitorEntity.setCreateTime(new Date());
+        xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_开始加载作业");
+        xjChildMonitorEntity.setStatus(0);
+        xjChildMonitorService.insert(xjChildMonitorEntity);
+        //开始加载作业
+        try {
+            KettleEnvironment.init();
+            KettleDatabaseRepository kettleDatabaseRepository = repositoryCon(ds);
+            //createAndSaveTrans(kettleDatabaseRepository);
+            JobMeta jobMeta = generateJob(kettleDatabaseRepository,xjKtr,ds);
+            saveJob(kettleDatabaseRepository, jobMeta);
+            Job job = setSql(ds,xjKtr);
+
+            xjChildMonitorEntity.setCreateTime(new Date());
+            xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_加载作业完成");
+            xjChildMonitorEntity.setStatus(1);
+            xjChildMonitorService.insert(xjChildMonitorEntity);
+            //作业加载完成
+            job.start();
+            xjChildMonitorEntity.setCreateTime(new Date());
+            xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_开始执行作业");
+            xjChildMonitorEntity.setStatus(2);
+            xjChildMonitorService.insert(xjChildMonitorEntity);
+            //开始执行作业
+            job.waitUntilFinished();
+            if (job.getErrors() > 0) {
+                //失败
+                xjKtr.setKtrStatus("3");
+
+                xjChildMonitorEntity.setCreateTime(new Date());
+                xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_结束执行作业");
+                xjChildMonitorEntity.setStatus(4);
+                xjChildMonitorService.insert(xjChildMonitorEntity);
+
+                xjMonitorEntity.setStatus(2);
+                xjMonitorEntity.setEndTime(new Date());
+                xjMonitorService.updateById(xjMonitorEntity);
+
+                String file = KettleLogStore.getAppender().getBuffer().toString();
+                XjKlogEntity xjKlogEntity = tableInput(file,xjMonitorEntity.getMonitorId());
+                xjKlogService.insert(xjKlogEntity);
+                XjKlogEntity xjKlogEntity1 = textOutput(file,xjMonitorEntity.getMonitorId());
+                xjKlogService.insert(xjKlogEntity1);
+
+
+            }else {
+                //成功
+                xjKtr.setKtrStatus("2");
+
+                xjChildMonitorEntity.setCreateTime(new Date());
+                xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_结束执行作业");
+                xjChildMonitorEntity.setStatus(3);
+                xjChildMonitorService.insert(xjChildMonitorEntity);
+
+                xjMonitorEntity.setStatus(1);
+                xjMonitorEntity.setEndTime(new Date());
+                xjMonitorService.updateById(xjMonitorEntity);
+
+                String file = KettleLogStore.getAppender().getBuffer().toString();
+                XjKlogEntity xjKlogEntity = tableInput(file,xjMonitorEntity.getMonitorId());
+                xjKlogService.insert(xjKlogEntity);
+                XjKlogEntity xjKlogEntity1 = textOutput(file,xjMonitorEntity.getMonitorId());
+                xjKlogService.insert(xjKlogEntity1);
+            }
+            this.updateById(xjKtr);
+        } catch (KettleException e) {
+            //失败
             xjKtr.setKtrStatus("3");
-        }else {
-            xjKtr.setKtrStatus("2");
+
+            xjChildMonitorEntity.setCreateTime(new Date());
+            xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_结束执行作业");
+            xjChildMonitorEntity.setStatus(4);
+            xjChildMonitorService.insert(xjChildMonitorEntity);
+
+            xjMonitorEntity.setStatus(2);
+            xjMonitorEntity.setEndTime(new Date());
+            xjMonitorService.updateById(xjMonitorEntity);
+
+            String file = KettleLogStore.getAppender().getBuffer().toString();
+            XjKlogEntity xjKlogEntity = tableInput(file,xjMonitorEntity.getMonitorId());
+            xjKlogService.insert(xjKlogEntity);
+            XjKlogEntity xjKlogEntity1 = textOutput(file,xjMonitorEntity.getMonitorId());
+            xjKlogService.insert(xjKlogEntity1);
+            e.printStackTrace();
+        } catch (Exception e) {
+            //失败
+            xjKtr.setKtrStatus("3");
+
+            xjChildMonitorEntity.setCreateTime(new Date());
+            xjChildMonitorEntity.setChildJobName(xjKtr.getKtrName()+"_结束执行作业");
+            xjChildMonitorEntity.setStatus(4);
+            xjChildMonitorService.insert(xjChildMonitorEntity);
+
+            xjMonitorEntity.setStatus(2);
+            xjMonitorEntity.setEndTime(new Date());
+            xjMonitorService.updateById(xjMonitorEntity);
+
+            String file = KettleLogStore.getAppender().getBuffer().toString();
+            XjKlogEntity xjKlogEntity = tableInput(file,xjMonitorEntity.getMonitorId());
+            xjKlogService.insert(xjKlogEntity);
+            XjKlogEntity xjKlogEntity1 = textOutput(file,xjMonitorEntity.getMonitorId());
+            xjKlogService.insert(xjKlogEntity1);
+            e.printStackTrace();
         }
-        this.updateById(xjKtr);
+
     }
 
     /**
@@ -237,4 +351,71 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
         return job;
     }
 
+    //表输入字段匹配
+    private static XjKlogEntity tableInput (String file ,int monid){
+        XjKlogEntity xjKlogEntity = new XjKlogEntity();
+        xjKlogEntity.setmonitorId(monid);
+        xjKlogEntity.setAssemblyName("表输入");
+        Pattern p = Pattern.compile("表输入.*完成处理.*");
+        Matcher m = p.matcher(file);
+        if (m.find() != false){
+            System.out.println(m.group(0));
+            Pattern p1 = Pattern.compile(".=\\d*");
+            Matcher m1 = p1.matcher(m.group(0));
+            while (m1.find()){
+                String[] s =  m1.group(0).split("=");
+                if (s[0].equals("I") ){
+                    xjKlogEntity.setxjIn(s[1]);
+                }else if (s[0] .equals("O") ){
+                    xjKlogEntity.setxjOut(s[1]);
+                }else if (s[0] .equals("R") ){
+                    xjKlogEntity.setxjRead(s[1]);
+                }else if (s[0] .equals("W") ){
+                    xjKlogEntity.setxjWrite(s[1]);
+                }else if (s[0] .equals("U") ){
+                    xjKlogEntity.setxjUpdate(s[1]);
+                }else if (s[0] .equals("E") ){
+                    xjKlogEntity.setxjError(s[1]);
+                }
+            }
+            xjKlogEntity.setCreateTime(new Date());
+            return xjKlogEntity;
+        }else {
+            return null;
+        }
+    }
+
+    //文本输出字段匹配
+    private static XjKlogEntity textOutput (String file ,int monid){
+        XjKlogEntity xjKlogEntity = new XjKlogEntity();
+        xjKlogEntity.setmonitorId(monid);
+        xjKlogEntity.setAssemblyName("文本文件输出");
+        Pattern p = Pattern.compile("文本文件输出.*完成处理.*");
+        Matcher m = p.matcher(file);
+        if (m.find() != false){
+            System.out.println(m.group(0));
+            Pattern p1 = Pattern.compile(".=\\d*");
+            Matcher m1 = p1.matcher(m.group(0));
+            while (m1.find()){
+                String[] s =  m1.group(0).split("=");
+                if (s[0].equals("I") ){
+                    xjKlogEntity.setxjIn(s[1]);
+                }else if (s[0] .equals("O") ){
+                    xjKlogEntity.setxjOut(s[1]);
+                }else if (s[0] .equals("R") ){
+                    xjKlogEntity.setxjRead(s[1]);
+                }else if (s[0] .equals("W") ){
+                    xjKlogEntity.setxjWrite(s[1]);
+                }else if (s[0] .equals("U") ){
+                    xjKlogEntity.setxjUpdate(s[1]);
+                }else if (s[0] .equals("E") ){
+                    xjKlogEntity.setxjError(s[1]);
+                }
+            }
+            xjKlogEntity.setCreateTime(new Date());
+            return xjKlogEntity;
+        }else {
+            return null;
+        }
+    }
 }

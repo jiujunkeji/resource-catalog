@@ -16,15 +16,20 @@
 
 package io.renren.modules.job.utils;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.job.entity.ScheduleJobEntity;
 import io.renren.modules.job.entity.ScheduleJobLogEntity;
 import io.renren.modules.job.service.ScheduleJobLogService;
+import io.renren.modules.job.service.ScheduleJobService;
+import io.renren.modules.xj.entity.XjScheduleJobEntity;
+import io.renren.modules.xj.service.XjScheduleJobService;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.Date;
@@ -41,12 +46,19 @@ import java.util.concurrent.Future;
  */
 public class ScheduleJob extends QuartzJobBean {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private ExecutorService service = Executors.newSingleThreadExecutor(); 
-	
+	private ExecutorService service = Executors.newSingleThreadExecutor();
+
+	@Autowired
+	private ScheduleJobService scheduleJobService;
+	@Autowired
+	private XjScheduleJobService xjScheduleJobService;
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         ScheduleJobEntity scheduleJob = (ScheduleJobEntity) context.getMergedJobDataMap()
         		.get(ScheduleJobEntity.JOB_PARAM_KEY);
+		XjScheduleJobEntity xjScheduleJobEntity = xjScheduleJobService.selectOne(new EntityWrapper<XjScheduleJobEntity>().eq("schedule_id",scheduleJob.getJobId()));
+
         
         //获取spring bean
         ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextUtils.getBean("scheduleJobLogService");
@@ -76,6 +88,7 @@ public class ScheduleJob extends QuartzJobBean {
 			log.setTimes((int)times);
 			//任务状态    0：成功    1：失败
 			log.setStatus(0);
+			xjScheduleJobEntity.setStatus(4);
 			
 			logger.info("任务执行完毕，任务ID：" + scheduleJob.getJobId() + "  总共耗时：" + times + "毫秒");
 		} catch (Exception e) {
@@ -88,8 +101,10 @@ public class ScheduleJob extends QuartzJobBean {
 			//任务状态    0：成功    1：失败
 			log.setStatus(1);
 			log.setError(StringUtils.substring(e.toString(), 0, 2000));
+			xjScheduleJobEntity.setStatus(5);
 		}finally {
 			scheduleJobLogService.insert(log);
+			xjScheduleJobService.updateById(xjScheduleJobEntity);
 		}
     }
 }

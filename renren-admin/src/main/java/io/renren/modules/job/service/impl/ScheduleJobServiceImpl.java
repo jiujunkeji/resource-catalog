@@ -113,26 +113,31 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
     
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public int run(Long jobId) {
-    		ScheduleUtils.run(scheduler, this.selectById(jobId));
-    		ScheduleJobEntity sj = scheduleJobService.selectById(jobId);
-    		return sj.getStatus();
+    public void run(Long[] jobIds) {
+    		for (Long jobId : jobIds){
+    			ScheduleUtils.run(scheduler,this.selectById(jobId));
+			}
+
     }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public int pause(Long jobIds) {
-    		ScheduleUtils.pauseJob(scheduler, jobIds);
-		    ScheduleJobEntity sj = scheduleJobService.selectById(jobIds);
-		    return sj.getStatus();
+    public void pause(Long[] jobIds) {
+		for (Long jobId : jobIds){
+			ScheduleUtils.pauseJob(scheduler,jobId);
+		}
+
+		updateBatch(jobIds,Constant.ScheduleStatus.PAUSE.getValue());
     }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-    public int resume(Long jobIds) {
-    		ScheduleUtils.resumeJob(scheduler, jobIds);
-		    ScheduleJobEntity sj = scheduleJobService.selectById(jobIds);
-		    return sj.getStatus();
+    public void resume(Long[] jobIds) {
+		for (Long jobId : jobIds){
+			ScheduleUtils.resumeJob(scheduler,jobId);
+		}
+
+		updateBatch(jobIds,Constant.ScheduleStatus.NORMAL.getValue());
     }
     
 }

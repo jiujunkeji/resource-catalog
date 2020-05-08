@@ -31,29 +31,29 @@ public class XjKlogEntity implements Serializable {
 	 */
 	private String assemblyName;
 	/**
-	 * 
+	 * 输入
 	 */
-	private String in;
+	private String xjIn;
 	/**
-	 * 
+	 * 输出
 	 */
-	private String out;
+	private String xjOut;
 	/**
-	 * 
+	 * 读
 	 */
-	private String read;
+	private String xjRead;
 	/**
-	 * 
+	 * 写
 	 */
-	private String write;
+	private String xjWrite;
 	/**
-	 * 
+	 * 更新
 	 */
-	private String update;
+	private String xjUpdate;
 	/**
-	 * 
+	 * 错误
 	 */
-	private String error;
+	private String xjError;
 	/**
 	 * 
 	 */
@@ -98,74 +98,74 @@ public class XjKlogEntity implements Serializable {
 	/**
 	 * 设置：
 	 */
-	public void setIn(String in) {
-		this.in = in;
+	public void setxjIn(String xjIn) {
+		this.xjIn = xjIn;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getIn() {
-		return in;
+	public String getxjIn() {
+		return xjIn;
 	}
 	/**
 	 * 设置：
 	 */
-	public void setOut(String out) {
-		this.out = out;
+	public void setxjOut(String xjOut) {
+		this.xjOut = xjOut;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getOut() {
-		return out;
+	public String getxjOut() {
+		return xjOut;
 	}
 	/**
 	 * 设置：
 	 */
-	public void setRead(String read) {
-		this.read = read;
+	public void setxjRead(String xjRead) {
+		this.xjRead = xjRead;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getRead() {
-		return read;
+	public String getxjRead() {
+		return xjRead;
 	}
 	/**
 	 * 设置：
 	 */
-	public void setWrite(String write) {
-		this.write = write;
+	public void setxjWrite(String xjWrite) {
+		this.xjWrite = xjWrite;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getWrite() {
-		return write;
+	public String getxjWrite() {
+		return xjWrite;
 	}
 	/**
 	 * 设置：
 	 */
-	public void setUpdate(String update) {
-		this.update = update;
+	public void setxjUpdate(String xjUpdate) {
+		this.xjUpdate = xjUpdate;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getUpdate() {
-		return update;
+	public String getxjUpdate() {
+		return xjUpdate;
 	}
 	/**
 	 * 设置：
 	 */
-	public void setError(String error) {
-		this.error = error;
+	public void setxjError(String xjError) {
+		this.xjError = xjError;
 	}
 	/**
 	 * 获取：
 	 */
-	public String getError() {
-		return error;
+	public String getxjError() {
+		return xjError;
 	}
 	/**
 	 * 设置：

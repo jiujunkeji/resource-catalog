@@ -55,15 +55,15 @@ public interface ScheduleJobService extends IService<ScheduleJobEntity> {
 	/**
 	 * 立即执行
 	 */
-	int run(Long jobId);
+	void run(Long[] jobIds);
 	
 	/**
 	 * 暂停运行
 	 */
-	int pause(Long jobIds);
+	void pause(Long[] jobIds);
 	
 	/**
 	 * 恢复运行
 	 */
-	int resume(Long jobIds);
+	void resume(Long[] jobIds);
 }

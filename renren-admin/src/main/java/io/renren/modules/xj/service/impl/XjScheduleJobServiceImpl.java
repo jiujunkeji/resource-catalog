@@ -1,8 +1,5 @@
 package io.renren.modules.xj.service.impl;
 
-import io.renren.modules.job.service.ScheduleJobService;
-import io.renren.modules.job.utils.ScheduleJob;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

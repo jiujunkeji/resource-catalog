@@ -120,7 +120,8 @@ public class XjScheduleJobController {
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
         xe.setStatus(1);
         xjScheduleJobService.updateById(xe);
-        scheduleJobService.run(xe.getScheduleId());
+        Long[] ids = {xe.getScheduleId()};
+        scheduleJobService.run(ids);
 
         return R.ok();
     }
@@ -134,7 +135,8 @@ public class XjScheduleJobController {
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
         xe.setStatus(2);
         xjScheduleJobService.updateById(xe);
-        scheduleJobService.pause(xe.getScheduleId());
+        Long[] ids = {xe.getScheduleId()};
+        scheduleJobService.pause(ids);
 
 
         return R.ok();
@@ -149,7 +151,8 @@ public class XjScheduleJobController {
         XjScheduleJobEntity xe = xjScheduleJobService.selectById(triggerId);
         xe.setStatus(1);
         xjScheduleJobService.updateById(xe);
-        scheduleJobService.resume(xe.getScheduleId());
+        Long[] ids = {xe.getScheduleId()};
+        scheduleJobService.resume(ids);
 
         return R.ok();
     }
