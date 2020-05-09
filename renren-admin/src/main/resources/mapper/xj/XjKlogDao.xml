@@ -17,5 +17,12 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-
+    <!-- 修改订单状态-->
+    <select id="sum" resultType="int">
+        select sum(xj_write) AS monitorDataCount FROM xj_klog
+        <where>
+            <if test="createDate != null"> and create_time <![CDATA[>= ]]> #{createDate}</if>
+            and assembly_name = "文本文件输出"
+        </where>
+    </select>
 </mapper>

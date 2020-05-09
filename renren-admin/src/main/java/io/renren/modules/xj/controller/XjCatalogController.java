@@ -418,7 +418,10 @@ public class XjCatalogController extends AbstractController{
         countDTO.setMonitorCount(monitorCount);
         int monitorDayCount = xjMonitorService.selectCount(new EntityWrapper<XjMonitorEntity>().ge("create_time",zero));
         countDTO.setMonitorDayCount(monitorDayCount);
-
+        int monitorDataCount = xjKlogService.sum(null);
+        countDTO.setMonitorDataCount(new BigDecimal(monitorDataCount));
+        int monitorDataDayCount = xjKlogService.sum(zero);
+        countDTO.setMonitorDataDayCount(new BigDecimal(monitorDataDayCount));
         return R.ok().put("countDTO",countDTO);
     }
 
