@@ -132,7 +132,7 @@
                     v-model="filterText">
             </el-input>
             <el-tree class="filter-tree" :data="menuList" :props="props"
-                     :filter-node-method="filterNode" ref="tree" accordion @node-click="handleNodeClick" :default-expand-all="true">
+                     :filter-node-method="filterNode" ref="tree" accordion @node-click="handleNodeClick">
             </el-tree>
         </div>
         <div class="listCon">

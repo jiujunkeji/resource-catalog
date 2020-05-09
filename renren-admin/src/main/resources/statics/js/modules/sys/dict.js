@@ -97,7 +97,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.dict) == '{}' || vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
+                    if(vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
                         that.$message({
                             message: "带 ' * ' 的为必填项",
                             type: 'warning'
@@ -150,7 +150,7 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    if(JSON.stringify(vm.dict) == '{}' || vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
+                    if(vm.dict.name == '' || vm.dict.type == '' || vm.dict.code == '' || vm.dict.value == '' ){
                         that.$message({
                             message: "带 ' * ' 的为必填项",
                             type: 'warning'

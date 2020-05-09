@@ -788,13 +788,13 @@ var vm = new Vue({
 
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '选择元数据',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
                 area: ['1000px', '700px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['新增','取消'],
+                btn: ['确定','取消'],
                 btn1:function (index) {
                     vm.resourceMeteData.meteDataList = vm.checkIdList2;
                     // vm.resourceMeteData.meteDataList = vm.checkIdList2;

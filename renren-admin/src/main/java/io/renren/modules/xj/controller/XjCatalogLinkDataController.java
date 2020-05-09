@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.xj.entity.XjCatalogEntity;
 import io.renren.modules.xj.entity.XjMeteSetMiddleEntity;
 import io.renren.modules.xj.service.XjCatalogService;
@@ -53,6 +52,14 @@ public class XjCatalogLinkDataController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 查询数据源
+     */
+    @RequestMapping("/getDataSource")
+    public R submit(@RequestParam Long catalogId){
+        XjCatalogLinkDataEntity linkDataEntity = xjCatalogLinkDataService.selectOne(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",catalogId));
+        return R.ok().put("linkData",linkDataEntity);
+    }
 
     /**
      * 信息

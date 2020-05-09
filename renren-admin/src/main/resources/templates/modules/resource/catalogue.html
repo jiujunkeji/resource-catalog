@@ -132,7 +132,7 @@
                     v-model="filterText">
             </el-input>
             <el-tree class="filter-tree" :data="menuList" :props="props"
-                     :filter-node-method="filterNode" ref="tree" accordion @node-click="handleNodeClick" :default-expand-all="true">
+                     :filter-node-method="filterNode" ref="tree" accordion @node-click="handleNodeClick">
             </el-tree>
         </div>
         <div class="listCon">
@@ -342,7 +342,7 @@
                 <div class="item">
                     <label>类目编码</label>
                     <div class="inp">
-                        <input type="text" class="form-control" v-model="resourceMeteData.catagoryCode" placeholder="类目编码" readonly="readonly"/>
+                        <input type="text" class="form-control" v-model="resourceMeteData.categoryCode" placeholder="类目编码" readonly="readonly"/>
                     </div>
                 </div>
             </div>
