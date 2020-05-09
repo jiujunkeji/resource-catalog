@@ -53,18 +53,6 @@ public class XjKtrEntity implements Serializable {
 	 */
 	private String ktrSql;
 	/**
-	 * 任务类型
-	 */
-	private String ktrType;
-	/**
-	 *描述
-	 */
-	private String ktrPurpose;
-	/**
-	 * 部门
-	 */
-	private String ktrMechanism;
-	/**
 	 * 备注
 	 */
 	private String ktrText;
@@ -77,10 +65,18 @@ public class XjKtrEntity implements Serializable {
 	 */
 	private Date ktrUpdatetime;
 	/**
+	 * 查询数量
+	 */
+	private Integer ktrNumber;
+	/**
 	 *状态
 	 * 0 未执行 1 正在执行 2 执行成功 3 执行失败
 	 */
 	private String ktrStatus;
+
+	public Integer getKtrNumber() { return ktrNumber; }
+
+	public void setKtrNumber(Integer ktrNumber) { this.ktrNumber = ktrNumber; }
 
 	public String getKtrStatus() {
 		return ktrStatus;
@@ -90,29 +86,6 @@ public class XjKtrEntity implements Serializable {
 		this.ktrStatus = ktrStatus;
 	}
 
-	public String getKtrType() {
-		return ktrType;
-	}
-
-	public void setKtrType(String ktrType) {
-		this.ktrType = ktrType;
-	}
-
-	public String getKtrPurpose() {
-		return ktrPurpose;
-	}
-
-	public void setKtrPurpose(String ktrPurpose) {
-		this.ktrPurpose = ktrPurpose;
-	}
-
-	public String getKtrMechanism() {
-		return ktrMechanism;
-	}
-
-	public void setKtrMechanism(String ktrMechanism) {
-		this.ktrMechanism = ktrMechanism;
-	}
 
 	public String getKtrText() {
 		return ktrText;
