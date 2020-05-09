@@ -110,16 +110,23 @@ var vm = new Vue({
             });
         },
 		add: function(){
+            var that = this;
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '新增任务',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '560px'],
+                area: ['562px', '460px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['新增','取消'],
+                btn: ['确定','取消'],
                 btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjktr/save',
@@ -128,9 +135,11 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code === 0){
                                 vm.reload();
+                                loading.close();
                                 layer.close(index);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }
                         }
@@ -151,16 +160,23 @@ var vm = new Vue({
             // vm.getMenu();
 		},
 		update: function (id) {
+		    var that = this;
             layer.open({
                 type: 1,
-                title: '修改',
+                title: '修改任务',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '560px'],
+                area: ['562px', '460px'],
                 shadeClose: true,
                 closeBtn:0,
-                btn: ['修改','取消'],
+                btn: ['确定','取消'],
                 btn1:function (index) {
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + 'xj/xjktr/update',
@@ -169,9 +185,11 @@ var vm = new Vue({
                         success: function(r){
                             if(r.code === 0){
                                 vm.reload();
+                                loading.close();
                                 layer.close(index);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
                             }else{
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }
                         }
@@ -192,10 +210,10 @@ var vm = new Vue({
         lookC:function (id) {
             layer.open({
                 type: 1,
-                title: '详情',
+                title: '查看任务',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '560px'],
+                area: ['562px', '460px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['关闭'],
@@ -233,6 +251,7 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
+		    var that = this;
 			// var meteCategoryIds = getMeteCategoryId();
             if(vm.checkIdList.length == 0){
                 this.$message({
@@ -241,6 +260,12 @@ var vm = new Vue({
                 });
             }else{
                 layer.confirm('确定要删除选中的记录？', function(index1){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + "xj/xjktr/delete",
@@ -251,9 +276,10 @@ var vm = new Vue({
                                 vm.reload();
                                 layer.close(index1);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-
+                                loading.close();
 
                             }else{
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }
                         }
@@ -325,35 +351,6 @@ var vm = new Vue({
                 }
             });
         },
-        querySearch:function(queryString, cb) {
-            var restaurants = this.restaurants;
-            var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-            // 调用 callback 返回建议列表的数据
-            cb(results);
-        },
-        createFilter:function(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        loadAll:function () {
-            return [
-                {'value':'GBase'},
-                {'value':'mysql'},
-                {'value':'xml'},
-                {'value':'Excel'},
-                {'value':'txt'},
-                {'value':'WebServices'},
-                {'value':'Teradata'},
-                {'value':'Hive'},
-                {'value':'GlusterFS'},
-                {'value':'HBase'},
-                {'value':'Greenplum'},
-                {'value':'Vertica'},
-            ]
-        },
-        handleSelect:function(item) {
-        },
         // 执行
         implement:function (id) {
             layer.confirm('确定要执行选中的记录？', function(index1){
@@ -424,9 +421,6 @@ var vm = new Vue({
 	    this.getShujuyuanList()
         // $.get(baseURL + "resource/metecategory/list", function(r){
         // });
-    },
-    mounted:function() {
-        this.restaurants = this.loadAll();
     }
 });
 

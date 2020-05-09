@@ -347,7 +347,12 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
 
         JobMeta jobMeta = repository.loadJob(ke.getKtrName(),directoryInterface,null,null);
         Job job = new Job(repository,jobMeta);
-        job.setVariable("test",ke.getKtrSql());
+        if (ke.getKtrSql() == null){
+            String sql = "select * from "+ke.getKtrTablename()+"limit" +ke.getKtrNumber();
+            job.setVariable("test",sql);
+        }else {
+            job.setVariable("test",ke.getKtrSql());
+        }
         return job;
     }
 

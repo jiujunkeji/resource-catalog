@@ -12,7 +12,7 @@
             }
             #statistics{
                 width: 100%;
-                height: 438px;
+                height: 460px;
             }
             #statistics1{
                 width: 100%;
@@ -45,10 +45,10 @@
                 border: 3px solid #10ac84;
             }
             .yuanshuju .item:nth-child(3):before{
-                border: 3px solid #ffa514;
+                border: 3px solid #e6a13c;
             }
             .yuanshuju .item:nth-child(4):before{
-                border: 3px solid #00dcff;
+                border: 3px solid #409eff;
             }
             .yuanshuju span.title{
                 display: inline-block;
@@ -123,11 +123,13 @@
             </div>
             <div class="item">
                 <span class="dec">交换任务量</span><br>
-                <span class="title">45767</span><br>
+                <span class="title">45767</span><br><br>
+                <el-progress :percentage="90" status="warning"></el-progress>
             </div>
             <div class="item" style="border: 0">
                 <span class="dec">交换记录数</span><br>
-                <span class="title">45767</span><br>
+                <span class="title">45767</span><br><br>
+                <el-progress :percentage="90" color="#409eff" :show-text="false"></el-progress>
             </div>
         </div>
     </div>
@@ -135,7 +137,7 @@
         <div class="grid-btn" style="border-bottom: 1px solid #eee">
             <span class="title">
                 <i class="el-icon-s-help"></i>
-                访问数统计
+                元数据数统计
             </span>
         </div>
         <div id="statistics"></div>
