@@ -10,6 +10,7 @@ var vm = new Vue({
         resourcemeteData:{},
         catalogsearchData:{},
         resourcecatalogData:{},
+        format:''
     },
     methods:{
         // 元数据统计
@@ -62,7 +63,7 @@ var vm = new Vue({
         }
     },
     created:function(){
-        this.resourcemetedata();
+        // this.resourcemetedata();
         this.catalogsearch();
         // this.resourcecatalog();
     }

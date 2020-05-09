@@ -195,7 +195,7 @@ var vm = new Vue({
                     //选择上级菜单
                     vm.resourceMeteData.categoryId = node[0].meteCategoryId;
                     vm.resourceMeteData.categoryName = node[0].name;
-                    vm.resourceMeteData.catagoryCode = node[0].code;
+                    vm.resourceMeteData.categoryCode = node[0].code;
                     layer.close(index);
                 }
             });

@@ -701,6 +701,9 @@ var vm = new Vue({
         addUp:function () {
             vm.getMenuList1();
             vm.getTableList1();
+            vm.resourceMeteData = {
+                dsName:''
+            }
 
             layer.open({
                 type: 1,
@@ -838,8 +841,9 @@ var vm = new Vue({
         // 数据源改变
         dsChange:function (opt) {
             vm.dataSourceList.forEach(function (item) {
-                if(item.dsId = opt){
-                    vm.resourceMeteData.dsName = item.dsName
+                if(item.dsId == opt){
+                    vm.resourceMeteData.dsName = item.dsName;
+                    return
                 }
             })
         },

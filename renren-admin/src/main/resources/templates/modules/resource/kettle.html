@@ -246,50 +246,17 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">数量</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="meteCategory.ktrTablename" placeholder="数量" :readonly="look"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">SQL</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ktrSql" placeholder="SQL" :readonly="look"/>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">任务类型</div>
-                <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrType" placeholder="请选择":disabled="look">
-
-                        <el-option
-                                key="1"
-                                label="抽取"
-                                value="抽取">
-                        </el-option>
-                        <el-option
-                                key="2"
-                                label="传输"
-                                value="传输">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">描述</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="meteCategory.ktrPurpose" placeholder="描述" :readonly="look"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">部门</div>
-                <div class="col-sm-10">
-                    <el-select v-model="meteCategory.ktrMechanism" placeholder="请选择" :disabled="look">
-                        <el-option
-                                v-for="item in comList"
-                                :key="item.organisationId"
-                                :label="item.organisationName"
-                                :value="item.organisationId">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-
-
             <div class="form-group">
                 <div class="col-sm-2 control-label">备注</div>
                 <div class="col-sm-10">
