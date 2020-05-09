@@ -16,5 +16,7 @@ import java.util.Map;
 public interface XjKlogService extends IService<XjKlogEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    int sum(String createDate);
 }
 

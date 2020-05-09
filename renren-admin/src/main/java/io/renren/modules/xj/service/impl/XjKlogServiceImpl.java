@@ -26,4 +26,9 @@ public class XjKlogServiceImpl extends ServiceImpl<XjKlogDao, XjKlogEntity> impl
         return new PageUtils(page);
     }
 
+    @Override
+    public int sum(String createDate) {
+        return  baseMapper.sum(createDate);
+    }
+
 }
