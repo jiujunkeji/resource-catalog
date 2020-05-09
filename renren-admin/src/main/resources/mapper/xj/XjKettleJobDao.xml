@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.xj.dao.XjKettleJobDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.xj.entity.XjKettleJobEntity" id="xjKettleJobMap">
+        <result property="kjId" column="kj_id"/>
+        <result property="kjName" column="kj_name"/>
+        <result property="kjType" column="kj_type"/>
+        <result property="kjPurpose" column="kj_purpose"/>
+        <result property="kjMappingModules" column="kj_mapping_modules"/>
+        <result property="kjMechanism" column="kj_mechanism"/>
+        <result property="kjText" column="kj_text"/>
+    </resultMap>
+
+
+</mapper>
