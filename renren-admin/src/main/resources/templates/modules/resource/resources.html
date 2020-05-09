@@ -98,38 +98,42 @@
         <div class="grid-btn" style="border-bottom: 1px solid #eee">
             <span class="title">
                 <i class="el-icon-menu"></i>
-                元数据统计
+                数据统计
             </span>
         </div>
         <div class="yuanshuju">
             <div class="item">
                 <span class="dec">元数据数</span><br>
-                <span class="title">4567893243</span><br>
+                <span class="title">{{resourcemeteData.meteDataCount}}</span><br>
                 <hr>
-                <span class="dec1">元数据分类数<span class="num">234</span></span>
+                <span class="dec1">元数据分类数<span class="num">{{resourcemeteData.meteCategoryCount}}</span></span>
                 <!--<span class="title">{{resourcemeteData.meteAll}}</span><br>-->
 
             </div>
             <div class="item">
                 <!--<span class="title">{{resourcemeteData.meteNew}}</span><br>-->
                 <span class="dec">目录数</span><br>
-                <span class="title">45767</span><br>
+                <span class="title">{{resourcemeteData.catalogCount}}</span><br>
                 <hr>
                 <div style="overflow: hidden">
-                    <span style="float: left" class="dec1">日变化量<span class="num add">234</span></span>
-                    <span style="float: right" class="dec1">月变化量<span class="num del">234</span></span>
+                    <span style="float: left" class="dec1">日增长量<span class="num">{{resourcemeteData.catalogDayChange}}</span></span>
+                    <span style="float: right" class="dec1">月增长量<span class="num">{{resourcemeteData.catalogMonChange}}</span></span>
                 </div>
 
             </div>
             <div class="item">
                 <span class="dec">交换任务量</span><br>
-                <span class="title">45767</span><br><br>
-                <el-progress :percentage="90" status="warning"></el-progress>
+                <span class="title">{{resourcemeteData.monitorCount}}</span><br>
+                <hr>
+                <span class="dec1">当日任务量<span class="num">{{resourcemeteData.monitorDayCount}}</span></span>
+                <!--<el-progress :percentage="90" status="warning"></el-progress>-->
             </div>
             <div class="item" style="border: 0">
                 <span class="dec">交换记录数</span><br>
-                <span class="title">45767</span><br><br>
-                <el-progress :percentage="90" color="#409eff" :show-text="false"></el-progress>
+                <span class="title">{{resourcemeteData.monitorDataCount}}</span><br>
+                <hr>
+                <span class="dec1">当日记录数<span class="num">{{resourcemeteData.monitorDataDayCount}}</span></span>
+                <!--<el-progress :percentage="90" color="#409eff" :show-text="false"></el-progress>-->
             </div>
         </div>
     </div>

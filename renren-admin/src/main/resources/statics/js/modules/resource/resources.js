@@ -17,14 +17,14 @@ var vm = new Vue({
         resourcemetedata:function () {
             $.ajax({
                 type: "GET",
-                url: baseURL + "resource/resourcemetedata/stat",
+                url: baseURL + "xj/xjcatalog/count1",
                 success: function(r){
                     if(r.code == 0){
                         console.log(r);
-                        vm.resourcemeteData = r;
+                        vm.resourcemeteData = r.countDTO;
 
                     }else{
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
                     }
                 }
             });
@@ -33,7 +33,7 @@ var vm = new Vue({
         catalogsearch:function () {
             $.ajax({
                 type: "GET",
-                url: baseURL + "resource/catalogsearch/stat",
+                url: baseURL + "xj/xjcatalog/count2",
                 success: function(r){
                     if(r.code == 0){
                         console.log(r);
@@ -63,7 +63,7 @@ var vm = new Vue({
         }
     },
     created:function(){
-        // this.resourcemetedata();
+        this.resourcemetedata();
         this.catalogsearch();
         // this.resourcecatalog();
     }

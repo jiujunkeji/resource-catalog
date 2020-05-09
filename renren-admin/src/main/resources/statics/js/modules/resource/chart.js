@@ -32,11 +32,11 @@ function ziyuan(data) {
         },
         xAxis: [{
             type: 'category',
-            color: '#59588D',
-            data: ['2016', '2017', '2018', '2019', '2020'],
+            color: '#777',
+            data: ['基础元数据', '网络安全元数据', '位置元数据', '社交网络元数据', '日志元数据','特征库元数据','画像库元数据'],
             axisLabel: {
                 margin: 20,
-                color: '#999',
+                color: '#777',
                 textStyle: {
                     fontSize: 14
                 },
@@ -77,7 +77,7 @@ function ziyuan(data) {
         }],
         series: [{
             type: 'bar',
-            data: [40, 90, 10, 20, 56],
+            data: [40, 90, 10, 20, 56, 20, 90],
             barWidth: '50px',
             itemStyle: {
                 normal: {
