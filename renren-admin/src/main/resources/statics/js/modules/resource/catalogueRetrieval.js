@@ -88,6 +88,7 @@ var vm = new Vue({
                                 vm.menuList.push({
                                     name:item.catalogName,
                                     id:item.catalogId,
+                                    type:item.datasourceType,
                                     list:[]
                                 })
                                 _len++;
@@ -103,6 +104,7 @@ var vm = new Vue({
                                     item.list.push({
                                         name:n.catalogName,
                                         id:n.catalogId,
+                                        type:n.datasourceType,
                                         list:[]
                                     })
                                     _len++;
@@ -120,6 +122,7 @@ var vm = new Vue({
                                         i.list.push({
                                             name:n.catalogName,
                                             id:n.catalogId,
+                                            type:n.datasourceType,
                                             list:[]
                                         })
                                     }
@@ -140,6 +143,7 @@ var vm = new Vue({
                                             j.list.push({
                                                 name:n.catalogName,
                                                 id:n.catalogId,
+                                                type:n.datasourceType,
                                                 list:[]
                                             })
                                         }
@@ -162,6 +166,7 @@ var vm = new Vue({
                                                 m.list.push({
                                                     name:n.catalogName,
                                                     id:n.catalogId,
+                                                    type:n.datasourceType,
                                                     list:[]
                                                 })
                                             }
@@ -186,6 +191,7 @@ var vm = new Vue({
                                                     x.list.push({
                                                         name:n.catalogName,
                                                         id:n.catalogId,
+                                                        type:n.datasourceType,
                                                         list:[]
                                                     })
                                                 }
@@ -380,11 +386,34 @@ var vm = new Vue({
         handleNodeClick:function(data) {
             if(data.id){
                 if(vm.isTwoArr.indexOf(data.id) == -1){
-                    vm.catalogId = data.id;
-                    vm.getTableList();
-                }else {
-                    var obj = {ktrName:data.name};
-                    vm.addKettle(obj);
+                    if(JSON.stringify(data.type) == 'null'){
+                        this.$message({
+                            message: '该目录未关联数据',
+                            type: 'warning'
+                        });
+                    }else if(data.type == 1){
+                        vm.catalogId = data.id;
+                        vm.getTableList();
+                    }else {
+                        $.ajax({
+                            type: "get",
+                            url: baseURL + 'xj/xjcataloglinkdata/getDataSource',
+                            // contentType: "application/json",
+                            dataType: 'json',
+                            data: {
+                                catalogId:data.id
+                            },
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.addKettle(r.linkData);
+                                }else{
+                                    alert(r.msg);
+                                }
+                            }
+                        });
+
+                    }
+
                 }
 
             }
@@ -414,9 +443,11 @@ var vm = new Vue({
         addKettle:function (obj) {
             var that = this;
             vm.meteCategory = {
-                ktrName:obj.ktrName+'-抽取',
+                ktrName:obj.catalogName+'-抽取',
                 ktrDsname:'',
-                ktrTablename:obj.ktrTablename,
+                ktrTablename:obj.tableName,
+                ktrDsid:obj.dataSourceId,
+                ktrDsname:obj.dsName
             }
             layer.open({
                 type: 1,

@@ -110,6 +110,7 @@ var vm = new Vue({
             });
         },
 		add: function(){
+            var that = this;
             layer.open({
                 type: 1,
                 title: '新增',
@@ -120,38 +121,49 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    console.log($('.cronDiv>.input-group>input').val());
-                    vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
-
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjschedulejob/save',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.meteCategory),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.reload();
-                                $('.col-sm-10.cronDiv .input-group').remove();
-                                layer.close(index);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(vm.meteCategory.triggerName == '' || vm.meteCategory.triggerCron == '' || vm.meteCategory.ktrId == ''){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else{
+                        vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'xj/xjschedulejob/save',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.meteCategory),
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.reload();
+                                    $('.col-sm-10.cronDiv .input-group').remove();
+                                    layer.close(index);
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
-
-
+                        });
+                    }
                 },
                 btn2:function () {
                     vm.reload();
                 }
-
             })
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-                ktrName:'',
-                triggerCron:''
+                triggerName:'',
+                triggerCron:'',
+                ktrId:''
 			};
             $("#cron").cronGen({
                 direction : 'bottom'
@@ -159,6 +171,7 @@ var vm = new Vue({
             // vm.getMenu();
 		},
 		update: function (id) {
+            var that = this;
             layer.open({
                 type: 1,
                 title: '修改',
@@ -169,24 +182,39 @@ var vm = new Vue({
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
-
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjschedulejob/update',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.meteCategory),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.reload();
-                                $('.col-sm-10.cronDiv .input-group').remove();
-                                layer.close(index);
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(vm.meteCategory.triggerName == '' || vm.meteCategory.triggerCron == '' || vm.meteCategory.ktrId == ''){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else{
+                        vm.meteCategory.triggerCron = $('.cronDiv>.input-group>input').val();
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'xj/xjschedulejob/update',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.meteCategory),
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.reload();
+                                    $('.col-sm-10.cronDiv .input-group').remove();
+                                    layer.close(index);
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 },
                 btn2:function () {
                     vm.reload();
@@ -247,6 +275,7 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
+            var that = this;
 			// var meteCategoryIds = getMeteCategoryId();
             if(vm.checkIdList.length == 0){
                 this.$message({
@@ -255,6 +284,12 @@ var vm = new Vue({
                 });
             }else{
                 layer.confirm('确定要删除选中的记录？', function(index1){
+                    const loading = that.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                     $.ajax({
                         type: "POST",
                         url: baseURL + "xj/xjschedulejob/delete",
@@ -265,9 +300,10 @@ var vm = new Vue({
                                 vm.reload();
                                 layer.close(index1);
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-
+                                loading.close();
 
                             }else{
+                                loading.close();
                                 layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
                             }
                         }
@@ -296,6 +332,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+		    this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjschedulejob/list',
@@ -308,8 +345,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
                     }else{
                         alert(r.msg);
+                        vm.loading = false;
                     }
                 }
             });

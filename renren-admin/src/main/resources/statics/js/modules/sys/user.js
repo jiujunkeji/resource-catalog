@@ -186,12 +186,7 @@ var vm = new Vue({
             });
         },
         reload: function () {
-            vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam','page');
-            $("#jqGrid").jqGrid('setGridParam',{
-                postData:{'username': vm.q.username},
-                page:page
-            }).trigger("reloadGrid");
+            vm.getList();
         },
         clean:function () {
             vm.q.username = null
@@ -213,7 +208,8 @@ var vm = new Vue({
                 url:baseURL + 'sys/user/list',
                 dataType: 'json',
                 data: {
-
+                    username:this.q.username,
+                    page:this.page
                 },
                 success: function(res){
                     console.log(res);
