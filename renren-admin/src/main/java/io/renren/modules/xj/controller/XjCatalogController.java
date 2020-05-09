@@ -388,7 +388,7 @@ public class XjCatalogController extends AbstractController{
         int meteDataCount = metaDataService.selectCount(null);
         countDTO.setMeteDataCount(meteDataCount);
         int meteCategoryCount = xjMeteCategoryService.selectCount(null);
-        countDTO.setCatalogCount(meteCategoryCount);
+        countDTO.setMeteCategoryCount(meteCategoryCount);
         int catalogCount = xjCatalogService.selectCount(new EntityWrapper<XjCatalogEntity>().eq("is_deleted",0));
         countDTO.setCatalogCount(catalogCount);
         //计算日增长量
