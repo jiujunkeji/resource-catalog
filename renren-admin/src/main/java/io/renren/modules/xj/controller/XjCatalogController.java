@@ -1,6 +1,8 @@
 package io.renren.modules.xj.controller;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -9,6 +11,7 @@ import io.renren.common.utils.QueryPage;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.xj.dto.CountDTO;
 import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.*;
 import io.renren.modules.xj.utils.Config;
@@ -53,6 +56,14 @@ public class XjCatalogController extends AbstractController{
     private XjDataSourceService dataSourceService;
     @Autowired
     private XjMetaDataSetService meteSetService;
+    @Autowired
+    private XjMetaDataService metaDataService;
+    @Autowired
+    private XjMeteCategoryService xjMeteCategoryService;
+    @Autowired
+    private XjMonitorService xjMonitorService;
+    @Autowired
+    private XjKlogService xjKlogService;
     /**
      * 目录列表
      */
@@ -365,5 +376,58 @@ public class XjCatalogController extends AbstractController{
         }else{
             return R.error("该目录未关联元数据集");
         }
+    }
+
+    /**
+     * 查询数据
+     */
+    @RequestMapping("/count1")
+    public R count1(){
+        CountDTO countDTO = new CountDTO();
+        int meteDataCount = metaDataService.selectCount(null);
+        countDTO.setMeteDataCount(meteDataCount);
+        int meteCategoryCount = xjMeteCategoryService.selectCount(null);
+        countDTO.setCatalogCount(meteCategoryCount);
+        int catalogCount = xjCatalogService.selectCount(new EntityWrapper<XjCatalogEntity>().eq("is_deleted",0));
+        countDTO.setCatalogCount(catalogCount);
+        //计算日增长量
+        long current=System.currentTimeMillis();    //当前时间毫秒数
+        long zeroT=current/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();  //今天零点零分零秒的毫秒数
+        //当天零点
+        String zero = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(zeroT);
+        int catalogDayChange = xjCatalogService.selectCount(
+                new EntityWrapper<XjCatalogEntity>()
+                        .eq("is_deleted",0)
+                        .ge("create_time", zero)
+        );
+        countDTO.setCatalogDayChange(catalogDayChange);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONDAY), calendar.get(Calendar.DAY_OF_MONTH), 0, 0,0);
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        long tt = calendar.getTime().getTime();
+        //本月第一天零点
+        String monDay = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tt);
+        int catalogMonChange = xjCatalogService.selectCount(
+                new EntityWrapper<XjCatalogEntity>()
+                        .eq("is_deleted",0)
+                        .ge("create_time", monDay)
+        );
+        countDTO.setCatalogMonChange(catalogMonChange);
+        int monitorCount = xjMonitorService.selectCount(null);
+        countDTO.setMonitorCount(monitorCount);
+        int monitorDayCount = xjMonitorService.selectCount(new EntityWrapper<XjMonitorEntity>().ge("create_time",zero));
+        countDTO.setMonitorDayCount(monitorDayCount);
+
+        return R.ok().put("countDTO",countDTO);
+    }
+
+    /**
+     * 查询数据
+     */
+    @RequestMapping("/count2")
+    public R count2(){
+
+        return R.ok();
     }
 }
