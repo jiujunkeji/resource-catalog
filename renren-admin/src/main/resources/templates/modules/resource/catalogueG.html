@@ -247,13 +247,13 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>目录名称</label>
+                    <label class="mustFill1">目录名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>数据源</label>
+                    <label class="mustFill1">数据源</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.dataSourceId" placeholder="请选择" @change="dsChange">
                             <el-option
@@ -266,7 +266,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>数据表名</label>
+                    <label class="mustFill1">数据表名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.tableName" placeholder="数据表名"/>
                     </div>
@@ -274,7 +274,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>数据表中文名</label>
+                    <label class="mustFill1">数据表中文名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.tableNameCn" placeholder="数据表中文名"/>
                     </div>

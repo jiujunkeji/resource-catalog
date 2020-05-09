@@ -78,7 +78,8 @@ var vm = new Vue({
         controlTypeList:[],
         dataTypeList:[],
         id:1,
-        hisList:[]
+        hisList:[],
+        loading:true,
     },
     watch: {
         filterText:function(val) {
@@ -174,7 +175,16 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增元数据";
             vm.resourceMeteData = {
-                isDisabled:0
+                isDisabled:0,
+                meteNumber:'',
+                meteCategoryId:'',
+                cnName:'',
+                euName:'',
+                euShortName:'',
+                dataType:'',
+                controlType:'',
+                checkType:'',
+                dataLength:''
             };
             if(vm.catalogId){
                 vm.resourceMeteData.meteCategoryId = vm.catalogId;
@@ -199,29 +209,37 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteId == null ? "xj/xjmetadata/save" : "xj/xjmetadata/update";
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.resourceMeteData),
-                success: function(r){
-                    if(r.code === 0){
-                        vm.page = 1;
-                        vm.reload();
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }else{
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+            if(vm.resourceMeteData.meteNumber == '' ||vm.resourceMeteData.meteCategoryId == '' ||vm.resourceMeteData.cnName == '' ||vm.resourceMeteData.euName == '' ||vm.resourceMeteData.euShortName == '' ||vm.resourceMeteData.dataType == '' ||vm.resourceMeteData.controlType == '' ||vm.resourceMeteData.checkType == '' ||vm.resourceMeteData.dataLength == ''){
+                this.$message({
+                    message: "带 ' * ' 的为必填项",
+                    type: 'warning'
+                });
+            }else {
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.resourceMeteData),
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.page = 1;
+                            vm.reload();
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
                     }
-                }
-            });
+                });
+            }
+
         },
         del: function (id) {
             var list = [];
@@ -332,6 +350,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            this.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetadata/queryList',
@@ -347,8 +366,14 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
+                        if(vm.tableList.length == 0 && vm.page >1){
+                            vm.page = vm.page - 1;
+                            vm.getTableList();
+                        }
                     }else{
                         alert(r.msg);
+                        vm.loading = false;
                     }
                 }
             });

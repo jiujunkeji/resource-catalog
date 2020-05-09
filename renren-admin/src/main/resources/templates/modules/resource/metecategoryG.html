@@ -173,6 +173,7 @@
                     </div>
                 </div>
                 <el-table
+                        v-loading="loading"
                         :data="tableList"
                         border
                         stripe
@@ -278,7 +279,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>编号</label>
+                    <label class="mustFill1">编号</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.meteNumber" placeholder="编号"/>
                     </div>
@@ -297,7 +298,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>中文名称</label>
+                    <label class="mustFill1">中文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.cnName" placeholder="中文名称"/>
                     </div>
@@ -307,19 +308,19 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>英文名称</label>
+                    <label class="mustFill1">英文名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euName" placeholder="英文名称"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>英文短名</label>
+                    <label class="mustFill1">英文短名</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.euShortName" placeholder="英文短名"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>数据类型</label>
+                    <label class="mustFill1">数据类型</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.dataType" placeholder="请选择" @change="setCom">
                             <el-option
@@ -336,7 +337,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>控件类型</label>
+                    <label class="mustFill1">控件类型</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.controlType" placeholder="请选择" @change="setCom">
                             <el-option
@@ -349,7 +350,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>校验类型</label>
+                    <label class="mustFill1">校验类型</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.checkType" placeholder="请选择" @change="setCom">
                             <el-option
@@ -366,7 +367,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>数据长度</label>
+                    <label class="mustFill1">数据长度</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.dataLength" placeholder="数据长度"/>
                     </div>

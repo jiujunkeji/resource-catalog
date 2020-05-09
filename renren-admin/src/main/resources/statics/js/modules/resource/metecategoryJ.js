@@ -110,34 +110,42 @@ var vm = new Vue({
                 title: '新增',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '360px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['新增','取消'],
                 btn1:function (index) {
-                    const loading = that.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/save',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.meteCategory),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.reload();
-                                layer.close(index);
-                                loading.close();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                loading.close();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(vm.meteCategory.metaCategorySetNumber == '' || vm.meteCategory.name == ''){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else{
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'xj/xjmetesetcategory/save',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.meteCategory),
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.reload();
+                                    layer.close(index);
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
 
 
                 },
@@ -149,10 +157,9 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.meteCategory = {
-                parentId:null,
-                parentName:''
+                metaCategorySetNumber:null,
+                name:''
 			};
-            vm.getMenu();
 		},
 		update: function (id) {
 		    var that = this;
@@ -161,34 +168,42 @@ var vm = new Vue({
                 title: '修改',
                 content: $('#addUp'), //这里content是一个普通的String
                 skin: 'openClass',
-                area: ['562px', '460px'],
+                area: ['562px', '360px'],
                 shadeClose: true,
                 closeBtn:0,
                 btn: ['修改','取消'],
                 btn1:function (index) {
-                    const loading = that.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + 'xj/xjmetesetcategory/update',
-                        contentType: "application/json",
-                        data: JSON.stringify(vm.meteCategory),
-                        success: function(r){
-                            if(r.code === 0){
-                                vm.reload();
-                                layer.close(index);
-                                loading.close();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
-                            }else{
-                                loading.close();
-                                layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                    if(vm.meteCategory.metaCategorySetNumber == '' || vm.meteCategory.name == ''){
+                        that.$message({
+                            message: "带 ' * ' 的为必填项",
+                            type: 'warning'
+                        });
+                    }else{
+                        const loading = that.$loading({
+                            lock: true,
+                            text: 'Loading',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + 'xj/xjmetesetcategory/update',
+                            contentType: "application/json",
+                            data: JSON.stringify(vm.meteCategory),
+                            success: function(r){
+                                if(r.code === 0){
+                                    vm.reload();
+                                    layer.close(index);
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],});
+                                }else{
+                                    loading.close();
+                                    layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 },
                 btn2:function () {
                     vm.reload();
@@ -294,6 +309,10 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        if(vm.tableList.length == 0 && vm.page > 1){
+                            vm.page = vm.page-1;
+                            vm.getTableList();
+                        }
                     }else{
                         alert(r.msg);
                     }

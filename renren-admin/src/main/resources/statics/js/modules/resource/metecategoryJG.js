@@ -53,7 +53,8 @@ var vm = new Vue({
         showList: true,
         title: null,
         resourceMeteData: {
-            meteDataList:[]
+            meteDataList:[],
+            meteCategorySetId:''
             // meteCategorySetId:null
         },
         imageUrl:'',
@@ -93,6 +94,7 @@ var vm = new Vue({
         fenlSelect1:[],
         hisList:[],
         look:false,
+        loading:true,
     },
     watch: {
         filterText:function(val) {
@@ -186,12 +188,19 @@ var vm = new Vue({
             });
         },
         add: function(){
-
             vm.showList = false;
             vm.title = "新增元数据集";
             vm.resourceMeteData = {
-                meteDataList:[]
+                meteCategorySetId:'',
+                meteDataList:[],
+                meteSetNumber:'',
+                cnName:'',
+                euName:'',
+                euShortName:''
             };
+            if(vm.meteCategorySetId){
+                vm.resourceMeteData.meteCategorySetId = vm.meteCategorySetId;
+            }
 
         },
         update: function (id) {
@@ -208,29 +217,37 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.meteSetId == null ? "xj/xjmetadataset/save" : "xj/xjmetadataset/update";
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.resourceMeteData),
-                success: function(r){
-                    if(r.code === 0){
-                        vm.page = 1;
-                        loading.close();
-                        vm.reload();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
-                    }else{
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+            if(vm.resourceMeteData.meteCategorySetId == '' || vm.resourceMeteData.meteSetNumber == '' || vm.resourceMeteData.cnName == '' || vm.resourceMeteData.euName == '' || vm.resourceMeteData.euShortName == ''){
+                this.$message({
+                    message: "带 ' * ' 的为必填项",
+                    type: 'warning'
+                });
+            }else {
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.resourceMeteData),
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.page = 1;
+                            loading.close();
+                            vm.reload();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px'],time:100});
+                        }else{
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
                     }
-                }
-            });
+                });
+            }
+
         },
         del: function (id) {
             var list = [];
@@ -352,6 +369,7 @@ var vm = new Vue({
         },
         // 获取表格列表
         getTableList:function () {
+            vm.loading = true;
             $.ajax({
                 type: "get",
                 url: baseURL + 'xj/xjmetadataset/queryList',
@@ -367,7 +385,13 @@ var vm = new Vue({
                     if(r.code === 0){
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
+                        vm.loading = false;
+                        if(vm.tableList.length == 0 && vm.page >1){
+                            vm.page = vm.page - 1;
+                            vm.getTableList();
+                        }
                     }else{
+                        vm.loading = false;
                         alert(r.msg);
                     }
                 }

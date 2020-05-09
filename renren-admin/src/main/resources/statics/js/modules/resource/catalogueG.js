@@ -198,16 +198,15 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增目录关联数据设置";
             vm.resourceMeteData = {
-                meteType:null,
-                categoryId:null,
-                categoryName:'',
-                catagoryCode:'',
                 catalogId:'',
                 catalogName:'',
                 fieldList:[],
                 parentId:0,
                 parentName:'',
-                meteDataList:[]
+                meteDataList:[],
+                dataSourceId:'',
+                tableName:'',
+                tableNameCn:''
             };
             vm.getMenu();
             // vm.getMenu1();
@@ -228,29 +227,37 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.linkId == null  ? "xj/xjcataloglinkdata/save" : "xj/xjcataloglinkdata/update";
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.resourceMeteData),
-                success: function(r){
-                    if(r.code === 0){
-                        vm.page = 1;
-                        vm.reload();
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }else{
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败<br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+            if(vm.resourceMeteData.catalogName == '' || vm.resourceMeteData.tableNameCn == '' || vm.resourceMeteData.tableName == '' || vm.resourceMeteData.dataSourceId == ''){
+                this.$message({
+                    message: "带 ' * ' 的为必填项",
+                    type: 'warning'
+                });
+            }else{
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.resourceMeteData),
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.page = 1;
+                            vm.reload();
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败<br>'+r.msg+'</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
                     }
-                }
-            });
+                });
+            }
+
         },
         del: function (id) {
             var list = [];
@@ -499,6 +506,10 @@ var vm = new Vue({
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
                         vm.loading = false;
+                        if(vm.tableList.length == 0 && vm.page >1){
+                            vm.page = vm.page - 1;
+                            vm.getTableList();
+                        }
                     }else{
                         vm.loading = false;
                         alert(r.msg);

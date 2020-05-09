@@ -85,6 +85,9 @@
                 -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
                 transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
             }
+            #safeDiv .el-select{
+                width: 100%;
+            }
             .el-popper[x-placement^=bottom]{
                 z-index:99999999999!important;
             }
@@ -328,13 +331,13 @@
             <div class="line">
 
                 <div class="item">
-                    <label>目录名称</label>
+                    <label class="mustFill1">目录名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" @click="menuTree" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>安全类型</label>
+                    <label class="mustFill1">安全类型</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.safeTypeCode" placeholder="请选择" @change="safeTypeChan">
                             <el-option
@@ -347,7 +350,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>安全级别</label>
+                    <label class="mustFill1">安全级别</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.safeCode" placeholder="1～5级别由高到低" @change="safeLevelChan">
                             <el-option
@@ -364,7 +367,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>加密模式</label>
+                    <label class="mustFill1">加密模式</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.encryptCode" placeholder="请选择" @change="encryptChan">
                             <el-option
