@@ -74,7 +74,7 @@ public class SysDictController {
     public R save(@RequestBody SysDictEntity dict){
         //校验类型
 //        ValidatorUtils.validateEntity(dict);
-
+        dict.setDelFlag(0);
         sysDictService.insert(dict);
 
         return R.ok();
