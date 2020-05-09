@@ -1,5 +1,6 @@
 package io.renren.modules.xj.service.impl;
 
+import io.renren.modules.xj.dto.MeteCategoryDto;
 import io.renren.modules.xj.entity.XjMeteCategoryEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -122,6 +123,11 @@ public class XjMetaDataServiceImpl extends ServiceImpl<XjMetaDataDao, XjMetaData
             xjMetaDataEntities.add(xjMetaDataEntity);
         }
         return xjMetaDataEntities;
+    }
+
+    @Override
+    public List<MeteCategoryDto> selectMeteByCategory() {
+        return baseMapper.selectMeteByCategory();
     }
 
 

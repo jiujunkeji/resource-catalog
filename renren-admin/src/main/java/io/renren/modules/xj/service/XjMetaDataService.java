@@ -2,6 +2,7 @@ package io.renren.modules.xj.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.xj.dto.MeteCategoryDto;
 import io.renren.modules.xj.entity.XjMetaDataEntity;
 
 import java.util.List;
@@ -26,10 +27,12 @@ public interface XjMetaDataService extends IService<XjMetaDataEntity> {
     /**
      * 元数据启用
      */
-    public List<XjMetaDataEntity> updateEnabledState(Long[] mete_ids);
+    List<XjMetaDataEntity> updateEnabledState(Long[] mete_ids);
 
     /**元数据禁用
      */
-    public List<XjMetaDataEntity> updateDisabledState(Long[] mete_ids);
+    List<XjMetaDataEntity> updateDisabledState(Long[] mete_ids);
+
+    List<MeteCategoryDto> selectMeteByCategory();
 }
 

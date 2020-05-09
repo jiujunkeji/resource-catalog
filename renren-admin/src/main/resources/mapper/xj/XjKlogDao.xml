@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.resource.dao.XjKlogDao">
+<mapper namespace="io.renren.modules.xj.dao.XjKlogDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="io.renren.modules.resource.entity.XjKlogEntity" id="xjKlogMap">
+    <resultMap type="io.renren.modules.xj.entity.XjKlogEntity" id="xjKlogMap">
         <result property="klogId" column="klog_id"/>
         <result property="childJobId" column="child_job_id"/>
         <result property="assemblyName" column="assembly_name"/>
@@ -17,7 +17,6 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-    <!-- 修改订单状态-->
     <select id="sum" resultType="int">
         select sum(xj_write) AS monitorDataCount FROM xj_klog
         <where>

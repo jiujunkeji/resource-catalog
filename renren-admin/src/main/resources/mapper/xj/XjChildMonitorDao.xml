@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.resource.dao.XjChildMonitorDao">
+<mapper namespace="io.renren.modules.xj.dao.XjChildMonitorDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="io.renren.modules.resource.entity.XjChildMonitorEntity" id="xjChildMonitorMap">
+    <resultMap type="io.renren.modules.xj.entity.XjChildMonitorEntity" id="xjChildMonitorMap">
         <result property="childJobId" column="child_job_id"/>
         <result property="monitorId" column="monitor_id"/>
         <result property="childJobName" column="child_job_name"/>

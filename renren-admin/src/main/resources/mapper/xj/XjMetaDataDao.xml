@@ -29,8 +29,22 @@
     </resultMap>
 
 
+    <resultMap type="io.renren.modules.xj.dto.MeteCategoryDto" id="MeteCategoryDtoMap">
+        <result property="catagoryName" column="catagory_name"/>
+        <result property="count" column="count"/>
+    </resultMap>
 
 
-
+    <select id="selectMeteByCategory" resultType="io.renren.modules.xj.dto.MeteCategoryDto">>
+        SELECT
+            b.name AS category_name,
+            count(*) AS count
+        FROM
+            xj_meta_data a
+        LEFT JOIN xj_mete_category b
+        ON a.mete_category_id = b.mete_category_id
+        GROUP BY
+            a.mete_category_id
+    </select>
 
 </mapper>

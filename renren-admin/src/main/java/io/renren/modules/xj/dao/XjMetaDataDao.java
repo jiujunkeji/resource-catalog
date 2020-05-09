@@ -2,6 +2,7 @@ package io.renren.modules.xj.dao;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.xj.dto.MeteCategoryDto;
 import io.renren.modules.xj.entity.XjMetaDataEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import io.renren.modules.xj.entity.XjMeteCategoryEntity;
@@ -25,9 +26,11 @@ public interface XjMetaDataDao extends BaseMapper<XjMetaDataEntity> {
     /**
      * 元数据启用
      */
-    public List<XjMetaDataEntity> updateEnabledState(Long[] mete_ids);
+    List<XjMetaDataEntity> updateEnabledState(Long[] mete_ids);
 
     /**元数据禁用
      */
-    public List<XjMetaDataEntity> updateDisabledState(Long[] mete_ids);
+    List<XjMetaDataEntity> updateDisabledState(Long[] mete_ids);
+
+    List<MeteCategoryDto> selectMeteByCategory();
 }

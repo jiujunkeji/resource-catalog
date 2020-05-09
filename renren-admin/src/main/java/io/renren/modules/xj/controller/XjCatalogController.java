@@ -12,6 +12,7 @@ import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.xj.dto.CountDTO;
+import io.renren.modules.xj.dto.MeteCategoryDto;
 import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.*;
 import io.renren.modules.xj.utils.Config;
@@ -430,7 +431,8 @@ public class XjCatalogController extends AbstractController{
      */
     @RequestMapping("/count2")
     public R count2(){
-
-        return R.ok();
+        List<MeteCategoryDto> list = new ArrayList<>();
+        list = metaDataService.selectMeteByCategory();
+        return R.ok().put("list",list);
     }
 }
