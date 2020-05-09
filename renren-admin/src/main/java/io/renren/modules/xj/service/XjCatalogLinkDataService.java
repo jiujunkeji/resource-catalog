@@ -16,5 +16,7 @@ import java.util.Map;
 public interface XjCatalogLinkDataService extends IService<XjCatalogLinkDataEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void getType(XjCatalogLinkDataEntity xjCatalogLinkDataEntity);
 }
 

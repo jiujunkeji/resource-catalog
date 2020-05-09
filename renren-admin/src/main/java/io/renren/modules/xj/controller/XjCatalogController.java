@@ -136,6 +136,7 @@ public class XjCatalogController extends AbstractController{
         xjCatalog.setCategoryCode(category.getCode());
         xjCatalog.setCategoryName(category.getName());
         xjCatalog.setCreateUserId(getUserId());
+        xjCatalog.setDatasourceType(null);
         xjCatalog.setCreateUserName(getUser().getName());
         xjCatalog.setCreateTime(new Date());
         xjCatalogService.insert(xjCatalog);

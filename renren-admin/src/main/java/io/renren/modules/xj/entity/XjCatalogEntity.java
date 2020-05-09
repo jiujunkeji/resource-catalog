@@ -45,6 +45,10 @@ public class XjCatalogEntity implements Serializable {
 	 */
 	private Long parentId;
 	/**
+	 * 数据库类型
+	 */
+	private Integer datasourceType;
+	/**
 	 * 信息资源名称
 	 */
 	private String resourceTitle;
@@ -163,6 +167,15 @@ public class XjCatalogEntity implements Serializable {
 	public String getCategoryCode() {
 		return categoryCode;
 	}
+
+	public Integer getDatasourceType() {
+		return datasourceType;
+	}
+
+	public void setDatasourceType(Integer datasourceType) {
+		this.datasourceType = datasourceType;
+	}
+
 	/**
 	 * 设置：类目名称
 	 */

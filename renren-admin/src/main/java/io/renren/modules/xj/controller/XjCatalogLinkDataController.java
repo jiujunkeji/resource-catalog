@@ -77,6 +77,7 @@ public class XjCatalogLinkDataController {
             return R.error("该条目录已有数据关联");
         }
         xjCatalogLinkDataService.insert(xjCatalogLinkData);
+        xjCatalogLinkDataService.getType(xjCatalogLinkData);
         List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
         meteDataList = xjCatalogLinkData.getMeteDataList();
         if(meteDataList != null && meteDataList.size() > 0){
@@ -91,6 +92,7 @@ public class XjCatalogLinkDataController {
     @RequestMapping("/update")
     public R update(@RequestBody XjCatalogLinkDataEntity xjCatalogLinkData){
         xjCatalogLinkDataService.updateById(xjCatalogLinkData);
+        xjCatalogLinkDataService.getType(xjCatalogLinkData);
         List<XjMeteSetMiddleEntity> meteDataList = new ArrayList<>();
         meteDataList = xjCatalogLinkData.getMeteDataList();
         if(meteDataList != null && meteDataList.size() > 0){
