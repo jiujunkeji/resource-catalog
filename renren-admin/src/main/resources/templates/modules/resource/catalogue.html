@@ -297,7 +297,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>目录名称</label>
+                    <label class="mustFill1">目录名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.catalogName" placeholder="目录名称" :readonly="look"/>
                     </div>
@@ -310,7 +310,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>资源提供单位</label>
+                    <label class="mustFill1">资源提供单位</label>
                     <div class="inp">
                         <el-select v-model="resourceMeteData.organisationName" placeholder="请选择" @change="setCom" :disabled="look">
                             <el-option
@@ -327,20 +327,20 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>资源提供单位地址</label>
+                    <label class="mustFill1">资源提供单位地址</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.organisationAddress" placeholder="资源提供单位地址" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>类目名称</label>
+                    <label class="mustFill1">类目名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="类目名称" v-if="look" readonly="readonly"/>
                         <input type="text" class="form-control" v-model="resourceMeteData.categoryName" placeholder="类目名称" v-if="!look" @click="menuTree1" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>类目编码</label>
+                    <label class="mustFill1">类目编码</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.categoryCode" placeholder="类目编码" readonly="readonly"/>
                     </div>
@@ -348,7 +348,7 @@
             </div>
             <div class="line">
                 <div class="item">
-                    <label>元数据集</label>
+                    <label class="mustFill1">元数据集</label>
                     <div class="inp">
                         <input v-if="!look" type="text" class="form-control" v-model="resourceMeteData.meteSetName" @click="getYsj" placeholder="选择元数据集" readonly="readonly"/>
                         <input v-if="look" type="text" class="form-control" v-model="resourceMeteData.meteSetName" placeholder="元数据集" readonly="readonly"/>
@@ -363,42 +363,21 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label>信息资源名称</label>
+                    <label class="mustFill1">信息资源名称</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceTitle" placeholder="信息资源名称" :readonly="look"/>
                     </div>
                 </div>
                 <div class="item">
-                    <label>信息资源标识</label>
+                    <label class="mustFill1">信息资源标识</label>
                     <div class="inp">
                         <input type="text" class="form-control" v-model="resourceMeteData.resourceSign" placeholder="信息资源标识" :readonly="look"/>
                     </div>
                 </div>
             </div>
-            <!--<div class="line">-->
-                <!--<div class="item">-->
-                    <!--<label>是否使用</label>-->
-                    <!--<div class="inp">-->
-                        <!--<el-select v-model="resourceMeteData.isUsed" placeholder="请选择">-->
-                            <!--<el-option-->
-                                    <!--key="0"-->
-                                    <!--label="停用"-->
-                                    <!--:value="0">-->
-                            <!--</el-option>-->
-                            <!--<el-option-->
-                                    <!--key="1"-->
-                                    <!--label="使用"-->
-                                    <!--:value="1">-->
-                            <!--</el-option>-->
-                        <!--</el-select>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="item"></div>-->
-                <!--<div class="item"></div>-->
-            <!--</div>-->
             <div class="line">
                 <div class="item">
-                    <label style="vertical-align: top">信息资源摘要</label>
+                    <label class="mustFill1" style="vertical-align: top">信息资源摘要</label>
                     <div class="inp">
                         <el-input
                                 type="textarea"

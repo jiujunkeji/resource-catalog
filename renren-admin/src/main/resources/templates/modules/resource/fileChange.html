@@ -102,6 +102,7 @@
             </div>
         </div>
         <el-table
+                v-loading="loading"
                 :data="tableList"
                 border
                 stripe
@@ -212,43 +213,43 @@
         <!--<div class="panel-heading">{{title}}</div>-->
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">任务名</div>
+                <div class="col-sm-2 control-label mustFill">任务名</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpName" placeholder="任务名" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">文件路径</div>
+                <div class="col-sm-2 control-label mustFill">文件路径</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpFilepath" placeholder="文件路径" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">ftp路径</div>
+                <div class="col-sm-2 control-label mustFill">ftp路径</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpFtppath" placeholder="ftp路径" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">IP</div>
+                <div class="col-sm-2 control-label mustFill">IP</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpIp" placeholder="IP" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">端口</div>
+                <div class="col-sm-2 control-label mustFill">端口</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpPort" placeholder="端口" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">用户名</div>
+                <div class="col-sm-2 control-label mustFill">用户名</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpUsername" placeholder="用户名" :readonly="look"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">密码</div>
+                <div class="col-sm-2 control-label mustFill">密码</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="meteCategory.ftpPassword" placeholder="密码" :readonly="look"/>
                 </div>

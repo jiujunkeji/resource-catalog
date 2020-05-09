@@ -205,10 +205,6 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增目录";
             vm.resourceMeteData = {
-                meteType:null,
-                categoryId:null,
-                categoryName:'',
-                catagoryCode:'',
                 catalogId:'',
                 catalogName:'',
                 fieldList:[],
@@ -216,7 +212,12 @@ var vm = new Vue({
                 parentName:'',
                 meteSetId:'',
                 meteSetName:'',
-                meteDataList:[]
+                meteDataList:[],
+                organisationName:'',
+                categoryName:'',
+                resourceTitle:'',
+                resourceSign:'',
+                resourceAbstract:''
             };
             vm.getMenu();
             vm.getMenu1();
@@ -240,29 +241,37 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             var url = vm.resourceMeteData.catalogId == ''  ? "xj/xjcatalog/save" : "xj/xjcatalog/update";
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.resourceMeteData),
-                success: function(r){
-                    if(r.code === 0){
-                        vm.page = 1;
-                        vm.reload();
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
-                    }else{
-                        loading.close();
-                        layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+            if(vm.resourceMeteData.catalogName == '' || vm.resourceMeteData.meteSetName == '' || vm.resourceMeteData.organisationName == '' || vm.resourceMeteData.categoryName == '' || vm.resourceMeteData.resourceTitle == '' || vm.resourceMeteData.resourceSign == '' || vm.resourceMeteData.resourceAbstract == ''){
+                this.$message({
+                    message: "带 ' * ' 的为必填项",
+                    type: 'warning'
+                });
+            }else{
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.resourceMeteData),
+                    success: function(r){
+                        if(r.code === 0){
+                            vm.page = 1;
+                            vm.reload();
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/success.png"><br>操作成功</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }else{
+                            loading.close();
+                            layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});
+                        }
                     }
-                }
-            });
+                });
+            }
+
         },
         del: function (id) {
             var list = [];
@@ -531,6 +540,10 @@ var vm = new Vue({
                         vm.tableList = r.page.list;
                         vm.totalPage = r.page.totalCount;
                         vm.loading = false;
+                        if(vm.tableList.length == 0 && vm.page >1){
+                            vm.page = vm.page - 1;
+                            vm.getTableList();
+                        }
                     }else{
                         alert(r.msg);
                         vm.loading = false;
