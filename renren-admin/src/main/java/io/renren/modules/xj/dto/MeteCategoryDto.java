@@ -11,7 +11,7 @@ public class MeteCategoryDto implements Serializable {
     //分类名称
     private String catagoryName;
     //元数据数量
-    private int count;
+    private int meteCount;
 
     public MeteCategoryDto(){}
 
@@ -23,11 +23,11 @@ public class MeteCategoryDto implements Serializable {
         this.catagoryName = catagoryName;
     }
 
-    public int getCount() {
-        return count;
+    public int getMeteCount() {
+        return meteCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setMeteCount(int meteCount) {
+        this.meteCount = meteCount;
     }
 }
