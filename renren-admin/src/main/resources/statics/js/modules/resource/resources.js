@@ -37,7 +37,7 @@ var vm = new Vue({
                 success: function(r){
                     if(r.code == 0){
                         console.log(r);
-                        vm.catalogsearchData = r;
+                        vm.catalogsearchData = r.list;
                         ziyuan(vm.catalogsearchData);
                     }else{
                         layer.msg('<div class="okDiv"><img src="'+baseURL+'statics/img/fail.png"><br>操作失败</div>',{skin:'bg-class',area: ['400px', '270px']});

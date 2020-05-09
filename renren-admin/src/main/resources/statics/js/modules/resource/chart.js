@@ -1,20 +1,12 @@
 function ziyuan(data) {
     var myChart = echarts.init(document.getElementById('statistics'));
 
-    var dataStyle = {
-        normal: {
-            label: {
-                show: false
-            },
-            labelLine: {
-                show: false
-            },
-            shadowBlur: 0,
-            shadowColor: '#203665'
-        }
-    };
-    console.log(data);
-    var num = data.callAll - data.callToday;
+    var dataX = [],
+        dataY = [];
+    data.forEach(function (t) {
+        dataX.push(t.catagoryName);
+        dataY.push(t.meteCount);
+    })
 
     option = {
         backgroundColor: '#fff',
@@ -33,7 +25,7 @@ function ziyuan(data) {
         xAxis: [{
             type: 'category',
             color: '#777',
-            data: ['基础元数据', '网络安全元数据', '位置元数据', '社交网络元数据', '日志元数据','特征库元数据','画像库元数据'],
+            data: dataX,
             axisLabel: {
                 margin: 20,
                 color: '#777',
@@ -52,7 +44,6 @@ function ziyuan(data) {
         }],
         yAxis: [{
             min: 0,
-            max: 100,
             axisLabel: {
                 formatter: '{value}',
                 color: '#999',
@@ -77,7 +68,7 @@ function ziyuan(data) {
         }],
         series: [{
             type: 'bar',
-            data: [40, 90, 10, 20, 56, 20, 90],
+            data: dataY,
             barWidth: '50px',
             itemStyle: {
                 normal: {
