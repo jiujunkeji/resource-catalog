@@ -11,6 +11,8 @@ import io.renren.common.utils.QueryPage;
 import io.renren.modules.resource.entity.MeteCategoryEntity;
 import io.renren.modules.resource.service.MeteCategoryService;
 import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.SysDictEntity;
+import io.renren.modules.sys.service.SysDictService;
 import io.renren.modules.xj.dto.CountDTO;
 import io.renren.modules.xj.dto.MeteCategoryDto;
 import io.renren.modules.xj.entity.*;
@@ -65,6 +67,8 @@ public class XjCatalogController extends AbstractController{
     private XjMonitorService xjMonitorService;
     @Autowired
     private XjKlogService xjKlogService;
+    @Autowired
+    private SysDictService dictService;
     /**
      * 目录列表
      */
@@ -306,6 +310,20 @@ public class XjCatalogController extends AbstractController{
         return R.ok();
     }
 
+    /**
+     * 查询数据字典值
+     */
+    @RequestMapping("/selectDictList")
+    public R selectDataList(@RequestParam String catalogId, @RequestParam String meteEname){
+        XjCatalogLinkDataEntity link = linkDataService.selectOne(new EntityWrapper<XjCatalogLinkDataEntity>().eq("catalog_id",catalogId));
+        XjDataSourceEntity dataSource = dataSourceService.selectById(link.getDataSourceId());
+        List<SysDictEntity> dictList = dictService.selectList(
+                new EntityWrapper<SysDictEntity>()
+                    .eq("ds_name",dataSource.getDsName())
+                    .eq("type",meteEname)
+        );
+        return R.ok().put("dictList",dictList);
+    }
 
     /**
      * 查询数据

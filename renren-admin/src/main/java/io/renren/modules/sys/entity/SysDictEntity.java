@@ -69,6 +69,8 @@ public class SysDictEntity implements Serializable {
 	@TableLogic
 	private Integer delFlag;
 
+	private String dsName;
+
 	/**
 	 * 设置：
 	 */
@@ -164,5 +166,13 @@ public class SysDictEntity implements Serializable {
 	 */
 	public Integer getDelFlag() {
 		return delFlag;
+	}
+
+	public String getDsName() {
+		return dsName;
+	}
+
+	public void setDsName(String dsName) {
+		this.dsName = dsName;
 	}
 }
