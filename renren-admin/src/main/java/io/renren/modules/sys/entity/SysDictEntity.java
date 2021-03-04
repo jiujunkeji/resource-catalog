@@ -69,7 +69,7 @@ public class SysDictEntity implements Serializable {
 	@TableLogic
 	private Integer delFlag;
 
-	private String dsName;
+	private String dsDatabasename;
 
 	/**
 	 * 设置：
@@ -168,11 +168,11 @@ public class SysDictEntity implements Serializable {
 		return delFlag;
 	}
 
-	public String getDsName() {
-		return dsName;
+	public String getDsDatabasename() {
+		return dsDatabasename;
 	}
 
-	public void setDsName(String dsName) {
-		this.dsName = dsName;
+	public void setDsDatabasename(String dsDatabasename) {
+		this.dsDatabasename = dsDatabasename;
 	}
 }

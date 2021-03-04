@@ -319,7 +319,7 @@ public class XjCatalogController extends AbstractController{
         XjDataSourceEntity dataSource = dataSourceService.selectById(link.getDataSourceId());
         List<SysDictEntity> dictList = dictService.selectList(
                 new EntityWrapper<SysDictEntity>()
-                    .eq("ds_name",dataSource.getDsName())
+                    .eq("ds_databasename",dataSource.getDsDatabasename())
                     .eq("type",meteEname)
         );
         return R.ok().put("dictList",dictList);

@@ -38,7 +38,6 @@ public class XjCatalogLinkDataServiceImpl extends ServiceImpl<XjCatalogLinkDataD
                     .eq(StringUtils.isNotBlank(catalogId),"catalog_id",catalogId)
                     .like(StringUtils.isNotBlank(catalogName),"catalog_name",catalogName)
         );
-
         return new PageUtils(page);
     }
 
@@ -47,11 +46,11 @@ public class XjCatalogLinkDataServiceImpl extends ServiceImpl<XjCatalogLinkDataD
         XjDataSourceEntity xjdse = xjDataSourceService.selectById(xjCatalogLinkDataEntity.getDataSourceId());
         String type = xjdse.getDsType();
         XjCatalogEntity xjCatalogEntity = xjCatalogService.selectById(xjCatalogLinkDataEntity.getCatalogId());
-        if (type.equals("mysql")||type.equals("Gbase")){
-            xjCatalogEntity.setDatasourceType(0);
+        if (type.equals("mysql")||type.equals("Gbase-8s")||type.equals("Gbase-8a")){
+            xjCatalogEntity.setDatasourceType(1);
             xjCatalogService.updateById(xjCatalogEntity);
         }else {
-            xjCatalogEntity.setDatasourceType(1);
+            xjCatalogEntity.setDatasourceType(0);
             xjCatalogService.updateById(xjCatalogEntity);
         }
     }
