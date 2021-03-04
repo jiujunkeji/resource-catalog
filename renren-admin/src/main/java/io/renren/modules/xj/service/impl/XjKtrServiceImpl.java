@@ -5,6 +5,7 @@ import io.renren.modules.xj.entity.*;
 import io.renren.modules.xj.service.XjChildMonitorService;
 import io.renren.modules.xj.service.XjKlogService;
 import io.renren.modules.xj.service.XjMonitorService;
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.ObjectLocationSpecificationMethod;
 import org.pentaho.di.core.database.DatabaseMeta;
@@ -52,9 +53,11 @@ public class XjKtrServiceImpl extends ServiceImpl<XjKtrDao, XjKtrEntity> impleme
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String catalogId = (String) params.get("catalogId");
         Page<XjKtrEntity> page = this.selectPage(
                 new Query<XjKtrEntity>(params).getPage(),
                 new EntityWrapper<XjKtrEntity>()
+                    .eq(StringUtils.isNotBlank(catalogId),"catalog_id",catalogId)
         );
 
         return new PageUtils(page);

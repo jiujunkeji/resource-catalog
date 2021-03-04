@@ -74,6 +74,8 @@ public class XjKtrEntity implements Serializable {
 	 */
 	private String ktrStatus;
 
+	private Long catalogId;
+
 	public Integer getKtrNumber() { return ktrNumber; }
 
 	public void setKtrNumber(Integer ktrNumber) { this.ktrNumber = ktrNumber; }
@@ -168,5 +170,13 @@ public class XjKtrEntity implements Serializable {
 	 */
 	public String getKtrSql() {
 		return ktrSql;
+	}
+
+	public Long getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(Long catalogId) {
+		this.catalogId = catalogId;
 	}
 }
