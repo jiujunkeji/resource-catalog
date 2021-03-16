@@ -279,6 +279,12 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
         },
+        test: function(){
+            //加载部门树
+            $.get(baseURL + "oauth/test", function(r){
+
+            })
+        },
         clean:function () {
             vm.q.roleName = null
         },

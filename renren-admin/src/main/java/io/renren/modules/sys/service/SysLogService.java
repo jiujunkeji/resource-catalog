@@ -35,4 +35,5 @@ public interface SysLogService extends IService<SysLogEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
+    void saveSysLog(String type, String content);
 }

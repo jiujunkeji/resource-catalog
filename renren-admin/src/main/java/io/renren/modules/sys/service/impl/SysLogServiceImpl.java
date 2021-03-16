@@ -16,17 +16,25 @@
 
 package io.renren.modules.sys.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.InfoJson;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.modules.sys.dao.SysLogDao;
 import io.renren.modules.sys.entity.SysLogEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysLogService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -43,5 +51,33 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogDao, SysLogEntity> impl
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void saveSysLog(String type, String content) {
+        //用户名
+        SysUserEntity user = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        String username = user.getUsername();
+        String name = user.getName();
+        String refreshToken = user.getRefreshToken();
+        if(StringUtils.isNotEmpty(type)){
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Map params = new HashMap();
+            params.put("sysNum", Constant.SYS_NUM);
+            params.put("systemSecret", Constant.CLIENT_SECRET);
+            params.put("userName", name);
+            params.put("loginName", username);
+            params.put("operationType", type);
+            params.put("content", content);
+            params.put("dateTime", s.format(new Date()));
+            JSONObject result = InfoJson.postJson(Constant.OPERATION_URI, params);
+            String code = result.getString("RetCode");
+            if ("S".equals(code)) {
+                System.out.println("审计日志保存成功");
+            } else {
+                System.out.println("审计日志保存失败");
+                System.out.println("失败原因：" + result.getString("RetMsg"));
+            }
+        }
     }
 }
